@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import GoogleIcon from '@/components/GoogleIcon';
+import Image from 'next/image';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -74,7 +74,7 @@ export default function SignUp() {
           onClick={handleGoogleSignUp}
           className="w-full flex items-center justify-center gap-3 rounded-lg border border-gray-300 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50"
         >
-          <GoogleIcon size={20} />
+          <Image src="/imgs/icons8-google-96.png" alt="Google" width={32} height={32} />
           Sign up with Google
         </button>
 
