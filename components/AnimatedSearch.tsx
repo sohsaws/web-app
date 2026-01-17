@@ -22,7 +22,7 @@ export default function AnimatedSearch() {
           <motion.button
             key="button"
             onClick={() => setIsExpanded(true)}
-            className="bg-black hover:bg-red-400 rounded-full p-2.5 transition-colors"
+            className="bg-black hover:bg-purple-300 rounded-full p-2.5 transition-colors"
             initial={{scale: 0.1, opacity: 0}}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.0, opacity: 1 }}
@@ -53,13 +53,13 @@ export default function AnimatedSearch() {
                     setIsExpanded(false);
                   }
                 }}
-                className="w-full h-9 bg-stone-950 text-white placeholder-gray-400 rounded-full px-6 py-4 pr-14 text-lg outline-none focus:ring-1 focus:ring-red-400 transition-all"
+                className="w-full h-10 bg-stone-950 text-white placeholder-gray-400 rounded-full px-6 py-4 pr-14 text-lg outline-none focus:ring-1 focus:ring-stone-50 transition-all"
               />
               <button
                 type="submit"
                 className="group absolute right-2 p-1 transition-colors"
               >
-                <LoaderPinwheel className= 'group-hover:text-red-400  text-white' size={24} />
+                <LoaderPinwheel className= 'group-hover:text-amber-100  text-white' size={24} />
               </button>
             </div>
           </motion.form>

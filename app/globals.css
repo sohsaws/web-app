@@ -24,3 +24,23 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes draw-circle {
+  0% {
+    stroke-dashoffset: 400;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+.animate-scribble {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: draw-circle 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards 0.5s;
+}
