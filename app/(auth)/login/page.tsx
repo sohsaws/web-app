@@ -24,7 +24,7 @@ export default function SignUp() {
           <h1 className="text-3xl font-bold text-black">Create Account</h1>
           <p className="mt-2 text-gray-600">Sign up to get started</p>
         </div>
-
+        
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
