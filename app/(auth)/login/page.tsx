@@ -20,10 +20,6 @@ export default function SignUp() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-black">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-black">Create Account</h1>
-          <p className="mt-2 text-gray-600">Sign up to get started</p>
-        </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -35,7 +31,7 @@ export default function SignUp() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder="Enter your email address"
               required
               className="w-full rounded-lg border border-gray-300 px-4 py-3 text-black placeholder-gray-400 focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-400"
             />
@@ -50,17 +46,25 @@ export default function SignUp() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Create a password"
+              placeholder="Enter your password"
               required
               className="w-full rounded-lg border border-gray-300 px-4 py-3 text-black placeholder-gray-400 focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-400"
             />
           </div>
 
+          
+          <p className="mt-6 text-sm text-gray-700">
+            Forgot Password?{' '}
+            <Link href="/forgot-password" className='font-semibold text-black hover:text-red-400 transition-colors'>
+              Send reset code
+            </Link>
+          </p>
+
           <button
             type="submit"
             className="w-full rounded-lg bg-black py-3 font-semibold text-white transition-colors hover:bg-gray-800"
           >
-            Sign Up
+            Log in
           </button>
         </form>
 
@@ -75,13 +79,13 @@ export default function SignUp() {
           className="w-full flex items-center justify-center gap-3 rounded-lg border border-gray-300 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50"
         >
           <Image src="/imgs/icons8-google-96.png" alt="Google" width={32} height={32} />
-          Sign up with Google
+          Log in with Google
         </button>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <Link href="/signin" className="font-semibold text-black hover:text-red-400 transition-colors">
-            Sign in
+          Don&apos;t have an account?{' '}
+          <Link href="/register" className="font-semibold text-black hover:text-red-400 transition-colors">
+            Sign up!
           </Link>
         </p>
       </div>
