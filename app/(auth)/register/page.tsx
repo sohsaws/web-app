@@ -3,24 +3,25 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, Lock } from 'lucide-react';
+import { User, Mail, Lock } from 'lucide-react';
 
-export default function Login() {
+export default function Register() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [resetEmailError, setResetEmailError] = useState<string | null>(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login with email:', email);
+    console.log('Register with:', { name, email, password, termsAccepted });
   };
 
-  const handleGoogleLogin = () => {
-    console.log('Login with Google');
+  const handleGoogleSignUp = () => {
+    console.log('Sign up with Google');
   };
 
-  const handleGitHubLogin = () => {
-    console.log('Login with GitHub');
+  const handleGitHubSignUp = () => {
+    console.log('Sign up with GitHub');
   };
 
   return (
@@ -29,10 +30,10 @@ export default function Login() {
 
         <div className="text-left">
           <h2 className="font-serif text-2xl font-medium tracking-tight text-white">
-            Welcome back
+            Let&apos;s create your account
           </h2>
           <p className="mt-2 text-sm text-neutral-500">
-            Enter your credentials to access your account
+            Enter your details below to create your account
           </p>
         </div>
 
@@ -41,7 +42,7 @@ export default function Login() {
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
-              onClick={handleGoogleLogin}
+              onClick={handleGoogleSignUp}
               className="group relative flex w-full items-center justify-center gap-2 rounded-md border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black transition-all"
             >
               <Image
@@ -54,11 +55,11 @@ export default function Login() {
             </button>
             <button
               type="button"
-              onClick={handleGitHubLogin}
+              onClick={handleGitHubSignUp}
               className="group relative flex w-full items-center justify-center gap-2 rounded-md border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black transition-all"
             >
               <Image
-                src="/imgs/GitHub.png"
+                src="/imgs/Github.png"
                 alt="GitHub"
                 width={23}
                 height={23}
@@ -79,6 +80,27 @@ export default function Login() {
 
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <div className="space-y-1">
+              <label htmlFor="name" className="block text-xs font-medium text-neutral-400">
+                Name
+              </label>
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <User className="text-neutral-600" size={18} strokeWidth={1.5} />
+                </div>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
+                  placeholder="John"
+                />
+              </div>
+            </div>
 
             <div className="space-y-1">
               <label htmlFor="email" className="block text-xs font-medium text-neutral-400">
@@ -114,7 +136,7 @@ export default function Login() {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -122,47 +144,57 @@ export default function Login() {
                   placeholder="••••••••"
                 />
               </div>
-            </div>
 
-            <div className="flex items-center justify-between">
-              <div className="text-xs">
-                <Link
-                  href="/forgot-password"
-                  onClick={(e) => {
-                    if (!email.trim()) {
-                      e.preventDefault();
-                      setResetEmailError(
-                        'Please input an email to send the verification code to.'
-                      );
-                      return;
-                    }
-                    setResetEmailError(null);
-                  }}
-                  className="font-medium text-neutral-500 hover:text-white transition-colors"
-                >
-                  Forgot password?
-                </Link>
+              
+            {/*"Password strength test (for now)"*/}
+              <div className="flex gap-1 pt-1">
+                <div className="h-1 flex-1 rounded-full bg-neutral-800"></div>
+                <div className="h-1 flex-1 rounded-full bg-neutral-800"></div>
+                <div className="h-1 flex-1 rounded-full bg-neutral-800"></div>
+                <div className="h-1 flex-1 rounded-full bg-neutral-800"></div>
               </div>
             </div>
+
+            <div className="flex items-start">
+              <div className="flex h-5 items-center">
+                <input
+                  id="terms"
+                  name="terms"
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  className="h-4 w-4 rounded border-neutral-700 bg-neutral-900 text-white focus:ring-white focus:ring-offset-0 cursor-pointer accent-white"
+                />
+              </div>
+              <div className="ml-2 text-xs">
+                <label htmlFor="terms" className="font-normal text-neutral-500">
+                  I agree to the{' '}
+                  <a href="#" className="font-medium text-white hover:underline">
+                    Terms of Service
+                  </a>{' '}
+                  and{' '}
+                  <a href="#" className="font-medium text-white hover:underline">
+                    Privacy Policy
+                  </a>
+                </label>
+              </div>
+            </div>
+
 
             <div>
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black transition-all"
               >
-                Log in
+                Create account
               </button>
             </div>
-
-            {resetEmailError ? (
-              <p className="flex items-center justify-center text-sm text-red-500">{resetEmailError}</p>
-            ) : null}
           </form>
 
           <div className="mt-6 text-center text-xs">
-            <span className="text-neutral-500">Don&apos;t have an account?</span>
-            <Link href="/register" className="font-medium text-white hover:underline ml-1">
-              Sign up
+            <span className="text-neutral-500">Already have an account?</span>
+            <Link href="/login" className="font-medium text-white hover:underline ml-1">
+              Sign in
             </Link>
           </div>
         </div>

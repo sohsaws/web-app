@@ -17,7 +17,6 @@ export default function AuthLayout({
           </Link>
         </div>
       </nav>
-
       <div className="relative z-10">{children}</div>
     </>
   );
