@@ -22,10 +22,10 @@ export default function AnimatedSearch() {
           <motion.button
             key="button"
             onClick={() => setIsExpanded(true)}
-            className="bg-black hover:bg-purple-300 rounded-full p-2.5 transition-colors"
-            initial={{scale: 0.1, opacity: 0}}
+            className="bg-black hover:bg-zinc-300 rounded-full p-2.5 transition-colors"
+            initial={{scale: 0.1, opacity: 1}}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.0, opacity: 1 }}
+            exit={{ scale: 0.1, opacity: 1 }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
@@ -53,7 +53,7 @@ export default function AnimatedSearch() {
                     setIsExpanded(false);
                   }
                 }}
-                className="w-full h-10 bg-stone-950 text-white placeholder-gray-400 rounded-full px-6 py-4 pr-14 text-lg outline-none focus:ring-1 focus:ring-stone-50 transition-all"
+                className="w-full h-10 bg-stone-950 text-white placeholder-gray-400 rounded-2xl px-6 py-4 pr-14 text-lg outline-none focus:ring-1 focus:ring-stone-50 transition-all"
               />
               <button
                 type="submit"

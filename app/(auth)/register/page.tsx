@@ -146,7 +146,6 @@ export default function Register() {
               </div>
 
               
-            {/*"Password strength test (for now)"*/}
               <div className="flex gap-1 pt-1">
                 <div className="h-1 flex-1 rounded-full bg-neutral-800"></div>
                 <div className="h-1 flex-1 rounded-full bg-neutral-800"></div>

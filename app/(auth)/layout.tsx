@@ -7,7 +7,7 @@ export default function AuthLayout({
 }>) {
   return (
     <>
-      <nav className="fixed flex w-full z-50 pt-10 pr-8 pl-8 top-0 left-0 items-center">
+      <nav className="fixed flex w-full z-50 pt-6 pr-8 pl-8 top-0 left-0 items-center">
         <div className="flex shrink-0 w-24 items-center">
           <Link
             href="/"
