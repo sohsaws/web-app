@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, LoaderPinwheel } from 'lucide-react';
+import { Search, ArrowUp } from 'lucide-react';
 
 export default function AnimatedSearch() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -22,12 +22,12 @@ export default function AnimatedSearch() {
           <motion.button
             key="button"
             onClick={() => setIsExpanded(true)}
-            className="bg-black hover:bg-zinc-300 rounded-full p-2.5 transition-colors"
+            className="bg-black hover:bg-zinc-300 rounded-full p-2 mt-1 transition-colors"
             initial={{scale: 0.1, opacity: 1}}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.1, opacity: 1 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.8 }}
           >
             <Search className='text-white' size={20}/>
           </motion.button>
@@ -57,9 +57,9 @@ export default function AnimatedSearch() {
               />
               <button
                 type="submit"
-                className="group absolute right-2 p-1 transition-colors"
+                className="group absolute right-4 transition-colors"
               >
-                <LoaderPinwheel className= 'group-hover:text-amber-100  text-white' size={24} />
+                <ArrowUp className= 'group-hover:text-zinc-300  text-white' size={24} />
               </button>
             </div>
           </motion.form>
