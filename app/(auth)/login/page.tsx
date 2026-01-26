@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, Lock } from 'lucide-react';
+// import { singIn } from "@/auth"
 
 export default function Login() {
   const [email, setEmail] = useState('');

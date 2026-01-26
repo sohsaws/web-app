@@ -11,11 +11,48 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  email String @db.VarChar(256) @unique @default("name@index.com")
-  name String  @db.VarChar(100) @default("Stranger")
+  email String? @db.VarChar(256) @unique
+  name String  @db.VarChar(100)
+  passwordHash String @db.VarChar(256)
+  emailVerified Boolean @default(false)
+  is_active Boolean @default(false)
   createdAt DateTime @default(now())
-  passwordHash String
-  lastLogin DateTime  
+  updatedAt DateTime @updatedAt
+  avatarUrl String? @db.Text
+  lastLogin DateTime
+  accounts Account[]
+  sessions Session[]
+  token UserToken[]
+}
+
+model Session {
+  id String @id @default(cuid())
+  userId Int
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  SessionToken String @db.VarChar(256) @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Account {
+  id String @id @default(cuid())
+  userId Int 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider String @db.VarChar(50)
+  providerAccountId String @db.VarChar(256)
+  createdAt DateTime @default(now())
+
+  @@unique([provider, providerAccountId])
+}
+
+model UserToken {
+  id String @id @default(cuid())
+  userId Int
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token String @db.VarChar(256) @unique
+  token_type String @db.VarChar(50)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
 
 
