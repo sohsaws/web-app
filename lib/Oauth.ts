@@ -6,8 +6,7 @@ export async function OauthRedirect(provider: string) {
     try {
         await signIn(provider, { redirectTo: '/' })
     } catch (error) {
-        // signIn throws a redirect, which is expected behavior
-        // This catch prevents the error from being logged
+        if (error instanceof Error) {console.log(`${error}`)} else console.log("Unknown error")
         throw error
     }
 } 

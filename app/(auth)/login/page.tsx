@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, Lock } from 'lucide-react';
-// import { signIn } from "@/auth"
-import { OauthRedirect } from '@/lib/Oauth';
+import { signIn } from "next-auth/react"
+// import { OauthRedirect } from '@/lib/Oauth';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -26,11 +26,11 @@ export default function Login() {
         </div>
 
         <div className="mt-8">
-          <form action={OauthRedirect.bind(null, "google")}>
-            <div className="grid grid-cols-2 gap-3">
+          <form action={() => signIn("google", { redirectTo: "/"})}>
+            <div className="grid gap-2">
               <button
                 type="submit"
-                className="group relative flex w-full items-center justify-center gap-2 rounded-md border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black transition-all"
+                className="flex items-center justify-center gap-3 rounded-md border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black transition-all"
               >
                 <Image
                   src="/imgs/Google.png"

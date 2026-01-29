@@ -12,14 +12,14 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   email String? @db.VarChar(256) @unique
-  name String  @db.VarChar(100)
-  passwordHash String @db.VarChar(256)
+  name String?  @db.VarChar(100)
+  passwordHash String? @db.VarChar(256)
   emailVerified Boolean @default(false)
   is_active Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   avatarUrl String? @db.Text
-  lastLogin DateTime
+  lastLogin DateTime @default(now())
   accounts Account[]
   sessions Session[]
   token UserToken[]

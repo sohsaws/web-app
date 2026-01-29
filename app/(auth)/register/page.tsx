@@ -20,10 +20,6 @@ export default function Register() {
     console.log('Sign up with Google');
   };
 
-  const handleGitHubSignUp = () => {
-    console.log('Sign up with GitHub');
-  };
-
   return (
     <div className="bg-zinc-950 grow flex min-h-screen items-center justify-center pt-25 px-4 py-12 sm:px-6 lg:px-20 xl:px-24">
       <div className="mx-auto w-full max-w-sm lg:w-96">
@@ -39,7 +35,7 @@ export default function Register() {
 
         <div className="mt-8">
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3">
             <button
               type="button"
               onClick={handleGoogleSignUp}
@@ -52,19 +48,6 @@ export default function Register() {
                 height={16}
               />
               <span>Google</span>
-            </button>
-            <button
-              type="button"
-              onClick={handleGitHubSignUp}
-              className="group relative flex w-full items-center justify-center gap-2 rounded-md border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black transition-all"
-            >
-              <Image
-                src="/imgs/Github.png"
-                alt="GitHub"
-                width={23}
-                height={23}
-              />
-              <span>GitHub</span>
             </button>
           </div>
 
