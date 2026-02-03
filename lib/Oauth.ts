@@ -3,5 +3,5 @@
 import { signIn } from "@/lib/auth"
 
 export const OauthRedirect = async () => {
-    await signIn("google", { redirectTo: "/" })
+    await signIn("google", { redirectTo: "/dashboard" })
 } 

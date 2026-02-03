@@ -7,11 +7,11 @@ export default function AuthLayout({
 }>) {
   return (
     <>
-      <nav className="fixed flex w-full z-50 pt-6 pr-8 pl-8 top-0 left-0 items-center">
-        <div className="flex shrink-0 w-24 items-center">
+      <nav className="fixed top-0 flex w-full z-50 items-center">
+        <div className="pt-10 px-15 max-w-7xl mx-auto w-full">
           <Link
             href="/"
-            className="pl-7 pb-4 text-3xl font-serif text-white tracking-tight"
+            className="text-3xl font-serif text-white tracking-tight"
           >
             Swiipy
           </Link>
