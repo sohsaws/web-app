@@ -1,6 +1,6 @@
-
-import { BellRing, User } from "lucide-react";
+import { BellRing } from "lucide-react";
 import Link from "next/link";
+import Dropdown from "@/components/Dropdown";
 
 export default function MainLayout({
     children,
@@ -16,18 +16,31 @@ export default function MainLayout({
                     </Link>
 
                     <div className="hidden md:flex items-center gap-2 bg-neutral-900/60 border border-white/10 rounded-full py-1.5 px-2 backdrop-blur-md shadow-2xl shadow-black/50">
-                        <Link href='#' className="px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 rounded-full transition-all duration-200">Overview</Link>
-                        <Link href="#" className="px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 rounded-full transition-all duration-200">Dive</Link>
-                        <Link href="#" className="px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 rounded-full transition-all duration-200">Explore</Link>
+                        <Link 
+                            href='#' 
+                            className="px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 rounded-full transition-all duration-200"
+                        >
+                        Overview
+                        </Link>
+                        <Link 
+                            href="#" 
+                            className="px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 rounded-full transition-all duration-200"
+                        >
+                        Dive
+                        </Link>
+                        <Link 
+                            href="#" 
+                            className="px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 rounded-full transition-all duration-200"
+                        >
+                        Explore
+                        </Link>
                     </div>
 
                     <div className="flex justify-end w-24 gap-7">
                         <button className="text-neutral-500 hover:text-white transition-colors cursor-pointer">
                             <BellRing className="w-6 h-6" />
                         </button>
-                        <button className="w-8 h-8 rounded-full bg-neutral-900 border border-white/10 flex items-center justify-center hover:border-white/30 text-neutral-400 hover:text-white cursor-pointer">
-                            <User />
-                        </button>
+                        <Dropdown />
                     </div>
                 </div>
             </nav>
