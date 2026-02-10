@@ -4,21 +4,53 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { User, Mail, Lock } from 'lucide-react';
+import { signIn } from "next-auth/react";
+import { OauthLogin } from "@/lib/Oauth"
 
 export default function Register() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [formValues, setFormValues] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
   const [termsAccepted, setTermsAccepted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const [error, setError] = useState("");
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Register with:', { name, email, password, termsAccepted });
+    setLoading(true);
+    setFormValues({ name: "", email: "", password: "" });
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formValues),
+      });
+
+      setLoading(false);
+      
+      if (!res.ok) {
+        setError((await res.json()).message);
+        console.log(error);
+        return;
+      }
+
+      signIn(undefined, { redirectTo: "/dashboard" });
+
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setError(error as string);
+    }
   };
 
-  const handleGoogleSignUp = () => {
-    console.log('Sign up with Google');
-  };
+  const handleSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormValues({...formValues, [name]: value });
+  }
 
   return (
     <div className="bg-zinc-950 grow flex min-h-screen items-center justify-center pt-25 px-4 py-12 sm:px-6 lg:px-20 xl:px-24">
@@ -37,8 +69,8 @@ export default function Register() {
 
           <div className="grid gap-3">
             <button
-              type="button"
-              onClick={handleGoogleSignUp}
+              type="submit"
+              onClick={OauthLogin}
               className="group relative flex w-full items-center justify-center gap-2 rounded-md border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black transition-all"
             >
               <Image
@@ -62,7 +94,7 @@ export default function Register() {
           </div>
 
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div className="space-y-1">
               <label htmlFor="name" className="block text-xs font-medium text-neutral-400">
                 Name
@@ -77,8 +109,8 @@ export default function Register() {
                   type="text"
                   autoComplete="name"
                   required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={formValues.name}
+                  onChange={handleSubmit} 
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="John"
                 />
@@ -99,8 +131,8 @@ export default function Register() {
                   type="email"
                   autoComplete="email"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={formValues.email}
+                  onChange={handleSubmit}
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="name@example.com"
                 />
@@ -121,8 +153,8 @@ export default function Register() {
                   type="password"
                   autoComplete="new-password"
                   required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={formValues.password}
+                  onChange={handleSubmit}
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="••••••••"
                 />
@@ -151,13 +183,13 @@ export default function Register() {
               <div className="ml-2 text-xs">
                 <label htmlFor="terms" className="font-normal text-neutral-500">
                   I agree to the{' '}
-                  <a href="#" className="font-medium text-white hover:underline">
+                  <Link href="#" className="font-medium text-white hover:underline">
                     Terms of Service
-                  </a>{' '}
+                  </Link>{' '}
                   and{' '}
-                  <a href="#" className="font-medium text-white hover:underline">
+                  <Link href="#" className="font-medium text-white hover:underline">
                     Privacy Policy
-                  </a>
+                  </Link>
                 </label>
               </div>
             </div>
@@ -166,11 +198,24 @@ export default function Register() {
             <div>
               <button
                 type="submit"
+                onClick={(event: React.FormEvent) => {
+                  if (!termsAccepted) {
+                    setError("You must accept the terms and conditions");
+                    event.preventDefault();
+                  }
+                }}
+                disabled={loading}
+                style={{backgroundColor: loading ? "#171717" : "white"}}
                 className="flex w-full justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black transition-all"
               >
                 Create account
               </button>
             </div>
+
+            {error ? (
+              <p className="flex items-center justify-center text-sm text-red-500">{error}</p>
+            ) : null }
+
           </form>
 
           <div className="mt-6 text-center text-xs">

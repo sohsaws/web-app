@@ -1,15 +1,61 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, Lock } from 'lucide-react';
-import { OauthRedirect } from '@/lib/Oauth';
+import { signIn } from 'next-auth/react';
+import { OauthLogin } from '@/lib/Oauth';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [resetEmailError, setResetEmailError] = useState<string | null>(null);
+
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+  const [resetEmailError, setResetEmailError] = useState("");
+  const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+
+  const callbackUrl = useSearchParams().get("callbackUrl") || "/dashboard";
+  
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setFormValues({email: "", password: ""})
+      
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: formValues.email,
+        password: formValues.password,
+        redirectTo: callbackUrl,
+      });
+
+      setLoading(false);
+
+      console.log(res);
+
+      if (!res?.error) {
+        router.push(callbackUrl);
+      } else {
+        setError("Invalid email or password");
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setError(error as string)
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
 
   return (
     <div className="bg-zinc-950 grow flex min-h-screen items-center justify-center pt-25 px-4 py-12 sm:px-6 lg:px-20 xl:px-24">
@@ -27,7 +73,7 @@ export default function Login() {
         <div className="mt-8">
           <div className="grid gap-2">
             <button
-              onClick={OauthRedirect}
+              onClick={OauthLogin}
               type="submit"
               className="cursor-pointer flex items-center justify-center gap-3 rounded-md border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black transition-all"
             >
@@ -51,7 +97,7 @@ export default function Login() {
           </div>
 
 
-          <form className="mt-6 space-y-4">
+          <form onSubmit={onSubmit} className="mt-6 space-y-4">
 
             <div className="space-y-1">
               <label htmlFor="email" className="block text-xs font-medium text-neutral-400">
@@ -67,8 +113,8 @@ export default function Login() {
                   type="email"
                   autoComplete="email"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={formValues.email}
+                  onChange={handleChange}
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="name@example.com"
                 />
@@ -89,8 +135,8 @@ export default function Login() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={formValues.password}
+                  onChange={handleChange}
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="••••••••"
                 />
@@ -102,14 +148,14 @@ export default function Login() {
                 <Link
                   href="/forgot-password"
                   onClick={(e) => {
-                    if (!email.trim()) {
+                    if (!formValues.email.trim()) {
                       e.preventDefault();
                       setResetEmailError(
                         'Please input an email to send the verification code to.'
                       );
                       return;
                     }
-                    setResetEmailError(null);
+                    setResetEmailError("");
                   }}
                   className="font-medium text-neutral-500 hover:text-white transition-colors"
                 >
@@ -121,15 +167,21 @@ export default function Login() {
             <div>
               <button
                   type="submit"
+                  style={{backgroundColor: loading ? "#171717" : "white"}}
+                  disabled={loading}
                   className="flex w-full justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black transition-all"
                 >
-                  Log in
+                  {loading ? "Loading..." : "Log in"}
               </button>
             </div>
 
             {resetEmailError ? (
               <p className="flex items-center justify-center text-sm text-red-500">{resetEmailError}</p>
             ) : null}
+
+            {error ? (
+              <p className="flex items-center justify-center text-sm text-red-500">{error}</p>
+            ) : null }
           </form>
 
           <div className="mt-6 text-center text-xs">

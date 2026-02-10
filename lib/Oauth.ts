@@ -1,7 +1,12 @@
 "use server"
 
-import { signIn } from "@/lib/auth"
+import { signIn, signOut } from "@/auth"
 
-export const OauthRedirect = async () => {
+export const OauthLogin = async () => {
     await signIn("google", { redirectTo: "/dashboard" })
 } 
+
+export const Logout = async () => {
+    await signOut({redirectTo: "/login"})
+}
+
