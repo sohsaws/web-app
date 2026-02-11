@@ -43,7 +43,7 @@ export default function Dropdown() {
                                 <ul className="w-full">
                                     <li className="w-full">
                                         <Link 
-                                            href="#" 
+                                            href="/profile" 
                                             className="block w-full text-center px-4 py-3 text-sm text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
                                         >Profile</Link>
                                     </li>
