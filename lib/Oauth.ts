@@ -7,6 +7,6 @@ export const OauthLogin = async () => {
 } 
 
 export const Logout = async () => {
-    await signOut({redirectTo: "/login"})
+    await signOut({redirectTo: "/"})
 }
 

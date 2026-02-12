@@ -1,7 +1,9 @@
 import { auth } from '@/auth'
 import Image from "next/image";
+import { cookies } from "next/headers";
 
 export default async function Dashboard() {
+    const cookieStore = await cookies();
     const session = await auth();
 
     const user = session?.user;
@@ -27,6 +29,11 @@ export default async function Dashboard() {
                                 <p className='mb-3'>ID: {user?.id}</p>
                                 <p className='mb-3'>Name: {user?.name}</p>
                                 <p className='mb-3'>Email: {user?.email}</p>
+                            </div>
+                            <div className="mt-10">
+                                {cookieStore.getAll().map((coockie) => (
+                                    <p key={coockie.name}>{coockie.name}: {coockie.value}</p>
+                                ))}
                             </div>
                         </div>
                         <button className="p-2 text-neutral-500 hover:text-white transition-colors border border-transparent hover:border-white/10 hover:bg-white/5 rounded-lg">

@@ -9,19 +9,7 @@ import bcrypt from "bcrypt"
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma as unknown as {prisma: PrismaClient}),
   providers: [
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
-      async profile(profile) {
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture,
-          emailVerified: profile.email_verified ? new Date() : null,
-        }
-      },
-    }),
+    Google,
     Credentials({
       name: "Credentionals",
       credentials: {
@@ -39,7 +27,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         });
         
         if (!user || !user.passwordHash)
-          return null; 
+          return null;
+        
 
         const pwValid = await bcrypt.compare(String(credentials.password), user.passwordHash!);
         if (!pwValid) 
@@ -49,7 +38,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: user.id,
           name: user.name,  
           email: user.email,
-          randomKey: "Hey cool" 
         };
       }
     })
@@ -66,7 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id;
         token.name = user.name;
       }
-
+      
       return token;
     },
     async session({session, token}) {

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { User } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Logout } from "@/lib/Oauth"
 
 export default function Dropdown() {
     const [isOpen, setIsOpen] = useState(false);
@@ -57,6 +58,7 @@ export default function Dropdown() {
                                         <Link 
                                             href="#" 
                                             className="block w-full text-center px-10 py-3 text-sm text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                                            onClick={Logout}
                                         >Sign out</Link>
                                     </li>
                                 </ul>
