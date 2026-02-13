@@ -6,6 +6,7 @@ import { PrismaClient } from './app/generated/prisma/client'
 import Credentials from 'next-auth/providers/credentials'
 import bcrypt from "bcrypt"
 
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma as unknown as {prisma: PrismaClient}),
   providers: [
@@ -50,6 +51,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (trigger === "signIn") {
         console.log("User signed in", `Welcome back, ${user?.name}!`)
       }
+      if (trigger === "update")
       if (user) {
         token.id = user.id;
         token.name = user.name;
