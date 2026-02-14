@@ -7,7 +7,7 @@
 generator client {
   provider = "prisma-client"
   output   = "../app/generated/prisma"
-  runtime  = "vercel-edge"
+  // runtime  = "vercel-edge"
 }
 
 datasource db {
@@ -70,7 +70,7 @@ model VerificationToken {
 }
 
 model TopicSearch {
-  id    String @id
+  id    Int    @id @default(autoincrement())
   topic String
 
   @@index([topic])

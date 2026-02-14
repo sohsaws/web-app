@@ -30,7 +30,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!user || !user.passwordHash)
           return null;
         
-
         const pwValid = await bcrypt.compare(String(credentials.password), user.passwordHash!);
         if (!pwValid) 
           return null; 
@@ -51,20 +50,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (trigger === "signIn") {
         console.log("User signed in", `Welcome back, ${user?.name}!`)
       }
-      if (trigger === "update")
       if (user) {
         token.id = user.id;
         token.name = user.name;
       }
       
+      console.log("JWT Callback Check:", { tokenId: token.id, userExists: !!user, trigger });
       return token;
     },
     async session({session, token}) {
+      console.log("Session Callback Check:", { sessionUser: session.user, tokenId: token.id });
       if (session.user) {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
       }
-
       return session;
     }
   },

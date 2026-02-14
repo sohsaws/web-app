@@ -1,56 +1,71 @@
 'use client';
 
 import { useState } from 'react';
+import * as z from "zod";
 import Link from 'next/link';
 import Image from 'next/image';
 import { User, Mail, Lock } from 'lucide-react';
 import { signIn } from "next-auth/react";
 import { OauthLogin } from "@/lib/Oauth"
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+
+const userSchema = z.object({
+  name: z.string({error: "Name is required"}).min(1, "Name is required"),
+  email: z.email("Invalid email address"),
+  password: z.string({error: "Password is required"})
+    .min(8, "Password must be at least 8 characters long")
+    .max(50, "Password must be at most 50 characters long"),
+  passwordConfirm: z.string({error: "Passwords do not match"})
+    .min(1, "Please confirm your password"),
+  }).refine((data) => data.password === data.passwordConfirm, {
+      path: ["passwordConfirm"],
+      message: "Password do not match",
+});
+
+type registerFrom = z.infer<typeof userSchema>;
 
 export default function Register() {
-  const [loading, setLoading] = useState(false);
-  const [formValues, setFormValues] = useState({
-    name: "",
-    email: "",
-    password: "",
+
+  const {register, handleSubmit, formState: { errors }} = useForm<registerFrom>({
+    resolver: zodResolver(userSchema)
   });
+
+  const [submitting, setSubmitting] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setFormValues({ name: "", email: "", password: "" });
-
+  const onSubmitHandler: SubmitHandler<registerFrom> = async (data) => {
     try {
+      setSubmitting(true);
       const res = await fetch("/api/auth/register", {
         method: "POST",
+        body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formValues),
       });
 
-      setLoading(false);
-      
       if (!res.ok) {
-        setError((await res.json()).message);
-        console.log(error);
+        const errorData = await res.json();
+        setError(errorData.message || "Registration failed");
+        setSubmitting(false);
         return;
       }
 
-      signIn(undefined, { redirectTo: "/dashboard" });
+      // Successful registration
+      await signIn("credentials", { 
+        email: data.email, 
+        password: data.password,
+        redirectTo: "/dashboard" 
+      });
 
     } catch (error) {
       console.log(error);
-      setLoading(false);
-      setError(error as string);
+      setError("An unexpected error occurred");
+      setSubmitting(false);
     }
   };
-
-  const handleSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormValues({...formValues, [name]: value });
-  }
 
   return (
     <div className="bg-zinc-950 grow flex min-h-screen items-center justify-center pt-25 px-4 py-12 sm:px-6 lg:px-20 xl:px-24">
@@ -94,7 +109,7 @@ export default function Register() {
           </div>
 
 
-          <form onSubmit={onSubmit} className="mt-6 space-y-4">
+          <form onSubmit={handleSubmit(onSubmitHandler)} className="mt-6 space-y-4">
             <div className="space-y-1">
               <label htmlFor="name" className="block text-xs font-medium text-neutral-400">
                 Name
@@ -104,16 +119,13 @@ export default function Register() {
                   <User className="text-neutral-600" size={18} strokeWidth={1.5} />
                 </div>
                 <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  value={formValues.name}
-                  onChange={handleSubmit} 
+                  {...register("name")}
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="John"
                 />
+                {errors.name && (
+                  <p className="text-red-500 text-xs mt-1">{errors.name?.message}</p>
+                )}
               </div>
             </div>
 
@@ -126,16 +138,14 @@ export default function Register() {
                   <Mail className="text-neutral-600" size={18} strokeWidth={1.5} />
                 </div>
                 <input
-                  id="email"
-                  name="email"
+                  {...register("email")}
                   type="email"
-                  autoComplete="email"
-                  required
-                  value={formValues.email}
-                  onChange={handleSubmit}
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="name@example.com"
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1">{errors.email?.message}</p>
+                )}
               </div>
             </div>
 
@@ -148,16 +158,32 @@ export default function Register() {
                   <Lock className="text-neutral-600" size={18} strokeWidth={1.5} />
                 </div>
                 <input
-                  id="password"
-                  name="password"
+                  {...register("password")}
                   type="password"
-                  autoComplete="new-password"
-                  required
-                  value={formValues.password}
-                  onChange={handleSubmit}
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="••••••••"
                 />
+                {errors.password && (
+                  <p className="text-red-500 text-xs mt-1">{errors.password?.message}</p>
+                )}
+              </div>
+
+              <label htmlFor="passwordConfirm" className="block text-xs font-medium text-neutral-400">
+                Password confirmation
+              </label>
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <Lock className="text-neutral-600" size={18} strokeWidth={1.5} />
+                </div>
+                <input
+                  {...register("passwordConfirm")}
+                  type="password"
+                  className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
+                  placeholder="••••••••"
+                />
+                {errors.passwordConfirm && (
+                  <p className="text-red-500 text-xs mt-1">{errors.passwordConfirm?.message}</p>
+                )}
               </div>
 
               
@@ -204,8 +230,8 @@ export default function Register() {
                     event.preventDefault();
                   }
                 }}
-                disabled={loading}
-                style={{backgroundColor: loading ? "#171717" : "white"}}
+                disabled={submitting}
+                style={{backgroundColor: submitting ? "#171717" : "white"}}
                 className="flex w-full justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black transition-all"
               >
                 Create account
