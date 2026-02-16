@@ -7,7 +7,7 @@ async function main() {
         await prisma.topicSearch.create({
             data: {
                 id: item.id,
-                topic: item.topic,
+                topic: item.topic.toLowerCase(),
             }
         })
     }

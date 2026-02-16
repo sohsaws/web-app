@@ -3,17 +3,19 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, ArrowUp } from 'lucide-react';
+import FuseSearch from "./fuseSearch";
+
 
 export default function AnimatedSearch() {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  // const [searchValue, setSearchValue] = useState('');
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (searchValue.trim()) {
-      console.log('Search submitted:', searchValue);
-    }
-  };
+  // const handleSubmit = (event: React.FormEvent) => {
+  //   event.preventDefault();
+  //   if (searchValue.trim()) {
+  //     console.log('Search submitted:', searchValue);
+  //   }
+  // };
 
   return (
     <div className="flex items-center justify-center">
@@ -34,7 +36,6 @@ export default function AnimatedSearch() {
         ) : (
           <motion.form
             key="search"
-            onSubmit={handleSubmit}
             className="relative"
             initial={{ width: 80, opacity: 0 }}
             animate={{ width: 500, opacity: 1 }}
@@ -42,7 +43,7 @@ export default function AnimatedSearch() {
             transition={{ duration: 0.4, ease: 'easeInOut' }}
           >
             <div className="relative flex items-center">
-              <input
+              {/* <input
                 type="text"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
@@ -54,7 +55,8 @@ export default function AnimatedSearch() {
                   }
                 }}
                 className="w-full h-10 bg-stone-950 text-white placeholder-gray-400 rounded-2xl px-6 py-4 pr-14 text-lg outline-none focus:ring-1 focus:ring-stone-50 transition-all"
-              />
+              /> */}
+              <FuseSearch />
               <button
                 type="submit"
                 className="group absolute right-4 transition-colors"
