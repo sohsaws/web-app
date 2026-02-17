@@ -12,8 +12,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 
 const userSchema = z.object({
-  name: z.string({error: "Name is required"}).min(1, "Name is required"),
-  email: z.email("Invalid email address"),
+  name: z.string({error: "Name is required"})
+    .min(1, "Name is required")
+    .max(50, "Name must be at most 50 characters long"),
+  email: z.email("Invalid email address")
+    .min(1, "Email is required")
+    .max(50, "Email must be at most 50 characters long"),
   password: z.string({error: "Password is required"})
     .min(8, "Password must be at least 8 characters long")
     .max(50, "Password must be at most 50 characters long"),

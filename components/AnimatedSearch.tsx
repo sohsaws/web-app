@@ -43,19 +43,6 @@ export default function AnimatedSearch() {
             transition={{ duration: 0.4, ease: 'easeInOut' }}
           >
             <div className="relative flex items-center">
-              {/* <input
-                type="text"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Whatever you wish..."
-                autoFocus
-                onBlur={() => {
-                  if (!searchValue.trim()) {
-                    setIsExpanded(false);
-                  }
-                }}
-                className="w-full h-10 bg-stone-950 text-white placeholder-gray-400 rounded-2xl px-6 py-4 pr-14 text-lg outline-none focus:ring-1 focus:ring-stone-50 transition-all"
-              /> */}
               <FuseSearch />
               <button
                 type="submit"

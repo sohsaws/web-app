@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import Fuse from "fuse.js";
 
 export async function POST(req: Request) {
  try {
@@ -10,24 +9,13 @@ export async function POST(req: Request) {
     take: 7,
     where: {
         topic: {
-            contains: query,
-        }
+            startsWith: query,
     }
-  });
-
-  const lowerQuery = query.toLowerCase();
-
-  const fuse = new Fuse(res, {
-   keys: ["topic"],
-   includeScore: true,      
-   threshold: 1,
-  });
-
-  const searchResults = fuse.search(lowerQuery);
+  }});
 
   return NextResponse.json({
    success: true,
-   results: searchResults.map((result) => result.item),
+   results: res,
    message: "Here are your search results",
   });
  } catch (error) {

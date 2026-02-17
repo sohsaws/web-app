@@ -1,6 +1,15 @@
 import AnimatedSearch from '@/components/AnimatedSearch';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
 
-export default function Home() {
+export default async function Home() {
+
+  const session = await auth();
+
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
     <main className="flex flex-col w-full relative items-center justify-center min-h-screen pb-15 items">
       <div className="text-center max-w-4xl mx-auto space-y-10 mb-10 px-6">
