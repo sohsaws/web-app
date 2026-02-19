@@ -4,7 +4,7 @@ import { useState } from 'react';
 import * as z from "zod";
 import Link from 'next/link';
 import Image from 'next/image';
-import { User, Mail, Lock } from 'lucide-react';
+import { User, Mail, Lock, AtSign } from 'lucide-react';
 import { signIn } from "next-auth/react";
 import { OauthLogin } from "@/lib/Oauth"
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -15,6 +15,10 @@ const userSchema = z.object({
   name: z.string({error: "Name is required"})
     .min(1, "Name is required")
     .max(50, "Name must be at most 50 characters long"),
+  username: z.string({error: "Username is required"})
+    .min(3, "Username must be at least 3 characters long")
+    .max(40, "Username must be at most 50 characters long")
+    .regex(/^[a-z0-9_]+$/, "Only lowercase letters, numbers, and underscores"),
   email: z.email("Invalid email address")
     .min(1, "Email is required")
     .max(50, "Email must be at most 50 characters long"),
@@ -34,7 +38,7 @@ export default function Register() {
 
   const {register, handleSubmit, formState: { errors }} = useForm<registerFrom>({
     resolver: zodResolver(userSchema)
-  });
+  })
 
   const [submitting, setSubmitting] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -129,6 +133,28 @@ export default function Register() {
                 />
                 {errors.name && (
                   <p className="text-red-500 text-xs mt-1">{errors.name?.message}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label htmlFor="username" className="block text-xs font-medium text-neutral-400">
+                Username
+              </label>
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <AtSign className="text-neutral-600" size={18} strokeWidth={1.5} />
+                </div>
+                <input
+                  {...register("username")}
+                  id="username"
+                  type="text"
+                  autoComplete="username"
+                  className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
+                  placeholder="Username"
+                />
+                {errors.username && (
+                  <p className="text-red-500 text-xs mt-1">{errors.username?.message}</p>
                 )}
               </div>
             </div>

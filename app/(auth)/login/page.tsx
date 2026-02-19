@@ -101,7 +101,7 @@ export default function Login() {
 
             <div className="space-y-1">
               <label htmlFor="email" className="block text-xs font-medium text-neutral-400">
-                Email address
+                Email address or Username
               </label>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">

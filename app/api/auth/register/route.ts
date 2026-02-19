@@ -4,32 +4,40 @@ import { hash } from "bcrypt";
 
 export async function POST(req: Request) {
     try {
-        const { name, email, password } = (await req.json() as {
+        const { name, username, email, password } = (await req.json() as {
             name: string,
+            username: string,
             email: string,
             password: string;
         });
 
         const salt = 12;
-        
         const hashed_password = await hash(password, salt);
 
-        const user = await prisma.user.findUnique({
-            where: {
-                email: email.toLowerCase(),
-            } 
-        })
-
-        if (user) {
+        const existingEmail = await prisma.user.findUnique({
+            where: { email: email.toLowerCase() }
+        });
+        if (existingEmail) {
             return NextResponse.json({
                 status: "error",
-                message: "User already registred in this email",
-            }, {status: 400});
+                message: "An account with this email already exists.",
+            }, { status: 400 });
+        }
+
+        const existingUsername = await prisma.user.findUnique({
+            where: { username: username.toLowerCase() }
+        });
+        if (existingUsername) {
+            return NextResponse.json({
+                status: "error",
+                message: "This username is already taken.",
+            }, { status: 400 });
         }
 
         const newUser = await prisma.user.create({
             data: {
                 name,
+                username: username.toLowerCase(),
                 email: email.toLowerCase(),
                 passwordHash: hashed_password,
             }
@@ -38,6 +46,7 @@ export async function POST(req: Request) {
         return NextResponse.json({
             user: {
                 name: newUser.name,
+                username: newUser.username,
                 email: newUser.email,
             }
         });
@@ -45,6 +54,6 @@ export async function POST(req: Request) {
         return new NextResponse(JSON.stringify({
             status: "error",
             message: error,
-        }), {status: 500});
+        }), { status: 500 });
     }
 }
