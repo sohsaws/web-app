@@ -14,29 +14,45 @@ export async function POST(req: Request) {
         const salt = 12;
         const hashed_password = await hash(password, salt);
 
-        const existingEmail = await prisma.user.findUnique({
-            where: { email: email.toLowerCase() }
-        });
-        if (existingEmail) {
+        const usr = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    {email: email.toLowerCase()},
+                    {username: username.toLowerCase()}
+                ]
+            }
+        })
+
+        if (usr) {
             return NextResponse.json({
                 status: "error",
-                message: "An account with this email already exists.",
-            }, { status: 400 });
+                message: "This user already exists."
+            }, {status: 400})
         }
 
-        const existingUsername = await prisma.user.findUnique({
-            where: { username: username.toLowerCase() }
-        });
-        if (existingUsername) {
-            return NextResponse.json({
-                status: "error",
-                message: "This username is already taken.",
-            }, { status: 400 });
-        }
+        // const existingEmail = await prisma.user.findUnique({
+        //     where: { email: email.toLowerCase() }
+        // });
+        // if (existingEmail) {
+        //     return NextResponse.json({
+        //         status: "error",
+        //         message: "An account with this email already exists.",
+        //     }, { status: 400 });
+        // }
+
+        // const existingUsername = await prisma.user.findUnique({
+        //     where: { username: username.toLowerCase() }
+        // });
+        // if (existingUsername) {
+        //     return NextResponse.json({
+        //         status: "error",
+        //         message: "This username is already taken.",
+        //     }, { status: 400 });
+        // }
 
         const newUser = await prisma.user.create({
             data: {
-                name,
+                name: name,
                 username: username.toLowerCase(),
                 email: email.toLowerCase(),
                 passwordHash: hashed_password,

@@ -4,34 +4,45 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, Lock } from 'lucide-react';
+import { AtSign, Lock } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import { OauthLogin } from '@/lib/Oauth';
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from "zod";
+
+const userSchema = z.object({
+    identifier: z.string({error: "This field is required"})
+      .min(3, "Email or username is required")
+      .max(50, "Email or username must be at most 50 characters long")
+      .regex(/^(?:[a-z0-9_]+|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})$/i, "Invalid email or username"),
+    password: z.string({error: "Password is required"})
+      .min(8, "Password must be at least 8 characters long")
+      .max(50, "Password must be at most 50 characters long")
+})
+
+type loginForm = z.infer<typeof userSchema>;
 
 export default function Login() {
 
   const router = useRouter();
 
-  const [loading, setLoading] = useState(false);
-  const [resetEmailError, setResetEmailError] = useState("");
-  const [formValues, setFormValues] = useState({
-    email: "",
-    password: "",
-  });
+  const {register, handleSubmit, formState: { errors }} = useForm<loginForm>({
+      resolver: zodResolver(userSchema)
+  })
+  
+  const [loading, setLoading] = useState(false);;
   const [error, setError] = useState("");
 
   const callbackUrl = useSearchParams().get("callbackUrl") || "/dashboard";
   
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmitHandler: SubmitHandler<loginForm> = async (data) => {
     try {
       setLoading(true);
-      setFormValues({email: "", password: ""})
-      
       const res = await signIn("credentials", {
         redirect: false,
-        email: formValues.email,
-        password: formValues.password,
+        identifier: data.identifier,
+        password: data.password,
         redirectTo: callbackUrl,
       });
 
@@ -42,7 +53,7 @@ export default function Login() {
       if (!res?.error) {
         router.push(callbackUrl);
       } else {
-        setError("Invalid email or password");
+        setError("Invalid credentials");
       }
     } catch (error) {
       console.log(error);
@@ -51,10 +62,10 @@ export default function Login() {
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = event.target;
+  //   setFormValues({ ...formValues, [name]: value });
+  // };
 
 
   return (
@@ -97,28 +108,28 @@ export default function Login() {
           </div>
 
 
-          <form onSubmit={onSubmit} className="mt-6 space-y-4">
+          <form onSubmit={handleSubmit(onSubmitHandler)} className="mt-6 space-y-4">
 
             <div className="space-y-1">
-              <label htmlFor="email" className="block text-xs font-medium text-neutral-400">
+              <label htmlFor="email or username" className="block text-xs font-medium text-neutral-400">
                 Email address or Username
               </label>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Mail className="text-neutral-600" size={18} strokeWidth={1.5} />
+                  <AtSign className="text-neutral-600" size={18} strokeWidth={1.5} />
                 </div>
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={formValues.email}
-                  onChange={handleChange}
+                  id="identifier"
+                  type="text"
+                  {...register("identifier")}
+                  autoComplete="identifier"
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
-                  placeholder="name@example.com"
+                  placeholder="....."
                 />
               </div>
+              {errors.identifier && (
+                  <p className="text-red-500 text-xs mt-2">{errors.identifier?.message}</p>
+                )}
             </div>
 
             <div className="space-y-1">
@@ -131,32 +142,22 @@ export default function Login() {
                 </div>
                 <input
                   id="password"
-                  name="password"
                   type="password"
+                  {...register("password")}
                   autoComplete="current-password"
-                  required
-                  value={formValues.password}
-                  onChange={handleChange}
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="••••••••"
                 />
               </div>
+              {errors.password && (
+                  <p className="text-red-500 text-xs mt-2">{errors.password?.message}</p>
+                )}
             </div>
 
             <div className="flex items-center justify-between">
               <div className="text-xs">
                 <Link
                   href="/forgot-password"
-                  onClick={(e) => {
-                    if (!formValues.email.trim()) {
-                      e.preventDefault();
-                      setResetEmailError(
-                        'Please input an email to send the verification code to.'
-                      );
-                      return;
-                    }
-                    setResetEmailError("");
-                  }}
                   className="font-medium text-neutral-500 hover:text-white transition-colors"
                 >
                   Forgot password?
@@ -174,10 +175,6 @@ export default function Login() {
                   {loading ? "Loading..." : "Log in"}
               </button>
             </div>
-
-            {resetEmailError ? (
-              <p className="flex items-center justify-center text-sm text-red-500">{resetEmailError}</p>
-            ) : null}
 
             {error ? (
               <p className="flex items-center justify-center text-sm text-red-500">{error}</p>

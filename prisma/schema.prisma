@@ -57,6 +57,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
+  @@index([username])
   @@map("users")
 }
 

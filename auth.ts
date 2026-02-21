@@ -6,6 +6,14 @@ import { PrismaClient } from './app/generated/prisma/client'
 import Credentials from 'next-auth/providers/credentials'
 import bcrypt from "bcrypt"
 
+type User = {
+  id: string;
+  name: string;
+  email: string | null;
+  emailVerified: boolean | null;
+  username: string | null;
+  image: string | null;
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma as unknown as {prisma: PrismaClient}),
@@ -15,13 +23,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       name: "Credentionals",
       credentials: {
         password: {label: "Password", type: "password"},
-        email: {label: "Email or Username", type: "text"},
+        identifier: {label: "Email or Username", type: "text"},
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) 
+        if (!credentials?.identifier || !credentials.password) 
           return null;
 
-        const identifier = String(credentials.email).toLowerCase().trim();
+        const identifier = String(credentials.identifier).toLowerCase().trim();
 
         const user = await prisma.user.findFirst({
           where: {
@@ -37,14 +45,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         
         const pwValid = await bcrypt.compare(String(credentials.password), user.passwordHash!);
         if (!pwValid) 
-          return null; 
+          return null;
         
         return {
           id: user.id,
           name: user.name,  
           email: user.email,
-          emailVerified: user.emailVerified
-        };
+          emailVerified: user.emailVerified,
+          username: user.username,
+          image: user.image
+        } as User;
       }
     })
   ],
@@ -57,18 +67,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         console.log("User signed in", `Welcome back, ${user?.name}!`)
       }
       if (user) {
-        token.id = user.id;
-        token.name = user.name;
+        const usr = user as User;
+        token.id = usr.id;
+        token.name = usr.name;
+        token.username = usr.username;
+        token.image = usr.image;
+        token.emailVerified = usr.emailVerified;
       }
-      
-      console.log("JWT Callback Check:", { tokenId: token.id, userExists: !!user, trigger });
       return token;
     },
     async session({session, token}) {
-      console.log("Session Callback Check:", { sessionUser: session.user, tokenId: token.id });
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.name = token.name as string;
+        const usr = session.user as User;
+        usr.id = token.id as string;
+        usr.name = token.name as string;
+        usr.username = token.username as string;
+        usr.image = token.image as string;
+        usr.emailVerified = token.emailVerified as boolean;
       }
       return session;
     }

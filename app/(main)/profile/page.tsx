@@ -88,7 +88,7 @@ export default function Profile() {
 
               <div className="mb-10">
                 <h1 className="text-2xl font-medium tracking-tight text-white mb-2">
-                  $Username$&apos;s details
+                {user.username}&apos;s details
                 </h1>
                 <p className="text-sm text-neutral-500">
                   Manage how your information appears to others on the platform.

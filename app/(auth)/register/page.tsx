@@ -18,7 +18,7 @@ const userSchema = z.object({
   username: z.string({error: "Username is required"})
     .min(3, "Username must be at least 3 characters long")
     .max(40, "Username must be at most 50 characters long")
-    .regex(/^[a-z0-9_]+$/, "Only lowercase letters, numbers, and underscores"),
+    .regex(/^[a-z0-9_]+$/i, "Only letters, numbers, and underscores are allowed"),
   email: z.email("Invalid email address")
     .min(1, "Email is required")
     .max(50, "Email must be at most 50 characters long"),
@@ -32,18 +32,18 @@ const userSchema = z.object({
       message: "Password do not match",
 });
 
-type registerFrom = z.infer<typeof userSchema>;
+type registerForm = z.infer<typeof userSchema>;
 
 export default function Register() {
 
-  const {register, handleSubmit, formState: { errors }} = useForm<registerFrom>({
+  const {register, handleSubmit, formState: { errors }} = useForm<registerForm>({
     resolver: zodResolver(userSchema)
   })
 
   const [submitting, setSubmitting] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
-  const onSubmitHandler: SubmitHandler<registerFrom> = async (data) => {
+  const onSubmitHandler: SubmitHandler<registerForm> = async (data) => {
     try {
       setSubmitting(true);
       const res = await fetch("/api/auth/register", {
@@ -61,9 +61,8 @@ export default function Register() {
         return;
       }
 
-      // Successful registration
-      await signIn("credentials", { 
-        email: data.email, 
+      await signIn("credentials", {
+        identifier: data.username, 
         password: data.password,
         redirectTo: "/dashboard" 
       });
@@ -127,14 +126,15 @@ export default function Register() {
                   <User className="text-neutral-600" size={18} strokeWidth={1.5} />
                 </div>
                 <input
+                  id="name"
                   {...register("name")}
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="John"
                 />
-                {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">{errors.name?.message}</p>
-                )}
               </div>
+              {errors.name && (
+                  <p className="text-red-500 text-xs mt-2">{errors.name?.message}</p>
+                )}
             </div>
 
             <div className="space-y-1">
@@ -149,14 +149,13 @@ export default function Register() {
                   {...register("username")}
                   id="username"
                   type="text"
-                  autoComplete="username"
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="Username"
                 />
-                {errors.username && (
-                  <p className="text-red-500 text-xs mt-1">{errors.username?.message}</p>
-                )}
               </div>
+              {errors.username && (
+                  <p className="text-red-500 text-xs mt-2">{errors.username?.message}</p>
+                )}
             </div>
 
             <div className="space-y-1">
@@ -168,15 +167,16 @@ export default function Register() {
                   <Mail className="text-neutral-600" size={18} strokeWidth={1.5} />
                 </div>
                 <input
+                  id="email"
                   {...register("email")}
                   type="email"
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="name@example.com"
                 />
-                {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">{errors.email?.message}</p>
-                )}
               </div>
+              {errors.email && (
+                  <p className="text-red-500 text-xs mt-2">{errors.email?.message}</p>
+                )}
             </div>
 
             <div className="space-y-1">
@@ -188,17 +188,18 @@ export default function Register() {
                   <Lock className="text-neutral-600" size={18} strokeWidth={1.5} />
                 </div>
                 <input
+                  id="password"
                   {...register("password")}
                   type="password"
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="••••••••"
                 />
-                {errors.password && (
-                  <p className="text-red-500 text-xs mt-1">{errors.password?.message}</p>
-                )}
               </div>
+              {errors.password && (
+                  <p className="text-red-500 text-xs mt-2">{errors.password?.message}</p>
+                )}
 
-              <label htmlFor="passwordConfirm" className="block text-xs font-medium text-neutral-400">
+              <label htmlFor="passwordConfirm" className="block text-xs font-medium mt-5 text-neutral-400">
                 Password confirmation
               </label>
               <div className="relative">
@@ -206,15 +207,16 @@ export default function Register() {
                   <Lock className="text-neutral-600" size={18} strokeWidth={1.5} />
                 </div>
                 <input
+                  id="passwordConfirm"
                   {...register("passwordConfirm")}
                   type="password"
                   className="block w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pl-10 pr-3 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 h-10 transition-colors"
                   placeholder="••••••••"
                 />
-                {errors.passwordConfirm && (
-                  <p className="text-red-500 text-xs mt-1">{errors.passwordConfirm?.message}</p>
-                )}
               </div>
+              {errors.passwordConfirm && (
+                  <p className="text-red-500 text-xs mt-2">{errors.passwordConfirm?.message}</p>
+                )}
 
               
               <div className="flex gap-1 pt-1">
