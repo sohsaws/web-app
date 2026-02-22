@@ -44,22 +44,21 @@ export default function Dropdown() {
                                 <ul className="w-full">
                                     <li className="w-full">
                                         <Link 
-                                            href="/profile" 
+                                            href="/settings/profile" 
                                             className="block w-full text-center px-4 py-3 text-sm text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
                                         >Profile</Link>
                                     </li>
                                     <li className="w-full">
                                         <Link 
-                                            href="#" 
+                                            href="/settings" 
                                             className="block w-full text-center px-4 py-3 text-sm text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
                                         >Settings</Link>
                                     </li>
                                     <li className="w-full">
-                                        <Link 
-                                            href="#" 
+                                        <button 
                                             className="block w-full text-center px-10 py-3 text-sm text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
                                             onClick={Logout}
-                                        >Sign out</Link>
+                                        >Sign out</button>
                                     </li>
                                 </ul>
                             </div>

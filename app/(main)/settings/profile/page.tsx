@@ -1,10 +1,12 @@
-"use client";
+
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import ProfileForm from "./_components/ProfileForm";
+
 import {
   User,
   ShieldCheck,
@@ -15,34 +17,38 @@ import {
   Save,
 } from "lucide-react";
 
+type User = {
+  name: string;
+  email: string;
+  image: string;
+  id: string;
+  username: string;
+  emailVerified: boolean;
+}
+
 const navItems = [
-  { label: "General",       icon: User        },
+  { label: "Profile",       icon: User        },
   { label: "Security",      icon: ShieldCheck },
   { label: "Billing",       icon: CreditCard  },
   { label: "Notifications", icon: Bell        },
   { label: "Preferences",   icon: Settings    },
 ] as const;
 
-const BIO_MAX = 200;
+// const BIO_MAX = 200;
 
 export default function Profile() {
   const router = useRouter();
-  const { data: session } = useSession({
+  const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
       router.push("/");
     },
   });
 
-  const user = session?.user;
+  const user = session?.user as User;
 
-  const [activeNav, setActiveNav] = useState<string>("General");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
+  const [Name, setName] = useState("");
   const [bio, setBio] = useState("");
-  const [profileVisible, setProfileVisible] = useState(true);
-  const [emailDisplay, setEmailDisplay] = useState(false);
 
 
   if (!user) {
@@ -55,37 +61,9 @@ export default function Profile() {
 
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-neutral-400 flex flex-col">
-      <div className="relative z-1 pt-32 pb-20 max-w-7xl mx-auto px-4 w-full">
-        <div className="flex gap-12">
-
-          <aside className="w-48 shrink-0">
-            <nav className="flex flex-col space-y-1">
-              {navItems.map(({ label, icon: Icon }) => {
-                const active = activeNav === label;
-                return (
-                  <button
-                    key={label}
-                    type="button"
-                    onClick={() => setActiveNav(label)}
-                    className={`flex cursor-pointer items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-left transition-all ${
-                      active
-                        ? "text-white bg-neutral-900/50 border border-neutral-800"
-                        : "text-neutral-500 border border-transparent hover:text-white hover:bg-neutral-900"
-                    }`}
-                  >
-                    <Icon size={18} strokeWidth={1.5} />
-                    {label}
-                  </button>
-                );
-              })}
-            </nav>
-          </aside>
-
-
           <div className="flex-1 px-10">
             <div className="max-w-3xl">
-
+              
               <div className="mb-10">
                 <h1 className="text-2xl font-medium tracking-tight text-white mb-2">
                 {user.username}&apos;s details
@@ -130,7 +108,9 @@ export default function Profile() {
                 </div>
               </div>
 
-              <form
+              <ProfileForm />
+
+              {/* <form
                 className="space-y-8"
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -146,8 +126,8 @@ export default function Profile() {
                     <input
                       id="name"
                       type="text"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
+                      value={Name}
+                      onChange={(e) => setName(e.target.value)}
                       placeholder={user?.name ?? "Name"}
                       className="block w-full min-w-0 flex-1 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-white/20 focus:ring-1 focus:ring-white/20"
                     />
@@ -157,16 +137,12 @@ export default function Profile() {
                     <label htmlFor="email" className="block text-xs font-medium text-neutral-500">
                       Email
                     </label>
-                    <input
+                    <text
                       id="email"
-                      type="text"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      placeholder={user?.email ?? "inbox@gmail.com"}
-                      className="block w-full min-w-0 flex-1 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-white/20 focus:ring-1 focus:ring-white/20"
-                    />
+                      className="block w-full min-w-0 flex-1 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-neutral-500 shadow-sm"
+                    >{user?.email}</text>
                     <Link
-                      href="#"
+                      href=""
                       className="pl-54 text-xs text-blue-400"
                     >
                       Change my email address
@@ -209,13 +185,9 @@ export default function Profile() {
                     Save Changes
                   </button>
                 </div>
-              </form>
+              </form> */}
 
             </div>
           </div>
-
-        </div>
-      </div>
-    </div>
-  );
+        );
 }
