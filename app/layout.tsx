@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const InterFont = Inter({
@@ -22,10 +23,18 @@ export default function RootLayout({
       <body
         className={`${InterFont.variable} antialiased min-h-screen overflow-x-hidden bg-neutral-950 text-neutral-300 selection:bg-purple-500/30 selection:text-red-200`}
       >
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[80vh] bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-neutral-800/30 via-neutral-950/80 to-transparent opacity-60"></div>
-        </div>
-        {children}
+          <div className="fixed inset-0 z-0 pointer-events-none">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[80vh] bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-neutral-800/30 via-neutral-950/80 to-transparent opacity-60"></div>
+          </div>
+          <Toaster
+            position="bottom-center"
+            richColors
+            theme="dark"
+            duration={5000}
+            closeButton
+            className="border-amber-500/20 bg-neutral-900/95 backdrop-blur-md"
+          />
+          {children}
       </body>
     </html>
   );
