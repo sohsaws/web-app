@@ -2,21 +2,12 @@ import NextAuth from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import prisma from '@/lib/prisma'
 import Google from 'next-auth/providers/google'
-import { PrismaClient } from './app/generated/prisma/client'
 import Credentials from 'next-auth/providers/credentials'
 import bcrypt from "bcrypt"
 
-type User = {
-  id: string;
-  name: string;
-  email: string | null;
-  emailVerified: boolean | null;
-  username: string | null;
-  image: string | null;
-}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma as unknown as {prisma: PrismaClient}),
+  adapter: PrismaAdapter(prisma as any),
   providers: [
     Google,
     Credentials({
@@ -51,39 +42,36 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: user.id,
           name: user.name,  
           email: user.email,
-          emailVerified: user.emailVerified,
           username: user.username,
-          image: user.image
-        } as User;
+        };
       }
     })
   ],
   callbacks: {
-    async jwt({token, user, trigger}) {
+    async jwt({token, user, trigger, session}) {
       if (trigger === "signUp") {
         console.log("User signed up", `Hello, ${user?.name}!`)
       }
       if (trigger === "signIn") {
         console.log("User signed in", `Welcome back, ${user?.name}!`)
       }
+      if (trigger === "update" && session?.user) {
+        token.name = session.user.name;
+      }
       if (user) {
-        const usr = user as User;
-        token.id = usr.id;
-        token.name = usr.name;
-        token.username = usr.username;
-        token.image = usr.image;
-        token.emailVerified = usr.emailVerified;
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.username = user.username;
       }
       return token;
     },
     async session({session, token}) {
       if (session.user) {
-        const usr = session.user as User;
-        usr.id = token.id as string;
-        usr.name = token.name as string;
-        usr.username = token.username as string;
-        usr.image = token.image as string;
-        usr.emailVerified = token.emailVerified as boolean;
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.username = token.username as string;
+        session.user.email = token.email as string;
       }
       return session;
     }

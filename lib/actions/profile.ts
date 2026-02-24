@@ -1,22 +1,18 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { auth } from "@/auth";
+import { auth,  } from "@/auth";
 
 export async function updateProfile(data: { name: string; bio: string }) {
   try {
     const session = await auth();
     const userId = session?.user?.id;
 
-    await prisma.user.upsert({
+    await prisma.user.update({
       where: {
         id: userId,
       },
-      update: {
-        name: data.name,
-        bio: data.bio,
-      },
-      create: {
+      data: {
         name: data.name,
         bio: data.bio,
       },
@@ -32,4 +28,5 @@ export async function updateProfile(data: { name: string; bio: string }) {
       message: "Profile update failed",
     };
   }
+  
 }

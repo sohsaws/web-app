@@ -4,13 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Save } from "lucide-react";
+import { useRouter } from "next/navigation";
 import * as z from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";   
 import { updateProfile } from "@/lib/actions/profile";
-
-
 
 const profileSchema = z.object({
     name: z.string()
@@ -25,13 +24,22 @@ type profileForm = z.infer<typeof profileSchema>
 
 const BIO_MAX = 200;
 
-export default function ProfileForm() {
+export default function ProfileForm(creds: {name: string, email: string, bio: string}) {
 
-  const [bio, setBio] = useState("");
+  const router = useRouter();
+
+  const {data: session, update} = useSession({
+    required: true,
+    onUnauthenticated() {
+      toast.error("Please login to continue");
+      router.push("/login");
+    }
+  });
+
+  const [bio, setBio] = useState(creds.bio);
+  const [name, setName] = useState(creds.name);
+
   const [subbmitting, setSubmitting] = useState(false);
-
-  const {data: session} = useSession();
-  const user = session?.user
 
   const {register, handleSubmit, formState: { errors }} = useForm<profileForm>({
     resolver: zodResolver(profileSchema)
@@ -42,13 +50,18 @@ export default function ProfileForm() {
       setSubmitting(true);
       const result = await updateProfile(data);
       if (result?.success) {
+
         toast.success(result.message);
         setSubmitting(false);
+
       } else {
+
         toast.error(result?.message);
         setSubmitting(false);
+
       }
     } catch (error) {
+
       console.log(error);
       setSubmitting(false);
     }
@@ -59,7 +72,6 @@ export default function ProfileForm() {
             <form className="space-y-8"
                 onSubmit={handleSubmit(onSubmitHandler)}
               >
-
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label htmlFor="name" className="block text-xs font-medium text-neutral-500">
@@ -68,7 +80,9 @@ export default function ProfileForm() {
                   <input
                     id="name"
                     {...register("name")}
-                    placeholder={user?.name ?? "Name"}
+                    value={name}
+                    placeholder="Your Name"
+                    onChange={(e) => setName(e.target.value)}
                     className="block w-full min-w-0 flex-1 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-white/20 focus:ring-1 focus:ring-white/20"
                   />
                   {errors.name && (
@@ -84,7 +98,7 @@ export default function ProfileForm() {
                   <text
                     id="email"
                     className="block w-full min-w-0 flex-1 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-neutral-500 shadow-sm"
-                  >{user?.email}
+                  >{creds.email}
                   </text>
                   <Link
                     href=""
@@ -102,6 +116,7 @@ export default function ProfileForm() {
                 <textarea
                   id="bio"
                   {...register("bio")}
+                  value={bio}
                   onChange={(e) => {
                     if (e.target.value.length <= BIO_MAX) setBio(e.target.value);
                   }}
@@ -111,13 +126,13 @@ export default function ProfileForm() {
                 />
                 <div className="flex justify-between pl-2 text-xs text-neutral-600">
                   <span>Write a short introduction.</span>
-                  <span>{bio.length}/{BIO_MAX}</span>
+                  {errors.bio && (
+                    <p className="text-xs text-red-500">{errors.bio?.message}</p>
+                  )}
+                  <span>{bio.length}/{BIO_MAX}</span>``
                 </div>
               </div>
-              {errors.bio && (
-                <p className="text-xs text-red-500">{errors.bio?.message}</p>
-              )}
-
+              
               <div className="flex items-center justify-end gap-4 pt-4">
                 <button
                   type="button"
@@ -127,7 +142,8 @@ export default function ProfileForm() {
                 </button>
                 <button
                   type="submit"
-                  className="cursor-pointer flex items-center gap-2 rounded-lg bg-white px-5 py-2 text-sm font-medium text-black shadow-sm outline-none transition-all hover:bg-neutral-200 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-950"
+                  className={`cursor-pointer flex items-center gap-2 rounded-lg bg-white px-5 py-2 text-sm font-medium text-black shadow-sm outline-none transition-all hover:bg-neutral-200 ${subbmitting ? "focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-950" : ""}`}
+                  onClick={() => update({user: {name: creds.name}})}
                 >
                   <Save size={16} strokeWidth={1.5} />
                   Save Changes

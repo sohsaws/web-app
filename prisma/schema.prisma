@@ -52,7 +52,7 @@ model User {
   name          String
   email         String?   @unique
   passwordHash  String?   @map("password_hash")
-  bio           String?   @map("bio")
+  bio           String?   @default("") @map("bio") @db.Text
   emailVerified Boolean?  @default(false) @map("email_verified")
   image         String?
   accounts      Account[]

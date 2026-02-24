@@ -1,26 +1,15 @@
-
 import Image from "next/image";
 import ProfileForm from "./_components/ProfileForm";
-import { auth } from "@/auth";
+import AvatarUpload from "./_components/AvatarUpload";
+import { getUser } from "@/lib/actions/User";
 
 import {
-  User,
   Camera,
 } from "lucide-react";
 
-type User = {
-  name: string;
-  email: string;
-  image: string;
-  id: string;
-  username: string;
-  emailVerified: boolean;
-}
-
 export default async function Profile() {
 
-  const session = await auth();
-  const user = session?.user as User;
+  const user = await getUser();
 
   if (!user) {
     return (
@@ -29,7 +18,6 @@ export default async function Profile() {
       </div>
     );
   }
-
 
   return (
           <div className="flex-1 px-10">
@@ -56,29 +44,11 @@ export default async function Profile() {
                     <Camera size={24} strokeWidth={1.5} className="text-white" />
                   </div>
                 </div>
+                <AvatarUpload image={String(user.image)}/>
 
-                <div className="flex-1">
-                  <h3 className="text-sm font-medium text-white mb-1">Profile Picture</h3>
-                  <p className="text-xs text-neutral-500 mb-4">
-                    Supports JPG, PNG or GIF. Max 2 MB.
-                  </p>
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      className="cursor-pointer px-4 py-2 text-xs font-medium text-neutral-300 bg-zinc-950 border border-white/10 rounded-md shadow-sm hover:bg-neutral-900 hover:border-white/20 focus:ring-1 focus:ring-neutral-700 outline-none transition-all"
-                    >
-                      Upload New
-                    </button>
-                    <button
-                      type="button"
-                      className="cursor-pointer px-4 py-2 text-xs font-medium text-neutral-500 hover:text-red-400 outline-none transition-colors"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
               </div>
-              <ProfileForm />
+              <ProfileForm name={user.name} bio={String(user.bio)} email={String(user.email)}/>
+
             </div>
           </div>
         );
