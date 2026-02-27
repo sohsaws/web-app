@@ -28,41 +28,40 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
 
   const router = useRouter();
 
-  const {data: session, update} = useSession({
-    required: true,
-    onUnauthenticated() {
-      toast.error("Please login to continue");
-      router.push("/login");
-    }
-  });
-
-  const [bio, setBio] = useState(creds.bio);
-  const [name, setName] = useState(creds.name);
+  const { data: session, update: updateSession } = useSession();
 
   const [subbmitting, setSubmitting] = useState(false);
 
-  const {register, handleSubmit, formState: { errors }} = useForm<profileForm>({
-    resolver: zodResolver(profileSchema)
-  })
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<profileForm>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      name: creds.name,
+      bio: creds.bio
+    } 
+  });
 
   const onSubmitHandler: SubmitHandler<profileForm> = async (data) => {
     try {
       setSubmitting(true);
       const result = await updateProfile(data);
+      
       if (result?.success) {
+        
+        await updateSession({
+          user: {
+            name: data.name,
+          }
+        });
 
         toast.success(result.message);
-        setSubmitting(false);
-
+        router.refresh();
       } else {
-
         toast.error(result?.message);
-        setSubmitting(false);
-
       }
     } catch (error) {
-
       console.log(error);
+      toast.error("Something went wrong");
+    } finally {
       setSubmitting(false);
     }
   }
@@ -80,9 +79,7 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
                   <input
                     id="name"
                     {...register("name")}
-                    value={name}
                     placeholder="Your Name"
-                    onChange={(e) => setName(e.target.value)}
                     className="block w-full min-w-0 flex-1 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-white/20 focus:ring-1 focus:ring-white/20"
                   />
                   {errors.name && (
@@ -95,14 +92,14 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
                   <label htmlFor="email" className="block text-xs font-medium text-neutral-500">
                     Email
                   </label>
-                  <text
+                  <div
                     id="email"
                     className="block w-full min-w-0 flex-1 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-neutral-500 shadow-sm"
                   >{creds.email}
-                  </text>
+                  </div>
                   <Link
                     href=""
-                    className="pl-54 text-xs text-blue-400"
+                    className="inline-block text-xs text-blue-400 hover:text-blue-300 transition-colors mt-1"
                   >
                     Change my email address
                   </Link>
@@ -116,21 +113,17 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
                 <textarea
                   id="bio"
                   {...register("bio")}
-                  value={bio}
-                  onChange={(e) => {
-                    if (e.target.value.length <= BIO_MAX) setBio(e.target.value);
-                  }}
                   rows={4}
                   placeholder="Write something about yourself…"
                   className="block w-full resize-none rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all"
                 />
-                <div className="flex justify-between pl-2 text-xs text-neutral-600">
+                <div className="flex justify-between pl-2 text-xs text-neutral-600 mt-1">
                   <span>Write a short introduction.</span>
-                  {errors.bio && (
-                    <p className="text-xs text-red-500">{errors.bio?.message}</p>
-                  )}
-                  <span>{bio.length}/{BIO_MAX}</span>``
+                  <span>{watch("bio")?.length || 0}/{BIO_MAX}</span>
                 </div>
+                {errors.bio && (
+                  <p className="text-xs text-red-500">{errors.bio?.message}</p>
+                )}
               </div>
               
               <div className="flex items-center justify-end gap-4 pt-4">
@@ -142,11 +135,11 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
                 </button>
                 <button
                   type="submit"
-                  className={`cursor-pointer flex items-center gap-2 rounded-lg bg-white px-5 py-2 text-sm font-medium text-black shadow-sm outline-none transition-all hover:bg-neutral-200 ${subbmitting ? "focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-950" : ""}`}
-                  onClick={() => update({user: {name: creds.name}})}
+                  className={`cursor-pointer flex items-center gap-2 rounded-lg bg-white px-5 py-2 text-sm font-medium text-black shadow-sm outline-none transition-all hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed`}
+                  disabled={subbmitting}
                 >
                   <Save size={16} strokeWidth={1.5} />
-                  Save Changes
+                  {subbmitting ? "Saving..." : "Save Changes"}
                 </button>
               </div>
             </form>

@@ -3,6 +3,7 @@ import ProfileForm from "./_components/ProfileForm";
 import AvatarUpload from "./_components/AvatarUpload";
 import { getUser } from "@/lib/actions/User";
 
+
 import {
   Camera,
 } from "lucide-react";
@@ -44,7 +45,7 @@ export default async function Profile() {
                     <Camera size={24} strokeWidth={1.5} className="text-white" />
                   </div>
                 </div>
-                <AvatarUpload image={String(user.image)}/>
+                <AvatarUpload />
 
               </div>
               <ProfileForm name={user.name} bio={String(user.bio)} email={String(user.email)}/>

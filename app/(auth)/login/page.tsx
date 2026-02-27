@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from "next/navigation"
+import MyToast from '@/components/Toast';
 import Link from 'next/link';
 import Image from 'next/image';
 import { AtSign, Lock } from 'lucide-react';
@@ -9,7 +10,9 @@ import { signIn } from 'next-auth/react';
 import { OauthLogin } from '@/lib/Oauth';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from "sonner";
 import * as z from "zod";
+
 
 const userSchema = z.object({
     identifier: z.string({error: "This field is required"})
@@ -24,6 +27,8 @@ const userSchema = z.object({
 type loginForm = z.infer<typeof userSchema>;
 
 export default function Login() {
+
+  MyToast();
 
   const router = useRouter();
 
