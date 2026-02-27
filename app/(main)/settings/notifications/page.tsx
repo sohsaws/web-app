@@ -1,8 +1,13 @@
+import NotificationsContent from "./_components/NotificationsContent";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function NotificationsPage() {
-    return (
-        <div>
-            <h1>Notifications</h1>
-        </div>
-    );
+export default async function NotificationsPage() {
+    const session = await auth();
+
+    if (!session) {
+        redirect("/login");
+    }
+
+    return <NotificationsContent />;
 }

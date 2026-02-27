@@ -4,11 +4,13 @@ import { useRef, useState } from "react";
 import { PutBlobResult } from "@vercel/blob";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function AvatarUpload() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const { update: updateSession } = useSession();
+  const router = useRouter();
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -34,20 +36,19 @@ export default function AvatarUpload() {
 
       const newBlob = (await response.json()) as PutBlobResult;
 
-      // Update the user session with the new image URL
       await updateSession({
         user: {
           image: newBlob.url,
         }
       });
 
-      toast.success("Avatar updated successfully", { id: toastId });
+      toast.success("Avatar updated successfully", {id: toastId});
+      router.refresh();
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong with the upload", { id: toastId });
+      toast.error("Something went wrong with the upload", {id: toastId});
     } finally {
       setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -62,9 +63,9 @@ export default function AvatarUpload() {
           ref={fileInputRef}
           type="file"
           id="avatar-upload"
-          accept="image/jpeg, image/png, image/gif, image/webp"
+          accept="image/jpeg, image/png, image/gif"
           className="hidden"
-          onChange={handleFileChange}
+          onChange={handleFileChange} 
           disabled={uploading}
         />
         <button

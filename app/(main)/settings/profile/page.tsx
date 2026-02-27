@@ -36,10 +36,10 @@ export default async function Profile() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-12 p-6 rounded-3xl border border-white/5 bg-[#080808]">
                 <div className="relative h-20 w-20 shrink-0 rounded-full overflow-hidden bg-neutral-900 border border-neutral-800 group">
                   <Image
-                    src={user?.image ? user.image : "/imgs/User.png"}
+                    src={user.image ? user.image : "/imgs/User.png"}
                     alt="Avatar"
                     fill
-                    className="object-cover grayscale opacity-90 transition-opacity group-hover:opacity-50"
+                    className="object-cover transition-opacity group-hover:opacity-50"
                   />
                   <div className="absolute cursor-pointer inset-1 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <Camera size={24} strokeWidth={1.5} className="text-white" />

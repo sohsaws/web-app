@@ -30,6 +30,8 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
 
   const { data: session, update: updateSession } = useSession();
 
+  const isVerificated = session?.user.emailVerified;
+
   const [subbmitting, setSubmitting] = useState(false);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<profileForm>({
@@ -98,8 +100,8 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
                   >{creds.email}
                   </div>
                   <Link
-                    href=""
-                    className="inline-block text-xs text-blue-400 hover:text-blue-300 transition-colors mt-1"
+                    href="/change-email"
+                    className="inline-block ml-55 text-xs text-blue-400 hover:text-blue-300 transition-colors mt-1"
                   >
                     Change my email address
                   </Link>

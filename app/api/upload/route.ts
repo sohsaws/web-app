@@ -24,9 +24,10 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   const blob = await put(filename, request.body as any, {
     access: 'public',
+    allowOverwrite: true,
   });
 
-  const usr = await prisma.user.update({
+  await prisma.user.update({
     where: {
       id: session.user.id as string
     },
