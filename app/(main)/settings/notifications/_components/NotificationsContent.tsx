@@ -57,7 +57,6 @@ export default function NotificationsContent() {
     <div className="flex-1 px-10">
       <div className="max-w-3xl space-y-8">
         
-        {/* Header */}
         <div className="space-y-1 mb-10">
           <h1 className="text-2xl font-semibold tracking-tight text-white">Notifications</h1>
           <p className="text-sm mt-5 font-normal text-neutral-500">
@@ -65,7 +64,6 @@ export default function NotificationsContent() {
           </p>
         </div>
 
-        {/* Email Preferences Section */}
         <div className="border border-white/10 rounded-xl bg-neutral-900/30 backdrop-blur-md shadow-lg shadow-black/20 overflow-hidden">
           <div className="p-6 border-b border-white/5">
             <h2 className="text-base font-medium text-white">Email Notifications</h2>
@@ -73,7 +71,6 @@ export default function NotificationsContent() {
           </div>
           <div className="flex flex-col">
             
-            {/* Product Updates */}
             <div className="flex items-center justify-between p-6 border-b border-white/5 hover:bg-white/2 transition-colors">
               <div className="flex items-center gap-4">
                 <div className="w-8 h-8 rounded-full bg-neutral-800/50 border border-white/5 flex items-center justify-center text-neutral-400 shrink-0">
@@ -87,7 +84,6 @@ export default function NotificationsContent() {
               <Toggle enabled={settings.productUpdates} onChange={() => toggleSetting('productUpdates')} />
             </div>
 
-            {/* Marketing */}
             <div className="flex items-center justify-between p-6 border-b border-white/5 hover:bg-white/2 transition-colors">
               <div className="flex items-center gap-4">
                 <div className="w-8 h-8 rounded-full bg-neutral-800/50 border border-white/5 flex items-center justify-center text-neutral-400 shrink-0">
@@ -101,7 +97,6 @@ export default function NotificationsContent() {
               <Toggle enabled={settings.marketing} onChange={() => toggleSetting('marketing')} />
             </div>
 
-            {/* Security Alerts */}
             <div className="flex items-center justify-between p-6">
               <div className="flex items-center gap-4">
                 <div className="w-8 h-8 rounded-full bg-neutral-800/50 border border-white/5 flex items-center justify-center text-neutral-500 shrink-0">
@@ -118,7 +113,6 @@ export default function NotificationsContent() {
           </div>
         </div>
 
-        {/* Push Preferences Section */}
         <div className="border border-white/10 rounded-xl bg-neutral-900/30 backdrop-blur-md shadow-lg shadow-black/20 overflow-hidden">
           <div className="p-6 border-b border-white/5">
             <h2 className="text-base font-medium text-white">Push Notifications</h2>
@@ -126,7 +120,6 @@ export default function NotificationsContent() {
           </div>
           <div className="flex flex-col">
             
-            {/* Direct Messages */}
             <div className="flex items-center justify-between p-6 border-b border-white/5 hover:bg-white/2 transition-colors">
               <div className="flex items-center gap-4">
                 <div className="w-8 h-8 rounded-full bg-neutral-800/50 border border-white/5 flex items-center justify-center text-neutral-400 shrink-0">
@@ -140,7 +133,6 @@ export default function NotificationsContent() {
               <Toggle enabled={settings.directMessages} onChange={() => toggleSetting('directMessages')} />
             </div>
 
-            {/* Mentions */}
             <div className="flex items-center justify-between p-6 border-b border-white/5 hover:bg-white/2 transition-colors">
               <div className="flex items-center gap-4">
                 <div className="w-8 h-8 rounded-full bg-neutral-800/50 border border-white/5 flex items-center justify-center text-neutral-400 shrink-0">
@@ -154,7 +146,6 @@ export default function NotificationsContent() {
               <Toggle enabled={settings.mentions} onChange={() => toggleSetting('mentions')} />
             </div>
 
-            {/* Workspace Activity */}
             <div className="flex items-center justify-between p-6 hover:bg-white/2 transition-colors">
               <div className="flex items-center gap-4">
                 <div className="w-8 h-8 rounded-full bg-neutral-800/50 border border-white/5 flex items-center justify-center text-neutral-400 shrink-0">
@@ -171,7 +162,6 @@ export default function NotificationsContent() {
           </div>
         </div>
 
-        {/* Do Not Disturb Section */}
         <div className="border border-white/10 rounded-xl bg-neutral-900/30 backdrop-blur-md shadow-lg shadow-black/20 overflow-hidden mt-12">
           <div className="p-6 flex flex-col sm:flex-row gap-6 justify-between items-start sm:items-center">
             <div className="space-y-2">

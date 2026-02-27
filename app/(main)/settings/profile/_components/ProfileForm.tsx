@@ -10,6 +10,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";   
 import { updateProfile } from "@/lib/actions/profile";
+import Exclamation from "./Exclamation";
+
+const BIO_MAX = 400;
 
 const profileSchema = z.object({
     name: z.string()
@@ -17,12 +20,10 @@ const profileSchema = z.object({
     .max(50, "Name cannot be longer than 50 characters"),
   bio: z.string()   
     .min(1, "Bio cannot be empty")
-    .max(200, "Bio cannot be longer than 200 characters"),  
+    .max(BIO_MAX, `Bio cannot be longer than ${BIO_MAX} characters`),  
 });
 
 type profileForm = z.infer<typeof profileSchema>
-
-const BIO_MAX = 200;
 
 export default function ProfileForm(creds: {name: string, email: string, bio: string}) {
 
@@ -30,7 +31,8 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
 
   const { data: session, update: updateSession } = useSession();
 
-  const isVerificated = session?.user.emailVerified;
+  const isVerificated = !!session?.user.emailVerified;
+  console.log(isVerificated);
 
   const [subbmitting, setSubmitting] = useState(false);
 
@@ -82,23 +84,30 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
                     id="name"
                     {...register("name")}
                     placeholder="Your Name"
-                    className="block w-full min-w-0 flex-1 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-white/20 focus:ring-1 focus:ring-white/20"
+                    className="block w-full min-w-0 flex-1 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all"
                   />
                   {errors.name && (
                     <p className="text-xs text-red-500">{errors.name?.message}</p>
                   )}
                 </div>
                   
-
-                <div className="space-y-2">
-                  <label htmlFor="email" className="block text-xs font-medium text-neutral-500">
-                    Email
-                  </label>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="email" className="block text-xs font-medium text-neutral-500">
+                      Email
+                    </label>
+                    {!isVerificated && <Exclamation />}
+                  </div>
                   <div
                     id="email"
-                    className="block w-full min-w-0 flex-1 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-neutral-500 shadow-sm"
-                  >{creds.email}
-                  </div>
+                    style={{  
+                      borderColor: !isVerificated ? '#d97706' : '#262626', 
+                      borderWidth: '1px' 
+                    }}
+                    className="block w-full min-w-0 flex-1 rounded-md px-3 py-2 text-sm text-neutral-400 shadow-sm transition-all duration-300 border-solid"
+                  >
+                    {creds.email}
+                  </div>  
                   <Link
                     href="/change-email"
                     className="inline-block ml-55 text-xs text-blue-400 hover:text-blue-300 transition-colors mt-1"
@@ -117,6 +126,7 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
                   {...register("bio")}
                   rows={4}
                   placeholder="Write something about yourself…"
+                  maxLength={BIO_MAX}
                   className="block w-full resize-none rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all"
                 />
                 <div className="flex justify-between pl-2 text-xs text-neutral-600 mt-1">

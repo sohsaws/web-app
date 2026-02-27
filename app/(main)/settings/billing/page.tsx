@@ -9,8 +9,9 @@ export default async function BillingPage() {
         redirect("/login");
     }
 
-    return (<div>
-                <BillingContent />
-            </div>
+    return (
+        <div>
+            <BillingContent />
+        </div>
     );
 }

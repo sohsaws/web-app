@@ -9,5 +9,9 @@ export default async function NotificationsPage() {
         redirect("/login");
     }
 
-    return <NotificationsContent />;
+    return (
+        <div>
+            <NotificationsContent />
+        </div>
+    );
 }
