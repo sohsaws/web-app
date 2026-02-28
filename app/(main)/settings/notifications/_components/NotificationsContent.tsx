@@ -9,8 +9,7 @@ import {
   AtSign, 
   BarChart3, 
   ChevronDown,
-  Clock,
-  Moon
+  Clock
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -27,7 +26,7 @@ const Toggle = ({ enabled, onChange, disabled }: ToggleProps) => (
     aria-checked={enabled}
     disabled={disabled}
     onClick={() => onChange?.(!enabled)}
-    className={`w-9 h-5 rounded-full flex items-center p-0.5 shrink-0 transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-neutral-950 cursor-pointer ${
+    className={`w-1 h-2 rounded-full flex items-center p-0.5 shrink-0 transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-neutral-950 cursor-pointer ${
       disabled ? "bg-white/20 opacity-50 cursor-not-allowed" : enabled ? "bg-white" : "bg-neutral-700 hover:bg-neutral-600"
     }`}
   >

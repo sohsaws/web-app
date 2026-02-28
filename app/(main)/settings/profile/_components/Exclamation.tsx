@@ -2,6 +2,7 @@
 
 import { CircleAlert } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Exclamation() {
     return (
@@ -11,7 +12,9 @@ export default function Exclamation() {
                 initial={{ scale: 1 }}
                 className="cursor-pointer"
             >
-                <CircleAlert size={20} strokeWidth={1.5} color="#d97706"/>
+                <Link href="/verify-email">
+                    <CircleAlert size={20} strokeWidth={1.5} color="#d97706"/>
+                </Link>
             </motion.div>
         </div>
     )
