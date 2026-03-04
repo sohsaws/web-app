@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "list:fix": "eslint --fix"
+    "list:fix": "eslint --fix",
+    "email:dev": "email dev"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -16,7 +17,8 @@
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "@prisma/extension-accelerate": "^3.0.1",
-    "@react-email/components": "^1.0.8",
+    "@react-email/components": "1.0.8",
+    "@react-email/render": "^2.0.4",
     "@vercel/blob": "^2.3.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
@@ -28,7 +30,6 @@
     "pg": "^8.18.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-email": "^5.2.9",
     "react-hook-form": "^7.71.1",
     "resend": "^6.9.3",
     "sonner": "^2.0.7",
@@ -36,6 +37,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
+    "@react-email/preview-server": "5.2.9",
     "@tailwindcss/postcss": "^4",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^20.19.33",
@@ -45,6 +47,7 @@
     "eslint": "^10.0.1",
     "eslint-config-next": "^0.2.4",
     "prisma": "^7.4.2",
+    "react-email": "5.2.9",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

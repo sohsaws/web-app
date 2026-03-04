@@ -12,7 +12,7 @@ export default function Exclamation() {
                 initial={{ scale: 1 }}
                 className="cursor-pointer"
             >
-                <Link href="/verify-email">
+                <Link href="/verify-email/pending">
                     <CircleAlert size={20} strokeWidth={1.5} color="#d97706"/>
                 </Link>
             </motion.div>

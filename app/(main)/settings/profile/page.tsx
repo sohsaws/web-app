@@ -48,7 +48,7 @@ export default async function Profile() {
                 <AvatarUpload />
 
               </div>
-              <ProfileForm name={user.name} bio={String(user.bio)} email={String(user.email)}/>
+              <ProfileForm name={user.name} bio={String(user.bio)} email={String(user.email)} emailVerified={user.emailVerified}/>
 
             </div>
           </div>

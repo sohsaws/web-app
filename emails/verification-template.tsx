@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Body, Button, Container, Head, Hr, Html, Img, Preview, Section, Text } from "@react-email/components";
 import { getBaseUrl } from "@/lib/utils/baseUrl";
 

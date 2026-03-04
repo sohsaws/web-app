@@ -25,14 +25,13 @@ const profileSchema = z.object({
 
 type profileForm = z.infer<typeof profileSchema>
 
-export default function ProfileForm(creds: {name: string, email: string, bio: string}) {
+export default function ProfileForm(creds: {name: string, email: string, bio: string, emailVerified: Date | null}) {
 
   const router = useRouter();
 
-  const { data: session, update: updateSession } = useSession();
+  const { update: updateSession } = useSession();
 
-  const isVerificated = !!session?.user.emailVerified;
-  console.log(isVerificated);
+  const isVerificated = !!creds.emailVerified;
 
   const [subbmitting, setSubmitting] = useState(false);
 
@@ -93,7 +92,7 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
                   
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <label htmlFor="email" className="block text-xs font-medium text-neutral-500">
+                    <label htmlFor="email" className="text-xs mb-1 font-medium text-neutral-500">
                       Email
                     </label>
                     {!isVerificated && <Exclamation />}
@@ -104,7 +103,7 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
                       borderColor: !isVerificated ? '#d97706' : '#262626', 
                       borderWidth: '1px' 
                     }}
-                    className="block w-full min-w-0 flex-1 rounded-md px-3 py-2 text-sm text-neutral-400 shadow-sm transition-all duration-300 border-solid"
+                    className="block rounded-md px-3 py-2 text-sm text-neutral-400 shadow-sm transition-all duration-300 border-solid"
                   >
                     {creds.email}
                   </div>  

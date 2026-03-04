@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SessionProvider } from "next-auth/react";
 
 export default function AuthLayout({
   children,
@@ -17,7 +18,9 @@ export default function AuthLayout({
           </Link>
         </div>
       </nav>
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10">
+        <SessionProvider>{children}</SessionProvider>
+      </div>
     </>
   );
 }

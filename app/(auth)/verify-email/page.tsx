@@ -1,43 +1,37 @@
-import { generateToken } from "@/lib/utils/tokenGenerator";
-import { sendEmail } from "@/lib/actions/email-actions";
-import { VerificationTemp } from "@/emails/verification-template";
-import { getUser } from "@/lib/actions/User";
 import prisma from "@/lib/prisma";
+import { VerifyEmailResult } from "./_component/VerfiedEmailResult";
 
-export default async function VerifyEmail() {
 
-    const emailVerificationTokenObject = generateToken(1);
-    const user = await getUser();
+export default async function VerifyEmail({ searchParams }: { searchParams: Promise<{ token?: string }> }) {
+    const { token } = await searchParams;
 
-    if (!user) {
-        return null;
+    if (!token) {
+        return <VerifyEmailResult status="missing_token" />;
     }
 
-    await prisma.verificationToken.update({
-        where: {
-            userId: user.id,
-        },
-        data: {
-            token: emailVerificationTokenObject.token,
-            expiresAt: emailVerificationTokenObject.expiresAt,
-            createdAt: emailVerificationTokenObject.createdAt,
-        }
-    })
+    const verificationToken = await prisma.verificationToken.findUnique({
+        where: { token },
+    });
 
-    if (!user.email && !user.username) {
-        return null;
+    if (!verificationToken) {
+        return <VerifyEmailResult status="invalid_token" />;
     }
 
-    await sendEmail({
-        to: [user.email!],
-        subject: "Email Verification",
-        react: <VerificationTemp username={user.username!} emailVerificationToken={emailVerificationTokenObject.token} />,
-    })
+    if (verificationToken.expiresAt < new Date()) {
+        await prisma.verificationToken.delete({
+            where: { token },
+        });
+        return <VerifyEmailResult status="expired_token" />;
+    }
 
-    return (
-        <div className="flex items-center justify-center h-screen">
-            <h1 className="text-2xl font-semibold">Email is send to your inbox!</h1>
-            <script>alert("Email is send to your inbox!")</script>
-        </div>
-    );
+    await prisma.user.update({
+        where: { id: verificationToken.userId },
+        data: { emailVerified: new Date() },
+    });
+
+    await prisma.verificationToken.delete({
+        where: { token },
+    });
+
+    return <VerifyEmailResult status="success" />;
 }
