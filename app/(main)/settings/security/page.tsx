@@ -41,7 +41,7 @@ export default function SecurityPage() {
           <div className="px-6 py-4 bg-white/2 border-t border-white/10 flex items-center justify-between">
             <p className="text-xs text-neutral-500">Secure passwords help protect your data.</p>
             <Link 
-              href="#" 
+              href="/change-password/pending" 
               className="inline-flex items-center gap-1.5 text-sm font-medium text-white hover:text-neutral-300 transition-colors group underline underline-offset-4 decoration-white/30 hover:decoration-white"
             >
               <Lock 

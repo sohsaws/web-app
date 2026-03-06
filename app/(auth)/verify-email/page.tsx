@@ -6,7 +6,7 @@ export default async function VerifyEmail({ searchParams }: { searchParams: Prom
     const { token } = await searchParams;
 
     if (!token) {
-        return <VerifyEmailResult status="missing_token" />;
+        return <VerifyEmailResult status="invalid_token" />;
     }
 
     const verificationToken = await prisma.verificationToken.findUnique({

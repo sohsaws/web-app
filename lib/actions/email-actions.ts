@@ -2,6 +2,9 @@
 
 import React from "react";
 import { Resend } from "resend";
+import { getUser } from "@/lib/actions/User";
+import { generateToken } from "../utils/tokenGenerator";
+import prisma from "../prisma";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

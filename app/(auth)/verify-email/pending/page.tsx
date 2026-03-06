@@ -2,46 +2,61 @@ import { generateToken } from "@/lib/utils/tokenGenerator";
 import { sendEmail } from "@/lib/actions/email-actions";
 import { VerificationTemp } from "@/emails/verification-template";
 import { getUser } from "@/lib/actions/User";
+import { requestForChange } from "@/lib/actions/creds-changes";
 import prisma from "@/lib/prisma";
 import { Mail } from "lucide-react";
 import Link from "next/link";
+import React from "react";
+import { TokenStatusCard } from "@/components/TokenStatusCard";
+import { success } from "zod";
 
 export default async function VerifyEmailPending() {
+    // const user = await getUser();
+
+    // if (!user || !user.email) {
+    //     return null;
+    // }
+
+    // const tokenObject = generateToken(1);
+
+    // await prisma.verificationToken.upsert({
+    //     where: { userId: user.id },
+    //     update: {
+    //         token: tokenObject.token,
+    //         expiresAt: tokenObject.expiresAt,
+    //         createdAt: tokenObject.createdAt,
+    //     },
+    //     create: {
+    //         userId: user.id,
+    //         token: tokenObject.token,
+    //         expiresAt: tokenObject.expiresAt,
+    //         createdAt: tokenObject.createdAt,
+    //     },
+    // });
+
+    // await sendEmail({
+    //     to: [user.email],
+    //     subject: "Verify your Swiipy email",
+    //     react: React.createElement(VerificationTemp, {
+    //         username: user.username ?? user.name,
+    //         emailVerificationToken: tokenObject.token,
+    //     }),
+    // });
     const user = await getUser();
-
-    if (!user) {
-        return null;
+    
+    if (!user || !user.email) {
+        return {};
     }
 
-    if (!user.email) {
-        return null;
+    const result = await requestForChange(5, {
+        passwordRequest: false,
+        emailRequest: false,
+        emailVerif: true
+    });
+
+    if (!result.success) {
+        return {success: false, message: "Bad Request"};
     }
-
-    const emailVerificationTokenObject = generateToken(1);
-
-    await prisma.verificationToken.upsert({
-        where: {
-            userId: user.id,
-        },
-        update: {
-            token: emailVerificationTokenObject.token,
-            expiresAt: emailVerificationTokenObject.expiresAt,
-            createdAt: emailVerificationTokenObject.createdAt,
-        },
-        create: {
-            userId: user.id,
-            token: emailVerificationTokenObject.token,
-            expiresAt: emailVerificationTokenObject.expiresAt,
-            createdAt: emailVerificationTokenObject.createdAt,
-        },
-    });
-
-    await sendEmail({
-        to: ["dsskis3@gmail.com"],
-        subject: "Email Verification",
-        react: <VerificationTemp username={user.username ? user.username : user.name} emailVerificationToken={emailVerificationTokenObject.token} />,
-    });
-
     return (
         <div className="bg-[#080808] flex items-center justify-center min-h-screen px-4">
             <div className="flex flex-col items-center gap-6 w-full max-w-md rounded-2xl border border-white/5 px-8 py-12 text-center">

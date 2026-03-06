@@ -108,7 +108,7 @@ export default function ProfileForm(creds: {name: string, email: string, bio: st
                     {creds.email}
                   </div>  
                   <Link
-                    href="/change-email"
+                    href="/change-email/pending"
                     className="inline-block ml-55 text-xs text-blue-400 hover:text-blue-300 transition-colors mt-1"
                   >
                     Change my email address
