@@ -1,27 +1,35 @@
 @import "tailwindcss";
 
-:root {
-  --background: #000000;
-  --foreground: #fbfbfb;
-}
+@theme {
+  --color-app-bg: #0a0a0a;
+  --color-app-fg: #d4d4d4;
+  --color-app-selection-bg: #ffffff;
+  --color-app-selection-fg: #0a0a0a;
+  --color-app-glow: #262626;
+  --color-app-toast-bg: #171717;
+  --color-app-toast-border: #f59e0b;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --spacing-app-screen-height: 100vh;
+  --spacing-app-screen-width: 100%;
+  --spacing-app-full: 100%;
+  --spacing-app-glow-height: 80vh;
+  --spacing-app-nav-height: 3.25rem;
+  --spacing-app-nav-x: 3rem;
+  --spacing-app-footer-x: 3rem;
+  --spacing-app-footer-y: 1rem;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #181818;
-    --foreground: #202020;
-  }
-}
+  --container-app-shell: 80rem;
 
+  --breakpoint-app-desktop: 48rem;
+
+  --text-app-brand: 1.875rem;
+  --text-app-nav: 0.75rem;
+  --text-app-footer-link: 0.875rem;
+  --text-app-footer-meta: 0.75rem;
+
+  --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
+}
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Inter, Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }

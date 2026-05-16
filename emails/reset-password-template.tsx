@@ -14,15 +14,15 @@ import { getBaseUrl } from "@/lib/utils/baseUrl";
 const CONTACT_EMAIL_ADDRESS = process.env.BASE_EMAIL_ADDRESS;
 const baseUrl = getBaseUrl();
 
-interface ChangeEmailTemplateProps {
+interface ChangePasswordTemplateProps {
 	username: string;
-	confirmToken: string;
+	passwordResetToken: string;
 }
 
-export const ChangeEmailTemp = ({
+export const PasswordResetTemp = ({
 	username,
-	confirmToken,
-}: ChangeEmailTemplateProps) => {
+	passwordResetToken,
+}: ChangePasswordTemplateProps) => {
 	return (
 		<Html>
 			<Head>
@@ -33,15 +33,15 @@ export const ChangeEmailTemp = ({
 					<Section style={section}>
 						<Text style={text}>Hello, {username}!</Text>
 						<Text style={textMuted}>
-							You requested to change the email address on your Swiipy account.
-							Click the button below to confirm this request and choose your new
-							email. This link expires in 15 minutes.
+							You requested to reset your password on your Swiipy account. Click
+							the button below to confirm this request and reset your new
+							password.
 						</Text>
 						<Button
 							style={buttonStyle}
-							href={`${baseUrl}/change-email?token=${confirmToken}`}
+							href={`${baseUrl}/change-password?token=${passwordResetToken}`}
 						>
-							Confirm Email Change
+							Confirm Password Reset
 						</Button>
 						<Text style={textMuted}>
 							If you did not request this, please secure your account

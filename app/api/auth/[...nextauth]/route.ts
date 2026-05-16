@@ -1,15 +1,11 @@
-
-import { handlers } from "@/auth" // Referring to the auth.ts we just created
-export const { GET, POST } = handlers
-
-
+import { handlers } from "@/auth"; // Referring to the auth.ts we just created
+export const { GET, POST } = handlers;
 
 // import NextAuth from "next-auth"
 // import GoogleProvider from "next-auth/providers/google"
 // import CredentialsProvider from "next-auth/providers/credentials"
 // import prisma from "@/lib/prisma"
 // import bcrypt from 'bcrypt'
-
 
 // export const authOptions = {
 //   providers: [
@@ -21,7 +17,7 @@ export const { GET, POST } = handlers
 //             email: { label: "Email", type: "email" },
 //             password: { label: "Password", type: "password" }
 //         },
-        
+
 //         async authorize(credentials) {
 
 //             if (!credentials?.email || credentials.name || !credentials.password) {

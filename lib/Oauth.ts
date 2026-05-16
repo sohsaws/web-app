@@ -1,12 +1,11 @@
-"use server"
+"use server";
 
-import { signIn, signOut } from "@/auth"
+import { signIn, signOut } from "@/auth";
 
 export const OauthLogin = async () => {
-    await signIn("google", { redirectTo: "/dashboard" })
-} 
+	await signIn("google", { redirectTo: "/dashboard" });
+};
 
 export const Logout = async () => {
-    await signOut({redirectTo: "/"})
-}
-
+	await signOut({ redirectTo: "/" });
+};

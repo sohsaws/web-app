@@ -3,15 +3,15 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 export default async function NotificationsPage() {
-    const session = await auth();
+	const session = await auth();
 
-    if (!session) {
-        redirect("/login");
-    }
+	if (!session) {
+		redirect("/login");
+	}
 
-    return (
-        <div>
-            <NotificationsContent />
-        </div>
-    );
+	return (
+		<div>
+			<NotificationsContent />
+		</div>
+	);
 }
