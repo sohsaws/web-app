@@ -10,9 +10,9 @@ export default async function Home() {
 	}
 
 	return (
-		<main className="flex flex-1 flex-col w-full relative items-center justify-center pb-15">
-			<div className="text-center max-w-4xl mx-auto space-y-10 mb-10 px-6">
-				<h1 className="text-5xl md:text-7xl font-medium tracking-tight text-white leading-[1.1]">
+		<main className="flex w-full min-w-0 flex-1 flex-col relative items-center justify-center px-4 pb-15">
+			<div className="w-full max-w-4xl mx-auto space-y-10 mb-10 text-center">
+				<h1 className="text-5xl sm:text-6xl md:text-7xl font-medium tracking-tight text-white leading-[1.1]">
 					<span className="font-serif text-transparent bg-clip-text bg-linear-to-b from-white via-white to-white/40">
 						Swipe. Decide. <br />
 						Done.

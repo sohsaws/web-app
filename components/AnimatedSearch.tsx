@@ -8,7 +8,7 @@ import FuseSearch from "./fuseSearch";
 export default function AnimatedSearch() {
 	const [isExpanded, setIsExpanded] = useState(false);
 	return (
-		<div className="flex items-center justify-center">
+		<div className="flex w-full max-w-[min(500px,calc(100vw-2rem))] items-center justify-center px-4">
 			<AnimatePresence mode="wait">
 				{!isExpanded ? (
 					<motion.button
@@ -26,9 +26,9 @@ export default function AnimatedSearch() {
 				) : (
 					<motion.form
 						key="search"
-						className="relative"
+						className="relative w-full"
 						initial={{ width: 80, opacity: 0 }}
-						animate={{ width: 500, opacity: 1 }}
+						animate={{ width: "100%", opacity: 1 }}
 						exit={{ width: 80, opacity: 0 }}
 						transition={{ duration: 0.4, ease: "easeInOut" }}
 					>
