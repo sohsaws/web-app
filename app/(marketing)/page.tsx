@@ -1,17 +1,9 @@
 import AnimatedSearch from "@/components/AnimatedSearch";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 
-export default async function Home() {
-	const session = await auth();
-
-	if (session) {
-		redirect("/dashboard");
-	}
-
+export default function Home() {
 	return (
 		<main className="flex w-full min-w-0 flex-1 flex-col relative items-center justify-center px-4 pb-15">
-			<div className="w-full max-w-4xl mx-auto space-y-10 mb-10 text-center">
+			<div className="w-full mx-auto space-y-10 mb-10 text-center">
 				<h1 className="text-5xl sm:text-6xl md:text-7xl font-medium tracking-tight text-white leading-[1.1]">
 					<span className="font-serif text-transparent bg-clip-text bg-linear-to-b from-white via-white to-white/40">
 						Swipe. Decide. <br />

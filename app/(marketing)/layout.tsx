@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+export const dynamic = "force-static";
+
 export default function SiteLayout({
 	children,
 }: Readonly<{
@@ -7,31 +9,31 @@ export default function SiteLayout({
 }>) {
 	return (
 		<div className="flex min-h-dvh flex-col">
-			<nav className="fixed top-0 w-app-screen-width z-50 bg-app-bg border-b border-white/5 h-app-nav-height">
-				<div className="max-w-app-shell mx-auto px-app-nav-x h-app-full flex items-center justify-between">
+			<nav className="fixed top-0 z-50 h-app-nav-height w-app-screen-width border-b border-white/5 bg-app-bg">
+				<div className="mx-auto flex h-app-full max-w-app-shell items-center justify-between gap-[clamp(0.125rem,2vw,2rem)] px-[clamp(0.375rem,4vw,3rem)]">
 					<Link
 						href="/"
-						className="pb-1 text-app-brand font-serif text-white tracking-tight"
+						className="shrink-0 pb-1 font-serif text-[clamp(1.25rem,5vw,1.875rem)] text-white tracking-tight"
 					>
 						Swiipy
 					</Link>
 
-					<div className="flex items-stretch overflow-hidden rounded-full bg-neutral-900/60 border border-white/10 backdrop-blur-md shadow-3xl shadow-black/50">
+					<div className="flex w-[clamp(11.25rem,42vw,27.75rem)] min-w-45 shrink items-stretch overflow-hidden rounded-full border border-white/10 bg-neutral-900/60 shadow-3xl shadow-black/50 backdrop-blur-md">
 						<Link
 							href="/contact"
-							className="flex flex-1 items-center justify-center px-10 py-1.5 text-app-nav font-medium text-neutral-400 hover:text-white hover:bg-white/5 rounded-l-full transition-all duration-200"
+							className="flex min-w-0 flex-1 items-center justify-center rounded-l-full px-[clamp(0.5rem,2.5vw,2.5rem)] py-1.5 text-app-nav font-medium text-neutral-400 transition-all duration-200 hover:bg-white/5 hover:text-white"
 						>
 							Contact
 						</Link>
 						<Link
 							href="/pricing"
-							className="flex flex-1 items-center justify-center px-10 py-1.5 text-app-nav font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-all duration-200"
+							className="flex min-w-0 flex-1 items-center justify-center px-[clamp(0.5rem,2.5vw,2.5rem)] py-1.5 text-app-nav font-medium text-neutral-400 transition-all duration-200 hover:bg-white/5 hover:text-white"
 						>
 							Pricing
 						</Link>
 						<Link
 							href="/about"
-							className="flex flex-1 items-center justify-center px-10 py-1.5 text-app-nav font-medium text-neutral-400 hover:text-white hover:bg-white/5 rounded-r-full transition-all duration-200"
+							className="flex min-w-0 flex-1 items-center justify-center rounded-r-full px-[clamp(0.5rem,2.5vw,2.5rem)] py-1.5 text-app-nav font-medium text-neutral-400 transition-all duration-200 hover:bg-white/5 hover:text-white"
 						>
 							About
 						</Link>
@@ -39,7 +41,7 @@ export default function SiteLayout({
 
 					<Link
 						href="/login"
-						className="hover:bg-neutral-300 transition-colors duration-200 text-app-nav font-semibold text-black tracking-tight bg-white rounded-full px-7 py-1.5"
+						className="shrink-0 rounded-full bg-white px-[clamp(0.75rem,3vw,1.75rem)] py-1.5 text-app-nav font-semibold tracking-tight text-black transition-colors duration-200 hover:bg-neutral-300"
 					>
 						Login
 					</Link>
@@ -47,31 +49,31 @@ export default function SiteLayout({
 			</nav>
 
 			<div className="flex flex-1 flex-col pt-app-nav-height">
-				<div className="flex flex-1 flex-col bg-app-bg relative z-10">
+				<div className="relative z-10 flex flex-1 flex-col bg-app-bg">
 					{children}
 				</div>
 
-				<footer className="shrink-0 border-t border-white/5 bg-app-bg py-3 relative z-10">
-				<div className="max-w-app-shell mx-auto px-app-nav-x relative flex items-center justify-center">
+				<footer className="relative z-10 shrink-0 border-t border-white/5 bg-app-bg py-3">
+				<div className="relative mx-auto flex max-w-app-shell items-center justify-center px-app-nav-x">
 					<nav
 						className="flex items-center gap-10 text-app-footer-link text-neutral-500"
 						aria-label="Footer"
 					>
-						<Link href="#" className="hover:text-white transition-colors">
+						<Link href="#" className="transition-colors hover:text-white">
 							Privacy
 						</Link>
-						<Link href="#" className="hover:text-white transition-colors">
+						<Link href="#" className="transition-colors hover:text-white">
 							Terms
 						</Link>
-						<Link href="#" className="hover:text-white transition-colors">
+						<Link href="#" className="transition-colors hover:text-white">
 							Telegram
 						</Link>
-						<Link href="#" className="hover:text-white transition-colors">
+						<Link href="#" className="transition-colors hover:text-white">
 							GitHub
 						</Link>
 					</nav>
 
-					<p className="absolute right-9 text-app-nav text-neutral-600 leading-none">
+					<p className="absolute right-9 text-app-nav leading-none text-neutral-600">
 						© 2026 Swiipy.
 					</p>
 				</div>
