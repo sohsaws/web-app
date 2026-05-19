@@ -9,18 +9,8 @@ export default function Contact() {
 	const [email, setEmail] = useState("");
 	const [message, setMessage] = useState("");
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		console.log("Contact form submitted:", {
-			firstName,
-			lastName,
-			email,
-			message,
-		});
-	};
-
 	return (
-		<section className="max-w-6xl mx-auto px-6 border-t border-white/5 pt-32">
+		<section className="max-w-6xl mx-auto px-6 border-t border-white/5 pt-10 pb-10">
 			<div className="grid md:grid-cols-2 gap-16 md:gap-24">
 				<div>
 					<h1 className="text-3xl font-medium text-white tracking-tight mb-2">
@@ -120,7 +110,7 @@ export default function Contact() {
 				</div>
 
 				<div className="bg-neutral-900/10 border border-white/5 p-8 rounded-2xl h-fit">
-					<form onSubmit={handleSubmit} className="space-y-4">
+					<form className="space-y-4">
 						<div className="grid grid-cols-2 gap-4">
 							<div className="space-y-1">
 								<label className="text-xs text-neutral-500 ml-1">

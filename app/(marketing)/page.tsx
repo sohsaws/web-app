@@ -1,4 +1,4 @@
-import AnimatedSearch from "@/components/AnimatedSearch";
+import { AnimatedSearch } from "@/components/search/animated-search.client";
 
 export default function Home() {
 	return (

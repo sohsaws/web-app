@@ -7,7 +7,7 @@ type SearchResult = {
 	topic: string;
 };
 
-export default function FuseSearch() {
+export function SuggestionsSearch() {
 	const [inputValue, setInputValue] = useState("");
 	const [suggestions, setSuggestions] = useState<SearchResult[]>([]);
 	const [isOpen, setIsOpen] = useState(false);
@@ -15,8 +15,7 @@ export default function FuseSearch() {
 
 	useEffect(() => {
 		const handleClick = (e: MouseEvent) => {
-			if (listRef.current && !listRef.current.contains(e.target as Node))
-				setIsOpen(false);
+			if (listRef.current && !listRef.current.contains(e.target as Node)) setIsOpen(false);
 		};
 
 		document.addEventListener("click", handleClick);

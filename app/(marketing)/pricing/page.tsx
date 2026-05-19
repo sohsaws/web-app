@@ -8,7 +8,7 @@ export default function Pricing() {
 	const [isYearly, setIsYearly] = useState(false);
 
 	return (
-		<section className="max-w-6xl mx-auto px-6 py-25">
+		<section className="max-w-6xl mx-auto px-6 pt-10 pb-10">
 			<div className="text-center mb-16">
 				<h2 className="text-3xl font-medium text-white tracking-tight mb-4">
 					Simple, transparent pricing
