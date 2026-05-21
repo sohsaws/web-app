@@ -6,7 +6,7 @@ export async function POST(req: Request) {
 		const { query } = await req.json();
 
 		const res = await prisma.topicSearch.findMany({
-			take: 7,
+			take: 10,
 			where: {
 				topic: {
 					startsWith: query,
@@ -17,7 +17,6 @@ export async function POST(req: Request) {
 		return NextResponse.json({
 			success: true,
 			results: res,
-			message: "Here are your search results",
 		});
 	} catch (error) {
 		if (error instanceof Error) {
@@ -32,7 +31,7 @@ export async function POST(req: Request) {
 
 		return NextResponse.json(
 			{
-				status: "error",
+				error: "error",
 				message: "Something went wrong",
 			},
 			{ status: 500 },
