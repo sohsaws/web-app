@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import MyToast from "@/components/Toast";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import Image from "next/image";
 import { AtSign, Lock } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { OauthLogin } from "@/lib/Oauth";
+import { useSignIn } from '@clerk/nextjs';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";

@@ -5,11 +5,11 @@ import * as z from "zod";
 import Link from "next/link";
 import Image from "next/image";
 import { User, Mail, Lock, AtSign } from "lucide-react";
-import { signIn } from "next-auth/react";
 import { OauthLogin } from "@/lib/Oauth";
 import { useSignUp } from '@clerk/nextjs';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 const userSchema = z
 	.object({
@@ -56,7 +56,10 @@ export default function Register() {
 	const [submitting, setSubmitting] = useState(false);
 	const [termsAccepted, setTermsAccepted] = useState(false);
 	const [error, setError] = useState("");
-	const { signUp } = useSignUp();
+
+	const { signUp, fetchStatus } = useSignUp();
+	const router = useRouter();
+
 	const onSubmitHandler: SubmitHandler<registerForm> = async (data) => {
 		try {
 			setSubmitting(true);
@@ -75,11 +78,41 @@ export default function Register() {
 				return;
 			}
 
-			await signIn("credentials", {
-				identifier: data.username,
+			const { error } = await signUp.password({
+				firstName: data.name,
+				lastName: 'Leen',
+				username: data.username,
 				password: data.password,
-				redirectTo: "/dashboard",
+				emailAddress: data.email
 			});
+
+			if (error) {
+				setError(error.message);
+				console.error(JSON.stringify(error, null, 2));
+			}
+
+			if (signUp.status === 'complete') {
+				await signUp.finalize({
+					navigate: ({ session, decorateUrl }) => {
+						if (session?.currentTask) {
+							console.log('Session task:', session.currentTask);
+							router.push('/dashboard'); // ваша страница для завершения таска
+							router.refresh();
+							return;
+						}
+						const url = decorateUrl('/dashboard');
+						if (url.startsWith('http')) {
+							window.location.href = url;
+						} else {
+							router.push(url);
+							router.refresh();
+						}
+					}
+				})
+			} else {
+				console.log('Status: ', signUp.status);
+			}
+
 		} catch (error) {
 			console.log(error);
 			setError("An unexpected error occurred");
@@ -104,7 +137,7 @@ export default function Register() {
 						<button
 							type="submit"
 							onClick={OauthLogin}
-							className="group relative flex w-full items-center justify-center gap-2 rounded-md border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black transition-all"
+							className="group relative cursor-pointer flex w-full items-center justify-center gap-2 rounded-md border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black transition-all"
 						>
 							<Image
 								src="/imgs/Google.png"
@@ -329,8 +362,8 @@ export default function Register() {
 									}
 								}}
 								disabled={submitting}
-								style={{ backgroundColor: submitting ? "#171717" : "white" }}
-								className="flex w-full justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black transition-all"
+								style={{ backgroundColor: submitting || fetchStatus === 'fetching' ? "#171717" : "white" }}
+								className="flex w-full cursor-pointer justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black transition-all"
 							>
 								Create account
 							</button>
@@ -352,6 +385,7 @@ export default function Register() {
 							Sign in
 						</Link>
 					</div>
+					<div id="clerk-captcha" />
 				</div>
 			</div>
 		</div>

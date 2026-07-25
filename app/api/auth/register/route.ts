@@ -2,6 +2,13 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { hash } from "bcrypt";
 
+interface RegisterData {
+	name: string,
+	username: string,
+	email: string,
+	password: string
+};
+
 export async function POST(req: Request) {
 	try {
 		const { name, username, email, password } = (await req.json()) as {
