@@ -7,6 +7,7 @@ import Image from "next/image";
 import { User, Mail, Lock, AtSign } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { OauthLogin } from "@/lib/Oauth";
+import { useSignUp } from '@clerk/nextjs';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -55,6 +56,7 @@ export default function Register() {
 	const [submitting, setSubmitting] = useState(false);
 	const [termsAccepted, setTermsAccepted] = useState(false);
 	const [error, setError] = useState("");
+	const { signUp } = useSignUp();
 	const onSubmitHandler: SubmitHandler<registerForm> = async (data) => {
 		try {
 			setSubmitting(true);
