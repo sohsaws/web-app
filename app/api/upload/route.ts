@@ -1,18 +1,25 @@
 import { put } from "@vercel/blob";
 import { NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 
 export async function POST(request: Request): Promise<NextResponse> {
-	const session = await auth();
+	const { sessionStatus, userId } = await auth();
 	const { searchParams } = new URL(request.url);
 	const filename = searchParams.get("filename");
 
-	if (!session) {
+	if (sessionStatus !== 'active') {
 		return NextResponse.json({
 			error: "Unauthorized",
 			status: 401,
 		});
+	}
+
+	if (!userId) {
+		return NextResponse.json({
+			error: 'User is not existing',
+			status: 500,
+		})
 	}
 
 	if (!filename) {
@@ -29,7 +36,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
 	await prisma.user.update({
 		where: {
-			id: session.user.id as string,
+			id: userId,
 		},
 		data: {
 			image: blob.url,

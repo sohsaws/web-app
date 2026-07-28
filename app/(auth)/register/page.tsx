@@ -5,8 +5,8 @@ import * as z from "zod";
 import Link from "next/link";
 import Image from "next/image";
 import { User, Mail, Lock, AtSign } from "lucide-react";
-import { OauthLogin } from "@/lib/Oauth";
 import { useSignUp } from '@clerk/nextjs';
+import { GoogleAuthButton } from '../../../components/GoogleSignButton';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -134,19 +134,7 @@ export default function Register() {
 
 				<div className="mt-8">
 					<div className="grid gap-3">
-						<button
-							type="submit"
-							onClick={OauthLogin}
-							className="group relative cursor-pointer flex w-full items-center justify-center gap-2 rounded-md border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black transition-all"
-						>
-							<Image
-								src="/imgs/Google.png"
-								alt="Google"
-								width={16}
-								height={16}
-							/>
-							<span>Google</span>
-						</button>
+						<GoogleAuthButton />
 					</div>
 
 					<div className="relative mt-6">

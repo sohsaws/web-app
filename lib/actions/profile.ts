@@ -1,16 +1,19 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 
 export async function updateProfile(data: { name: string; bio: string }) {
 	try {
-		const session = await auth();
-		const userId = session?.user?.id;
+		const { userId, isAuthenticated, redirectToSignIn} = await auth();
+
+		if (!userId || !isAuthenticated) {
+			return redirectToSignIn();
+		}
 
 		await prisma.user.update({
 			where: {
-				id: userId,
+				id: userId
 			},
 			data: {
 				name: data.name,

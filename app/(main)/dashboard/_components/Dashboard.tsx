@@ -1,18 +1,17 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useUser } from '@clerk/nextjs';
 import MyToast from "@/components/Toast";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ensureServerEntryExports } from 'next/dist/build/webpack/loaders/next-flight-loader/action-validate';
 
 export default function DashBoard() {
 	const router = useRouter();
 
 	MyToast();
 
-	const { data: session } = useSession();
-
-	const user = session?.user;
+	const { user } = useUser();
 
 	return (
 		<main className="relative z-10 pt-32 pb-20 max-w-7xl mx-auto px-6 w-full space-y-12">
@@ -26,16 +25,19 @@ export default function DashBoard() {
 							Growth comparison year over year
 						</p>
 						<Image
-							src={user?.image ? user.image : "/imgs/User.png"}
-							alt={`profile photo of ${user?.name}`}
+							src={user?.imageUrl ? user.imageUrl : "/imgs/User.png"}
+							alt={`profile photo of ${user?.firstName}`}
 							width={180}
 							height={180}
 							className="flex items-center justify-center rounded-full mt-8"
 						/>
 						<div className="mt-8">
 							<p className="mb-3">ID: {user?.id}</p>
-							<p className="mb-3">Name: {user?.name}</p>
-							<p className="mb-3">Email: {user?.email}</p>
+							<p className="mb-3">Name: {user?.firstName}</p>
+							<p className="mb-3">Email:
+								{user?.emailAddresses.map((email, key) => (
+								<p key={key}>{email.emailAddress}</p>))}
+							</p>
 						</div>
 					</div>
 					<button className="p-2 text-neutral-500 hover:text-white transition-colors border border-transparent hover:border-white/10 hover:bg-white/5 rounded-lg"></button>

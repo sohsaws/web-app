@@ -1,11 +1,10 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 
 export async function getUser() {
-	const session = await auth();
-	const userId = session?.user?.id;
+	const { userId }= await auth();
 
 	if (!userId) {
 		return null;

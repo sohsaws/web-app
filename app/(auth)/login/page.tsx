@@ -6,12 +6,13 @@ import MyToast from "@/components/Toast";
 import Link from "next/link";
 import Image from "next/image";
 import { AtSign, Lock } from "lucide-react";
-import { signIn } from "next-auth/react";
+// import { signIn } from "next-auth/react";
 import { OauthLogin } from "@/lib/Oauth";
 import { useSignIn } from '@clerk/nextjs';
+import { GoogleAuthButton } from '../../../components/GoogleSignButton';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import * as z from "zod";
 
 const userSchema = z.object({
@@ -45,40 +46,60 @@ export default function Login() {
 	});
 
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState("");
+	const [Error, setError] = useState('');
 
 	const callbackUrl = useSearchParams().get("callbackUrl") || "/dashboard";
+	const { signIn, fetchStatus } = useSignIn();
 
 	const onSubmitHandler: SubmitHandler<loginForm> = async (data) => {
 		try {
 			setLoading(true);
-			const res = await signIn("credentials", {
-				redirect: false,
-				identifier: data.identifier,
-				password: data.password,
-				redirectTo: callbackUrl,
-			});
 
+			const { error } = await signIn.password({
+				identifier: data.identifier,
+				password: data.password
+			});
 			setLoading(false);
 
-			console.log(res);
+			if (error) {
 
-			if (!res?.error) {
-				router.push(callbackUrl);
-			} else {
-				setError("Invalid credentials");
+				if (error.message === `Couldn't find your account.`) {
+					console.log(error.message, error.longMessage);
+					setError(`This account doesn't exists`);
+					return;
+				}
+
+				console.log(JSON.stringify(error, null, 2));
+				return;
 			}
+
+			if (signIn.status === 'complete') {
+				await signIn.finalize({
+					navigate: ({ session, decorateUrl }) => {
+
+						if (session?.currentTask) {
+							console.log(session?.currentTask);
+							router.push(decorateUrl(callbackUrl));
+						}
+
+						const url = decorateUrl(callbackUrl);
+						if (url.startsWith('http')) {
+							window.location.href = url;
+						} else {
+							router.push(url);
+						}
+					}
+				})
+			} else {
+				console.log('Sign up not complete: ', signIn.status);
+			}
+			
 		} catch (error) {
 			console.log(error);
 			setLoading(false);
-			setError(error as string);
+			setError(String(error));
 		}
 	};
-
-	// const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-	//   const { name, value } = event.target;
-	//   setFormValues({ ...formValues, [name]: value });
-	// };
 
 	return (
 		<div className="bg-zinc-950 grow flex min-h-screen items-center justify-center pt-25 px-4 py-12 sm:px-6 lg:px-20 xl:px-24">
@@ -94,19 +115,7 @@ export default function Login() {
 
 				<div className="mt-8">
 					<div className="grid gap-2">
-						<button
-							onClick={OauthLogin}
-							type="submit"
-							className="cursor-pointer flex items-center justify-center gap-3 rounded-md border border-neutral-700 bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-black transition-all"
-						>
-							<Image
-								src="/imgs/Google.png"
-								alt="Google"
-								width={16}
-								height={16}
-							/>
-							<span>Google</span>
-						</button>
+						<GoogleAuthButton />
 					</div>
 
 					<div className="relative mt-6">
@@ -205,15 +214,15 @@ export default function Login() {
 								type="submit"
 								style={{ backgroundColor: loading ? "#171717" : "white" }}
 								disabled={loading}
-								className="flex w-full justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black transition-all"
+								className="flex w-full cursor-pointer justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black transition-all"
 							>
-								{loading ? "Loading..." : "Log in"}
+								{loading || fetchStatus === 'fetching' ? "Loading..." : "Log in"}
 							</button>
 						</div>
 
-						{error ? (
+						{Error ? (
 							<p className="flex items-center justify-center text-sm text-red-500">
-								{error}
+								{Error}
 							</p>
 						) : null}
 					</form>

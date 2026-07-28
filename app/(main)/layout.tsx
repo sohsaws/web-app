@@ -1,7 +1,6 @@
 import { BellRing } from "lucide-react";
 import Link from "next/link";
 import Dropdown from "@/components/Dropdown";
-import { SessionProvider } from "next-auth/react";
 
 export default function MainLayout({
 	children,
@@ -50,7 +49,7 @@ export default function MainLayout({
 			</nav>
 
 			<div>
-				<SessionProvider>{children}</SessionProvider>
+				{children}
 			</div>
 		</>
 	);

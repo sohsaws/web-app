@@ -1,5 +1,6 @@
+
 import NotificationsContent from "./_components/NotificationsContent";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 export default async function NotificationsPage() {

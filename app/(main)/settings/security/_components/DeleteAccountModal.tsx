@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Trash2, AlertTriangle, X } from "lucide-react";
-import { Logout } from "@/lib/Oauth";
 import { deleteAccount } from "@/lib/actions/creds-changes";
 import * as z from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -40,6 +39,10 @@ export function DeleteAccountModal({ hasPassword }: { hasPassword: boolean }) {
 		setPassword("");
 		setConfirmation("");
 	};
+
+	const Logout = async () => {
+		return;
+	}
 
 	const onSubmitHandler: SubmitHandler<passForm> = async (data) => {
 		try {

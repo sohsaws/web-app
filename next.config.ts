@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
 				hostname: "zxeuto22j2svqapd.public.blob.vercel-storage.com",
 				pathname: "/**",
 			},
+			{
+				protocol: 'https',
+				hostname: 'img.clerk.com',
+				pathname: '/**'
+			}
 		],
 	},
 };

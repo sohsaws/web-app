@@ -1,10 +1,10 @@
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-	const session = await auth();
+	const { sessionStatus, sessionId } = await auth();
 
-	if (!session?.user) {
+	if (sessionStatus !== 'active') {
 		return new NextResponse(
 			JSON.stringify({ message: "Unauthorized", status: "fail" }),
 			{ status: 401 },
@@ -12,7 +12,6 @@ export async function GET() {
 	}
 
 	return NextResponse.json({
-		authenticated: !!session,
-		session,
+		authenticated: sessionId,
 	});
 }
