@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+
 import prisma from "@/lib/prisma";
 import { TokenStatusCard } from "@/components/TokenStatusCard";
 import { NewEmailForm } from "./_components/NewEmailForm";

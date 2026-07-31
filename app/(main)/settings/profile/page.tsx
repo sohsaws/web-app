@@ -1,19 +1,22 @@
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import ProfileForm from "./_components/ProfileForm";
 import AvatarUpload from "./_components/AvatarUpload";
 import { getUser } from "@/lib/actions/User";
-
+import { auth } from '@clerk/nextjs/server';
+import { currentUser } from "@clerk/nextjs/server";
 import { Camera } from "lucide-react";
+
 
 export default async function Profile() {
 	const user = await getUser();
+	const u1 = await currentUser();
+	const { userId, isAuthenticated }  = await auth();
+
+	console.log('Profile page: ', userId, isAuthenticated, u1);
 
 	if (!user) {
-		return (
-			<div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-				<p className="text-sm text-neutral-500">Loading profile…</p>
-			</div>
-		);
+		redirect("/login");
 	}
 
 	return (

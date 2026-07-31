@@ -1,12 +1,17 @@
 import { BellRing } from "lucide-react";
 import Link from "next/link";
 import Dropdown from "@/components/Dropdown";
+import { auth } from "@clerk/nextjs/server";
 
-export default function MainLayout({
+export default async function MainLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const { userId, isAuthenticated } = await auth();
+
+	console.log('(main) routes: ', userId, isAuthenticated);
+
 	return (
 		<>
 			<nav className="fixed top-0 w-full z-50 bg-zinc-950 border-b border-white/5 h-20">

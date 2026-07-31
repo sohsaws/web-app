@@ -1,14 +1,8 @@
-import { generateToken } from "@/lib/utils/tokenGenerator";
-import { sendEmail } from "@/lib/actions/email-actions";
-import { VerificationTemp } from "@/emails/verification-template";
+
 import { getUser } from "@/lib/actions/User";
 import { requestForChange } from "@/lib/actions/creds-changes";
-import prisma from "@/lib/prisma";
 import { Mail } from "lucide-react";
 import Link from "next/link";
-import React from "react";
-import { TokenStatusCard } from "@/components/TokenStatusCard";
-import { success } from "zod";
 
 export default async function VerifyEmailPending() {
 	// const user = await getUser();

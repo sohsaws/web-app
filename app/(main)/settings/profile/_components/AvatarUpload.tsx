@@ -3,20 +3,25 @@
 import { useRef, useState } from "react";
 import { PutBlobResult } from "@vercel/blob";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 export default function AvatarUpload() {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [uploading, setUploading] = useState(false);
-	const { update: updateSession } = useSession();
+	const { user } = useUser();
 	const router = useRouter();
 
 	const handleFileChange = async (
 		event: React.ChangeEvent<HTMLInputElement>,
 	) => {
+
 		const file = event.target.files?.[0];
-		if (!file) return;
+
+		if (!file) {
+			toast.error('Something went wrong while saving file');
+			return;
+		};
 
 		if (file.size > 4 * 1024 * 1024) {
 			toast.error("File too large (max 4 MB)");
@@ -38,10 +43,8 @@ export default function AvatarUpload() {
 
 			const newBlob = (await response.json()) as PutBlobResult;
 
-			await updateSession({
-				user: {
-					image: newBlob.url,
-				},
+			await user?.setProfileImage({
+				file: newBlob.url
 			});
 
 			toast.success("Avatar updated successfully", { id: toastId });

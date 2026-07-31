@@ -1,10 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
-// import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 import { toast } from "sonner";
-// import { CheckCircle, XCircle, AlertCircle, Mail } from "lucide-react";
 import { TokenStatusCard } from "@/components/TokenStatusCard";
 import { TokenStatus } from "@/components/TokenStatusCard";
 

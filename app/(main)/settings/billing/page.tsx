@@ -1,12 +1,12 @@
 import BillingContent from "./_components/BillingContent";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 export default async function BillingPage() {
-	const session = await auth();
+	const { isAuthenticated, redirectToSignIn } = await auth();
 
-	if (!session) {
-		redirect("/login");
+	if (!isAuthenticated) {
+		return redirectToSignIn;
 	}
 
 	return (

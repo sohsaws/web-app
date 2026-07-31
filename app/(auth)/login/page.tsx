@@ -4,15 +4,11 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import MyToast from "@/components/Toast";
 import Link from "next/link";
-import Image from "next/image";
 import { AtSign, Lock } from "lucide-react";
-// import { signIn } from "next-auth/react";
-import { OauthLogin } from "@/lib/Oauth";
 import { useSignIn } from '@clerk/nextjs';
 import { GoogleAuthButton } from '../../../components/GoogleSignButton';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import { toast } from "sonner";
 import * as z from "zod";
 
 const userSchema = z.object({
@@ -33,7 +29,6 @@ const userSchema = z.object({
 type loginForm = z.infer<typeof userSchema>;
 
 export default function Login() {
-	MyToast();
 
 	const router = useRouter();
 

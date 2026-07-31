@@ -3,9 +3,8 @@
 import { useState } from "react";
 import * as z from "zod";
 import Link from "next/link";
-import Image from "next/image";
 import { User, Mail, Lock, AtSign } from "lucide-react";
-import { useSignUp } from '@clerk/nextjs';
+import { useSignUp } from "@clerk/nextjs";
 import { GoogleAuthButton } from '../../../components/GoogleSignButton';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -63,27 +62,13 @@ export default function Register() {
 	const onSubmitHandler: SubmitHandler<registerForm> = async (data) => {
 		try {
 			setSubmitting(true);
-			const res = await fetch("/api/auth/register", {
-				method: "POST",
-				body: JSON.stringify(data),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-
-			if (!res.ok) {
-				const errorData = await res.json();
-				setError(errorData.message || "Registration failed");
-				setSubmitting(false);
-				return;
-			}
 
 			const { error } = await signUp.password({
 				firstName: data.name,
-				lastName: 'Leen',
+				lastName: '',
 				username: data.username,
 				password: data.password,
-				emailAddress: data.email
+				emailAddress: data.email,
 			});
 
 			if (error) {
@@ -91,26 +76,52 @@ export default function Register() {
 				console.error(JSON.stringify(error, null, 2));
 			}
 
-			if (signUp.status === 'complete') {
+			if (signUp.status === "complete") {
+				const clerkId = signUp.createdUserId;
+
+				if (!clerkId) {
+					setError("Registration failed: Clerk user id was not created.");
+					setSubmitting(false);
+					return;
+				}
+
+				const res = await fetch("/api/auth/register", {
+					method: "POST",
+					body: JSON.stringify({
+						...data,
+						clerkId,
+					}),
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
+
+				if (!res.ok) {
+					const errorData = await res.json();
+					setError(errorData.message || "Registration failed");
+					setSubmitting(false);
+					return;
+				}
+
 				await signUp.finalize({
 					navigate: ({ session, decorateUrl }) => {
 						if (session?.currentTask) {
-							console.log('Session task:', session.currentTask);
-							router.push('/dashboard'); // ваша страница для завершения таска
+							console.log("Session task:", session.currentTask);
+							router.push("/dashboard");
 							router.refresh();
 							return;
 						}
-						const url = decorateUrl('/dashboard');
-						if (url.startsWith('http')) {
+						const url = decorateUrl("/dashboard");
+						if (url.startsWith("http")) {
 							window.location.href = url;
 						} else {
 							router.push(url);
 							router.refresh();
 						}
-					}
-				})
+					},
+				});
 			} else {
-				console.log('Status: ', signUp.status);
+				console.log("Status: ", signUp.status);
 			}
 
 		} catch (error) {

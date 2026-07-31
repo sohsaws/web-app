@@ -3,11 +3,8 @@
 import { useUser } from '@clerk/nextjs';
 import MyToast from "@/components/Toast";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { ensureServerEntryExports } from 'next/dist/build/webpack/loaders/next-flight-loader/action-validate';
 
 export default function DashBoard() {
-	const router = useRouter();
 
 	MyToast();
 

@@ -5,7 +5,7 @@ import { auth } from "@clerk/nextjs/server";
 
 export async function updateProfile(data: { name: string; bio: string }) {
 	try {
-		const { userId, isAuthenticated, redirectToSignIn} = await auth();
+		const { userId, isAuthenticated, redirectToSignIn } = await auth();
 
 		if (!userId || !isAuthenticated) {
 			return redirectToSignIn();
@@ -13,7 +13,7 @@ export async function updateProfile(data: { name: string; bio: string }) {
 
 		await prisma.user.update({
 			where: {
-				id: userId
+				clerkId: userId,
 			},
 			data: {
 				name: data.name,

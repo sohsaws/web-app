@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { useUser } from '@clerk/nextjs';
 import { Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as z from "zod";
@@ -35,7 +35,11 @@ export default function ProfileForm(creds: {
 }) {
 	const router = useRouter();
 
-	const { update: updateSession } = useSession();
+	const { user } = useUser();
+
+	if (!user) {
+		console.log(`User doesn't exists`);
+	}
 
 	const isVerificated = !!creds.emailVerified;
 
@@ -60,11 +64,9 @@ export default function ProfileForm(creds: {
 			const result = await updateProfile(data);
 
 			if (result?.success) {
-				await updateSession({
-					user: {
-						name: data.name,
-					},
-				});
+				await user?.update({
+					firstName: data.name,
+				})
 
 				toast.success(result.message);
 				router.refresh();
