@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import MyToast from "@/components/Toast";
 import Link from "next/link";
 import { AtSign, Lock } from "lucide-react";
 import { useSignIn } from '@clerk/nextjs';
