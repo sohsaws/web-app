@@ -1,105 +1,92 @@
+import { auth } from "@clerk/nextjs/server";
 import { put } from "@vercel/blob";
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+const MAX_FILE_SIZE = 4 * 1024 * 1024;
 
 export async function POST(request: Request): Promise<NextResponse> {
-	const { sessionStatus, userId } = await auth();
-	const { searchParams } = new URL(request.url);
-	const filename = searchParams.get("filename");
+  const { sessionStatus, userId } = await auth();
+  const user = await currentUser();
 
-	if (sessionStatus !== 'active') {
-		return NextResponse.json({
-			error: "Unauthorized",
-			status: 401,
-		});
-	}
+  if (sessionStatus !== "active") {
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+        status: 401,
+      },
+      { status: 401 },
+    );
+  }
 
-	if (!userId) {
-		return NextResponse.json({
-			error: 'User is not existing',
-			status: 500,
-		})
-	}
+  if (!userId) {
+    return NextResponse.json(
+      {
+        error: "Something went wrong",
+        status: 500,
+      },
+      { status: 500 },
+    );
+  }
 
-	if (!filename) {
-		return NextResponse.json({
-			error: "No filename provided",
-			status: 400,
-		});
-	}
+  const formData = await request.formData();
+  const file = formData.get("file");
 
-	const blob = await put(filename, request.body as any, {
-		access: "public",
-		allowOverwrite: true,
-	});
+  if (!(file instanceof File)) {
+    return NextResponse.json(
+      {
+        error: "No file uploaded",
+        status: 400,
+      },
+      { status: 400 },
+    );
+  }
 
-	await prisma.user.update({
-		where: {
-			id: userId,
-		},
-		data: {
-			image: blob.url,
-		},
-	});
+  if (!file.name) {
+    return NextResponse.json(
+      {
+        error: "No filename provided",
+        status: 400,
+      },
+      { status: 400 },
+    );
+  }
 
-	// session.user.image = blob.url;
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return NextResponse.json(
+      {
+        error: "Invalid file type",
+        status: 400,
+      },
+      { status: 400 },
+    );
+  }
 
-	return NextResponse.json(blob);
+  if (file.size > MAX_FILE_SIZE) {
+    return NextResponse.json(
+      {
+        error: "File too large (max 4 MB)",
+        status: 400,
+      },
+      { status: 400 },
+    );
+  }
+
+  const blob = await put(file.name, file, {
+    access: "public",
+    allowOverwrite: true,
+  });
+
+  await prisma.user.update({
+    where: {
+      clerkId: userId,
+    },
+    data: {
+      image: blob.url,
+    },
+  });
+
+  return NextResponse.json({ url: blob.url });
 }
-
-// import path from "path";
-// import prisma from "@/lib/prisma";
-// import { NextResponse } from "next/server";
-// import { auth } from "@/auth";
-
-// export async function POST(req: Request) {
-
-//     const formData = await req.formData();
-//     const userId = (await auth())?.user.id;
-
-//     const file = formData.get("file") as File;
-
-//     if (!file) {
-//         return NextResponse.json({
-//             error: "No file uploaded",
-//             success: false },
-//             { status: 400 }
-//         );
-//     }
-
-//     const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-//     if (!allowedTypes.includes(file.type)) {
-//         return NextResponse.json({
-//             error: "Invalid file type",
-//             success: false },
-//             { status: 400 }
-//         );
-//     }
-
-//     const maxSize = 4 * 1024 * 1024;
-//     if (file.size > maxSize) {
-//         return NextResponse.json({
-//             error: "File too large (max 5MB)",
-//             success: false},
-//             { status: 400 }
-//         );
-//     }
-
-//     try {
-//         const bytes = await file.arrayBuffer();
-//         const buffer = Buffer.from(bytes);
-
-//         const upload = await prisma.user.upsert({
-//             where: {
-//                 id: userId
-//             },
-//             create: {
-//                 image: file
-//             },
-//             update: {
-//                 image: file
-//             }
-//         })
-//     }
-// }

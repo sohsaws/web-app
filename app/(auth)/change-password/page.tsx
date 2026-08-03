@@ -1,30 +1,30 @@
-import prisma from "@/lib/prisma";
 import { TokenStatusCard } from "@/components/TokenStatusCard";
+import prisma from "@/lib/prisma";
 import { NewPasswordForm } from "./_components/NewPasswordForm";
 
 export default async function ChangePasswordPage({
-	searchParams,
+  searchParams,
 }: {
-	searchParams: Promise<{ token?: string }>;
+  searchParams: Promise<{ token?: string }>;
 }) {
-	const { token } = await searchParams;
+  const { token } = await searchParams;
 
-	if (!token) {
-		return <TokenStatusCard status="invalid_token" />;
-	}
+  if (!token) {
+    return <TokenStatusCard status="invalid_token" />;
+  }
 
-	const verificationToken = await prisma.verificationToken.findUnique({
-		where: { token },
-	});
+  const verificationToken = await prisma.verificationToken.findUnique({
+    where: { token },
+  });
 
-	if (!verificationToken) {
-		return <TokenStatusCard status="invalid_token" />;
-	}
+  if (!verificationToken) {
+    return <TokenStatusCard status="invalid_token" />;
+  }
 
-	if (verificationToken.expiresAt < new Date()) {
-		await prisma.verificationToken.delete({ where: { token } });
-		return <TokenStatusCard status="expired_token" />;
-	}
+  if (verificationToken.expiresAt < new Date()) {
+    await prisma.verificationToken.delete({ where: { token } });
+    return <TokenStatusCard status="expired_token" />;
+  }
 
-	return <NewPasswordForm token={token} />;
+  return <NewPasswordForm token={token} />;
 }

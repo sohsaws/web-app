@@ -1,14 +1,9 @@
-import { clerkMiddleware } from '@clerk/nextjs/server'
+import { NextResponse, type NextRequest } from "next/server";
 
-export default clerkMiddleware(
-	(auth, req) => {
-	},
-	{ debug: true })
+export default function proxy(request: NextRequest) {
+  return undefined;
+}
 
 export const config = {
-  matcher: [
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    '/(api|trpc)(.*)',
-    '/__clerk/(.*)',
-  ],
-}
+  matcher: ["/(dashboard|settings)(.*)", "/(api)(.*)", "/__clerk/(.*)"],
+};

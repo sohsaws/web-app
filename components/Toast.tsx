@@ -1,15 +1,15 @@
 "use client";
 
-import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function MyToast() {
-	const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
 
-	useEffect(() => {
-		if (searchParams.get("reason") === "unauthorized") {
-			toast.warning("Please login to access this page");
-		}
-	}, []);
+  useEffect(() => {
+    if (searchParams.get("reason") === "unauthorized") {
+      toast.warning("Please login to access this page");
+    }
+  }, []);
 }
