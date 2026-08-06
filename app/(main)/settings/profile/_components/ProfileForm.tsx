@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useUser } from '@clerk/nextjs';
+import { authClient } from "@/lib/auth/auth-client";
 import { Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as z from "zod";
@@ -13,7 +13,6 @@ import { updateProfile } from "@/lib/actions/profile";
 import Exclamation from "./Exclamation";
 
 const BIO_MAX = 400;
-
 const profileSchema = z.object({
 	name: z
 		.string()
@@ -34,16 +33,9 @@ export default function ProfileForm(creds: {
 	emailVerified: Date | null;
 }) {
 	const router = useRouter();
-
-	const { user } = useUser();
-
-	if (!user) {
-		console.log(`User doesn't exists`);
-	}
+	const [subbmitting, setSubmitting] = useState(false);
 
 	const isVerificated = !!creds.emailVerified;
-
-	const [subbmitting, setSubmitting] = useState(false);
 
 	const {
 		register,
@@ -64,9 +56,9 @@ export default function ProfileForm(creds: {
 			const result = await updateProfile(data);
 
 			if (result?.success) {
-				await user?.update({
-					firstName: data.name,
-				})
+				await authClient.updateUser({
+					name: data.name,
+				});
 
 				toast.success(result.message);
 				router.refresh();

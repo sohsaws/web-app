@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { AtSign, Lock } from "lucide-react";
-import { useSignIn } from '@clerk/nextjs';
-import { GoogleAuthButton } from '../../../components/GoogleSignButton';
+import { authClient } from '@/lib/auth/auth-client';
+import { GoogleAuthButton } from '@/components/GoogleSignButton';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+
 
 const userSchema = z.object({
 	identifier: z
@@ -29,7 +30,7 @@ type loginForm = z.infer<typeof userSchema>;
 
 export default function Login() {
 
-	const router = useRouter();
+	// const router = useRouter();
 
 	const {
 		register,
@@ -40,58 +41,41 @@ export default function Login() {
 	});
 
 	const [loading, setLoading] = useState(false);
-	const [Error, setError] = useState('');
+	const [Error, setError] = useState<string | undefined>();
 
 	const callbackUrl = useSearchParams().get("callbackUrl") || "/dashboard";
-	const { signIn, fetchStatus } = useSignIn();
 
-	const onSubmitHandler: SubmitHandler<loginForm> = async (data) => {
+	const onSubmitHandler: SubmitHandler<loginForm> = async (Data) => {
 		try {
 			setLoading(true);
 
-			const { error } = await signIn.password({
-				identifier: data.identifier,
-				password: data.password
+			const isEmail = Data.identifier.includes("@");
+
+			const { data, error } = isEmail ? await authClient.signIn.email({
+				email: Data.identifier,
+				password: Data.password,
+				rememberMe: true,
+				callbackURL: callbackUrl
+			}) : await authClient.signIn.username({
+				username: Data.identifier,
+				password: Data.password,
+				rememberMe: true,
+				callbackURL: callbackUrl
 			});
-			setLoading(false);
 
 			if (error) {
-
-				if (error.message === `Couldn't find your account.`) {
-					console.log(error.message, error.longMessage);
-					setError(`This account doesn't exists`);
-					return;
-				}
-
+				setError(error.message);
 				console.log(JSON.stringify(error, null, 2));
-				return;
 			}
 
-			if (signIn.status === 'complete') {
-				await signIn.finalize({
-					navigate: ({ session, decorateUrl }) => {
-
-						if (session?.currentTask) {
-							console.log(session?.currentTask);
-							router.push(decorateUrl(callbackUrl));
-						}
-
-						const url = decorateUrl(callbackUrl);
-						if (url.startsWith('http')) {
-							window.location.href = url;
-						} else {
-							router.push(url);
-						}
-					}
-				})
-			} else {
-				console.log('Sign up not complete: ', signIn.status);
-			}
-			
+			console.log(data);
+		
 		} catch (error) {
 			console.log(error);
 			setLoading(false);
 			setError(String(error));
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -210,7 +194,7 @@ export default function Login() {
 								disabled={loading}
 								className="flex w-full cursor-pointer justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black transition-all"
 							>
-								{loading || fetchStatus === 'fetching' ? "Loading..." : "Log in"}
+								{loading  ? "Loading..." : "Log in"}
 							</button>
 						</div>
 

@@ -1,23 +1,27 @@
 import { put } from "@vercel/blob";
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
-export async function POST(request: Request): Promise<NextResponse> {
-	const { sessionStatus, userId } = await auth();
-	const { searchParams } = new URL(request.url);
-	const filename = searchParams.get("filename");
+export async function PUT(request: Request): Promise<NextResponse> {
+	const session = await auth.api.getSession();
+	const form = await request.formData();
 
-	if (sessionStatus !== 'active') {
+	const filename = form.get("filename") as string;
+	const file = form.get('file') as File;
+
+	if (!session) {
 		return NextResponse.json({
 			error: "Unauthorized",
 			status: 401,
 		});
 	}
 
+	const userId = session.user.id;
+
 	if (!userId) {
 		return NextResponse.json({
-			error: 'User is not existing',
+			error: 'User not found',
 			status: 500,
 		})
 	}
@@ -29,7 +33,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 		});
 	}
 
-	const blob = await put(filename, request.body as any, {
+	const blob = await put(filename, file, {
 		access: "public",
 		allowOverwrite: true,
 	});

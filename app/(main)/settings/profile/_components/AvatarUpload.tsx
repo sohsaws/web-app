@@ -3,13 +3,12 @@
 import { useRef, useState } from "react";
 import { PutBlobResult } from "@vercel/blob";
 import { toast } from "sonner";
-import { useUser } from "@clerk/nextjs";
+import { authClient } from '@/lib/auth/auth-client';
 import { useRouter } from "next/navigation";
 
 export default function AvatarUpload() {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [uploading, setUploading] = useState(false);
-	const { user } = useUser();
 	const router = useRouter();
 
 	const handleFileChange = async (
@@ -33,7 +32,7 @@ export default function AvatarUpload() {
 
 		try {
 			const response = await fetch(`/api/upload?filename=${file.name}`, {
-				method: "POST",
+				method: "PUT",
 				body: file,
 			});
 
@@ -43,9 +42,9 @@ export default function AvatarUpload() {
 
 			const newBlob = (await response.json()) as PutBlobResult;
 
-			await user?.setProfileImage({
-				file: newBlob.url
-			});
+			await authClient.updateUser({
+				image: newBlob.url
+			})
 
 			toast.success("Avatar updated successfully", { id: toastId });
 			router.refresh();

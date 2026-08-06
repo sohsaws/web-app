@@ -4,11 +4,11 @@ import { useState } from "react";
 import * as z from "zod";
 import Link from "next/link";
 import { User, Mail, Lock, AtSign } from "lucide-react";
-import { useSignUp } from "@clerk/nextjs";
-import { GoogleAuthButton } from '../../../components/GoogleSignButton';
+import { authClient } from '@/lib/auth/auth-client';
+import { GoogleAuthButton } from '@/components/GoogleSignButton';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 const userSchema = z
 	.object({
@@ -54,21 +54,20 @@ export default function Register() {
 
 	const [submitting, setSubmitting] = useState(false);
 	const [termsAccepted, setTermsAccepted] = useState(false);
-	const [error, setError] = useState("");
+	const [error, setError] = useState<string | undefined>();
 
-	const { signUp, fetchStatus } = useSignUp();
-	const router = useRouter();
+	// const router = useRouter();
 
-	const onSubmitHandler: SubmitHandler<registerForm> = async (data) => {
+	const onSubmitHandler: SubmitHandler<registerForm> = async (Data) => {
 		try {
 			setSubmitting(true);
 
-			const { error } = await signUp.password({
-				firstName: data.name,
-				lastName: '',
-				username: data.username,
-				password: data.password,
-				emailAddress: data.email,
+			const { data, error } = await authClient.signUp.email({
+				name: Data.name,
+				username: Data.username,
+				password: Data.password,
+				email: Data.email,
+				callbackURL: "/dashboard"
 			});
 
 			if (error) {
@@ -76,57 +75,30 @@ export default function Register() {
 				console.error(JSON.stringify(error, null, 2));
 			}
 
-			if (signUp.status === "complete") {
-				const clerkId = signUp.createdUserId;
+			console.log(data);
 
-				if (!clerkId) {
-					setError("Registration failed: Clerk user id was not created.");
-					setSubmitting(false);
-					return;
-				}
+			// const res = await fetch("/api/auth/register", {
+			// 	method: "POST",
+			// 	body: JSON.stringify({
+			// 		...data,
+			// 		clerkId,
+			// 	}),
+			// 	headers: {
+			// 		"Content-Type": "application/json",
+			// 	},
+			// });
 
-				const res = await fetch("/api/auth/register", {
-					method: "POST",
-					body: JSON.stringify({
-						...data,
-						clerkId,
-					}),
-					headers: {
-						"Content-Type": "application/json",
-					},
-				});
-
-				if (!res.ok) {
-					const errorData = await res.json();
-					setError(errorData.message || "Registration failed");
-					setSubmitting(false);
-					return;
-				}
-
-				await signUp.finalize({
-					navigate: ({ session, decorateUrl }) => {
-						if (session?.currentTask) {
-							console.log("Session task:", session.currentTask);
-							router.push("/dashboard");
-							router.refresh();
-							return;
-						}
-						const url = decorateUrl("/dashboard");
-						if (url.startsWith("http")) {
-							window.location.href = url;
-						} else {
-							router.push(url);
-							router.refresh();
-						}
-					},
-				});
-			} else {
-				console.log("Status: ", signUp.status);
-			}
+			// if (!res.ok) {
+			// 	const errorData = await res.json();
+			// 	setError(errorData.message || "Registration failed");
+			// 	setSubmitting(false);
+			// 	return;
+			// }
 
 		} catch (error) {
 			console.log(error);
 			setError("An unexpected error occurred");
+		} finally {
 			setSubmitting(false);
 		}
 	};
@@ -361,7 +333,7 @@ export default function Register() {
 									}
 								}}
 								disabled={submitting}
-								style={{ backgroundColor: submitting || fetchStatus === 'fetching' ? "#171717" : "white" }}
+								style={{ backgroundColor: submitting ? "#171717" : "white" }}
 								className="flex w-full cursor-pointer justify-center rounded-md border border-transparent bg-white py-2 px-4 text-sm font-medium text-black shadow-sm hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black transition-all"
 							>
 								Create account

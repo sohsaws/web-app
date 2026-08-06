@@ -1,21 +1,25 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "./../auth";
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export async function getUser() {
 
-	const { userId } = await auth();
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
 
-	console.log(userId);
-
-	if (!userId) {
-		return null;
+	if (!session) {
+		redirect('/login');
 	}
+
+	const id = session.user.id;
 
 	const user = await prisma.user.findUnique({
 		where: {
-			clerkId: userId,
+			id: id,
 		},
 	});
 

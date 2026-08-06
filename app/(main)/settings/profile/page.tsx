@@ -2,21 +2,27 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import ProfileForm from "./_components/ProfileForm";
 import AvatarUpload from "./_components/AvatarUpload";
-import { getUser } from "@/lib/actions/User";
-import { auth } from '@clerk/nextjs/server';
-import { currentUser } from "@clerk/nextjs/server";
+import { authClient } from '@/lib/auth/auth-client';
+import { getUser } from '@/lib/actions/User';
 import { Camera } from "lucide-react";
 
 
 export default async function Profile() {
-	const user = await getUser();
-	const u1 = await currentUser();
-	const { userId, isAuthenticated }  = await auth();
 
-	console.log('Profile page: ', userId, isAuthenticated, u1);
+	const { data: session } = authClient.useSession();
+
+	if (!session) {
+		redirect('/login');
+	}
+
+	const user = await getUser();
 
 	if (!user) {
-		redirect("/login");
+		return (
+			<div className='flex items-center text-md text-red-600'>
+				<p>Something went wrong while fetching the user's data</p>
+			</div>
+		)
 	}
 
 	return (

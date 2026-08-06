@@ -1,19 +1,22 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from '../auth';
+import { redirect } from 'next/navigation';
 
-export async function updateProfile(data: { name: string; bio: string }) {
+export async function updateProfile(data: { name: string, bio: string }) {
 	try {
-		const { userId, isAuthenticated, redirectToSignIn } = await auth();
+		const session = await auth.api.getSession();
 
-		if (!userId || !isAuthenticated) {
-			return redirectToSignIn();
+		if (!session) {
+			redirect('/login');
 		}
+
+		const userId = session.user.id;
 
 		await prisma.user.update({
 			where: {
-				clerkId: userId,
+				id: userId,
 			},
 			data: {
 				name: data.name,

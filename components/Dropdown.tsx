@@ -4,16 +4,26 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { User } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useClerk } from '@clerk/nextjs';
+import { authClient } from '@/lib/auth/auth-client';
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 
 export default function Dropdown() {
+
 	const [isOpen, setIsOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
+	const router = useRouter();
 
-	const { signOut } = useClerk();
-
-	const Logout = () => {
-		signOut({ redirectUrl: '/' });
+	const logout = async () => {
+		await authClient.signOut({
+			fetchOptions: {
+				onSuccess: () => {
+					toast.success("Signed out successfully"),
+					router.push('/login');
+				}
+			}
+		})
 	}
 
 	useEffect(() => {
@@ -67,7 +77,7 @@ export default function Dropdown() {
 									<li className="w-full">
 										<button
 											className="block cursor-pointer w-full text-center px-10 py-3 text-sm text-neutral-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-											onClick={Logout}
+											onClick={logout}
 										>
 											Sign out
 										</button>
