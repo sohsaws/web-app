@@ -11,5 +11,10 @@ export default function MyToast() {
 		if (searchParams.get("reason") === "unauthorized") {
 			toast.warning("Please login to access this page");
 		}
-	}, []);
+	});
+
+	return (
+		<>
+		</>
+	)
 }

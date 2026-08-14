@@ -8,7 +8,9 @@ import { authClient } from '@/lib/auth/auth-client';
 import { GoogleAuthButton } from '@/components/GoogleSignButton';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
+
+const BaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const userSchema = z
 	.object({
@@ -52,11 +54,11 @@ export default function Register() {
 		resolver: zodResolver(userSchema),
 	});
 
-	const [submitting, setSubmitting] = useState(false);
-	const [termsAccepted, setTermsAccepted] = useState(false);
+	const [submitting, setSubmitting] = useState<boolean>(false);
+	const [termsAccepted, setTermsAccepted] = useState<boolean>(false);
 	const [error, setError] = useState<string | undefined>();
-
-	// const router = useRouter();
+	
+	const router = useRouter();
 
 	const onSubmitHandler: SubmitHandler<registerForm> = async (Data) => {
 		try {
@@ -67,33 +69,27 @@ export default function Register() {
 				username: Data.username,
 				password: Data.password,
 				email: Data.email,
-				callbackURL: "/dashboard"
+				callbackURL: `${BaseUrl}/dashboard`
+			}, {
+				onRequest: (ctx) => {
+					console.log(JSON.stringify(ctx, null, 2));
+				}, 
+				onError: (ctx) => {
+					console.error(JSON.stringify(ctx.error, null, 2));
+					setError(ctx.error.message);
+				},
+				onSuccess: () => {
+					router.push('/dashboard');
+				}
 			});
 
 			if (error) {
 				setError(error.message);
 				console.error(JSON.stringify(error, null, 2));
+				return;
 			}
 
 			console.log(data);
-
-			// const res = await fetch("/api/auth/register", {
-			// 	method: "POST",
-			// 	body: JSON.stringify({
-			// 		...data,
-			// 		clerkId,
-			// 	}),
-			// 	headers: {
-			// 		"Content-Type": "application/json",
-			// 	},
-			// });
-
-			// if (!res.ok) {
-			// 	const errorData = await res.json();
-			// 	setError(errorData.message || "Registration failed");
-			// 	setSubmitting(false);
-			// 	return;
-			// }
 
 		} catch (error) {
 			console.log(error);

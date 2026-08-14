@@ -1,19 +1,12 @@
+
 import Image from "next/image";
-import { redirect } from "next/navigation";
 import ProfileForm from "./_components/ProfileForm";
 import AvatarUpload from "./_components/AvatarUpload";
-import { authClient } from '@/lib/auth/auth-client';
 import { getUser } from '@/lib/actions/User';
 import { Camera } from "lucide-react";
 
 
 export default async function Profile() {
-
-	const { data: session } = authClient.useSession();
-
-	if (!session) {
-		redirect('/login');
-	}
 
 	const user = await getUser();
 
@@ -55,7 +48,7 @@ export default async function Profile() {
 					name={user.name}
 					bio={String(user.bio)}
 					email={String(user.email)}
-					emailVerified={user.emailVerified}
+					emailVerified={new Date()}
 				/>
 			</div>
 		</div>

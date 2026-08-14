@@ -9,27 +9,16 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
-  user: {
-    changeEmail: {
-      enabled: true,
-    },
-  },
-
   emailAndPassword: {
     enabled: true,
   },
 
   socialProviders: {
     google: {
-        clientId: process.env.GOOGLE_CLIENT_ID!,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        clientId: process.env.GOOGLE_CLIENT_ID as string,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        redirectURI: 'http://localhost:3000/api/auth/callback/google'
     },
-
-    account: {
-      accountLinking: {
-        enabled: true,
-      }
-    }
   },
 
   plugins: [    

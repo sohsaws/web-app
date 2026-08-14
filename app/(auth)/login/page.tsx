@@ -9,6 +9,7 @@ import { GoogleAuthButton } from '@/components/GoogleSignButton';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useRouter } from 'next/navigation';
 
 
 const userSchema = z.object({
@@ -30,7 +31,7 @@ type loginForm = z.infer<typeof userSchema>;
 
 export default function Login() {
 
-	// const router = useRouter();
+	const router = useRouter();
 
 	const {
 		register,
@@ -56,11 +57,27 @@ export default function Login() {
 				password: Data.password,
 				rememberMe: true,
 				callbackURL: callbackUrl
+			}, {
+				onSuccess: () => {
+					router.push('/dashboard')
+				},
+				onError: (ctx) => {
+					console.error(JSON.stringify(ctx.error, null, 2));
+					setError(ctx.error.message);
+				}
 			}) : await authClient.signIn.username({
 				username: Data.identifier,
 				password: Data.password,
 				rememberMe: true,
 				callbackURL: callbackUrl
+			}, {
+				onSuccess: () => {
+					router.push('/dashboard')
+				},
+				onError: (ctx) => {
+					console.error(JSON.stringify(ctx.error, null, 2));
+					setError(ctx.error.message);
+				}
 			});
 
 			if (error) {

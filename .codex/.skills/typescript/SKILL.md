@@ -82,9 +82,9 @@ If code seems correct in a narrow local area, still inspect how it behaves in th
 
 ## Project-Specific Preferences
 
-- Reuse existing stack and patterns: Next.js App Router, Prisma, Clerk, React Hook Form, Zod, Sonner, Tailwind v4, Biome, and strict TypeScript.
+- Reuse existing stack and patterns: Next.js App Router, Prisma, Better Auth, React Hook Form, Zod, Sonner, Tailwind v4, Biome, and strict TypeScript.
 - Validate on the server even when the client already has Zod validation.
-- Keep auth-required mutations behind Clerk server-side authorization checks.
+- Keep auth-required mutations behind Better Auth server-side session and authorization checks.
 - Prefer semantic app-level tokens for repeated global colors, sizes, and layout values.
 - Prefer focused patches. Do not rewrite whole files when a local patch is enough.
 - Prefer central wrappers for repeated behavior, such as toast messages, only when repetition is real.
@@ -104,18 +104,24 @@ If code seems correct in a narrow local area, still inspect how it behaves in th
 ## Next.js App Router Skill
 
 - Default to Server Components. Use Client Components only for state, effects, browser APIs, event handlers, client-only libraries, and interactive animation.
+- Name ordinary Client and Server Component files `name.client.tsx` and `name.server.tsx`. Keep Next.js convention filenames such as `page.tsx`, `layout.tsx`, `route.ts`, `loading.tsx`, and `error.tsx` unchanged.
+- Every `page.tsx` is a Server Component. It should compose route-local components from the route's `_components/` folder or reusable components from the root `components/` folder.
+- Keep a component used by only one route in that route's `_components/` folder. Promote it to root `components/` only when it is genuinely reused across routes.
+- Move React-hook logic that coordinates business data, requests, mutations, or domain state into a named custom hook under the root `hooks/` folder. Small presentational state may remain local.
 - Static rendering is not the opposite of Server Components. A server-rendered page can be static if it avoids request-time data.
 - Mark intentionally static marketing pages with `dynamic = "error"` when accidental dynamic APIs should fail loudly.
 - Use route handlers for HTTP APIs and external boundaries. Use server actions for internal mutations and form-style workflows.
 - Keep route-private components in `app/**/_components`; use top-level `components/` only for reusable UI.
 - Prefer colocated server data helpers in `lib/data` and mutation actions in `lib/actions`.
 
-## Clerk Auth Skill
+## Better Auth Skill
 
-- Use Clerk server APIs in server components, layouts, route handlers, middleware/proxy, and server actions.
-- Use Clerk client hooks/components only in Client Components.
+- Better Auth is the sole user and authentication manager. Do not add Clerk or Auth0 packages, APIs, components, schema fields, or middleware.
+- Use Better Auth server APIs in Server Components, layouts, route handlers, proxy, and server actions.
+- Use the Better Auth React client and its hooks only in Client Components.
 - Enforce protected route access at a boundary such as `proxy.ts` or a route-group layout instead of duplicating checks in many pages.
-- During migration, identify stale NextAuth imports/config before debugging Clerk behavior.
+- When enabling a Better Auth plugin, update the Prisma schema with every field required by that plugin, then create/apply a Prisma migration and regenerate the client before exercising the flow.
+- During migration, remove stale Clerk, Auth0, NextAuth, and custom-auth assumptions before relying on auth behavior.
 
 ## Biome And Tooling Skill
 
