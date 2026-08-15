@@ -36,6 +36,9 @@ Good simple code:
 
 Avoid meaningful duplication, especially duplicated business rules, validation schemas, tokens, messages, and API response shapes.
 
+- Define related constants once in a canonical configuration object. Derive lookup tables, allowed-value lists, union types, and UI strings from that source instead of repeating nearly identical literals across files.
+- Keep stable domain entities and their invariants in `lib/entities`. Colocate component-, hook-, form-, and transport-specific types with their owner; move them to a shared contract or configuration module only when multiple layers genuinely consume them.
+
 Do not remove harmless duplication by creating a vague abstraction. Two similar pieces of UI can remain separate until the shared pattern is stable. Prefer duplication over a premature abstraction that makes both call sites harder to read.
 
 ### YAGNI

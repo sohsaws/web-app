@@ -1,109 +1,128 @@
-import { put } from "@vercel/blob";
+import { randomUUID } from "node:crypto";
+import { del, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
+import {
+  AVATAR_CONTENT_TYPE_TO_EXTENSION,
+  AVATAR_MAX_SIZE_BYTES,
+  isAvatarContentType,
+} from "@/lib/config/avatar";
 
-export async function PUT(request: Request): Promise<NextResponse> {
-	const session = await auth.api.getSession();
-	const form = await request.formData();
-
-	const filename = form.get("filename") as string;
-	const file = form.get('file') as File;
-
-	if (!session) {
-		return NextResponse.json({
-			error: "Unauthorized",
-			status: 401,
-		});
-	}
-
-	const userId = session.user.id;
-
-	if (!userId) {
-		return NextResponse.json({
-			error: 'User not found',
-			status: 500,
-		})
-	}
-
-	if (!filename) {
-		return NextResponse.json({
-			error: "No filename provided",
-			status: 400,
-		});
-	}
-
-	const blob = await put(filename, file, {
-		access: "public",
-		allowOverwrite: true,
-	});
-
-	await prisma.user.update({
-		where: {
-			id: userId,
-		},
-		data: {
-			image: blob.url,
-		},
-	});
-
-	// session.user.image = blob.url;
-
-	return NextResponse.json(blob);
+function errorResponse(message: string, status: number): NextResponse {
+  return NextResponse.json({ error: message }, { status });
 }
 
-// import path from "path";
-// import prisma from "@/lib/prisma";
-// import { NextResponse } from "next/server";
-// import { auth } from "@/auth";
+function isManagedBlobUrl(value: string | null | undefined): value is string {
+  if (!value) {
+    return false;
+  }
 
-// export async function POST(req: Request) {
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === "https:" &&
+      url.hostname.endsWith(".blob.vercel-storage.com")
+    );
+  } catch {
+    return false;
+  }
+}
 
-//     const formData = await req.formData();
-//     const userId = (await auth())?.user.id;
+async function deleteManagedBlob(
+  value: string | null | undefined,
+): Promise<void> {
+  if (!isManagedBlobUrl(value)) {
+    return;
+  }
 
-//     const file = formData.get("file") as File;
+  try {
+    await del(value);
+  } catch (error: unknown) {
+    console.error("Failed to delete avatar blob:", error);
+  }
+}
 
-//     if (!file) {
-//         return NextResponse.json({
-//             error: "No file uploaded",
-//             success: false },
-//             { status: 400 }
-//         );
-//     }
+export async function POST(request: Request): Promise<NextResponse> {
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-//     const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-//     if (!allowedTypes.includes(file.type)) {
-//         return NextResponse.json({
-//             error: "Invalid file type",
-//             success: false },
-//             { status: 400 }
-//         );
-//     }
+  if (!session) {
+    return errorResponse("Unauthorized", 401);
+  }
 
-//     const maxSize = 4 * 1024 * 1024;
-//     if (file.size > maxSize) {
-//         return NextResponse.json({
-//             error: "File too large (max 5MB)",
-//             success: false},
-//             { status: 400 }
-//         );
-//     }
+  const contentType = request.headers.get("content-type") ?? "";
 
-//     try {
-//         const bytes = await file.arrayBuffer();
-//         const buffer = Buffer.from(bytes);
+  if (!isAvatarContentType(contentType)) {
+    return errorResponse("Unsupported image type", 415);
+  }
 
-//         const upload = await prisma.user.upsert({
-//             where: {
-//                 id: userId
-//             },
-//             create: {
-//                 image: file
-//             },
-//             update: {
-//                 image: file
-//             }
-//         })
-//     }
-// }
+  const file = await request.blob();
+
+  if (file.size === 0) {
+    return errorResponse("No image provided", 400);
+  }
+
+  if (file.size > AVATAR_MAX_SIZE_BYTES) {
+    return errorResponse("File too large (max 4 MB)", 413);
+  }
+
+  const extension = AVATAR_CONTENT_TYPE_TO_EXTENSION[contentType];
+  const pathname = `avatars/${session.user.id}/${randomUUID()}.${extension}`;
+  const previousImage = session.user.image;
+  let uploadedUrl: string | undefined;
+
+  try {
+    const blob = await put(pathname, file, {
+      access: "public",
+    });
+    uploadedUrl = blob.url;
+
+    await auth.api.updateUser({
+      body: {
+        image: blob.url,
+      },
+      headers: request.headers,
+    });
+
+    await deleteManagedBlob(previousImage);
+
+    return NextResponse.json({ url: blob.url });
+  } catch (error: unknown) {
+    await deleteManagedBlob(uploadedUrl);
+    console.error("Avatar upload failed:", error);
+    return errorResponse("Avatar upload failed", 500);
+  }
+}
+
+export async function DELETE(request: Request): Promise<NextResponse> {
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
+
+  if (!session) {
+    return errorResponse("Unauthorized", 401);
+  }
+
+  const previousImage = session.user.image;
+
+  if (!previousImage) {
+    return NextResponse.json({ success: true });
+  }
+
+  try {
+    await auth.api.updateUser({
+      body: {
+        image: null,
+      },
+      headers: request.headers,
+    });
+
+    await deleteManagedBlob(previousImage);
+
+    return NextResponse.json({ success: true });
+  } catch (error: unknown) {
+    console.error("Avatar removal failed:", error);
+    return errorResponse("Avatar removal failed", 500);
+  }
+}

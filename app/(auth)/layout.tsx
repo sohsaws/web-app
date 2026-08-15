@@ -6,12 +6,12 @@ export default function AuthLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<>
-			<nav className="fixed top-0 flex w-full z-50 items-center">
-				<div className="pt-10 px-15 max-w-7xl mx-auto w-full">
+		<div className='flex min-h-dvh flex-col'>
+			<nav className="fixed top-0 flex h-app-nav-height z-50 w-full items-center bg-app-bg border-white/5 border-b">
+				<div className="mx-auto flex items-center justify-between">
 					<Link
 						href="/"
-						className="text-3xl font-serif text-white tracking-tight"
+						className="shrink-0 pb-1 font-serif text-[clamp(1.25rem,5vw,1.875rem)] text-white tracking-tight justify-end"
 					>
 						Swiipy
 					</Link>
@@ -20,6 +20,6 @@ export default function AuthLayout({
 			<div className="relative z-10">
 				{children}
 			</div>
-		</>
+		</div>
 	);
 }

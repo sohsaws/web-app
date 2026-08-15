@@ -1,37 +1,58 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { auth } from '../auth';
-import { redirect } from 'next/navigation';
+import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+import {
+  type ProfileFormValues,
+  profileFormSchema,
+} from "@/lib/entities/profile";
 
-export async function updateProfile(data: { name: string, bio: string }) {
-	try {
-		const session = await auth.api.getSession();
+export type UpdateProfileResult =
+  | { success: true; message: string }
+  | { success: false; message: string };
 
-		if (!session) {
-			redirect('/login');
-		}
+export async function updateProfile(
+  input: ProfileFormValues,
+): Promise<UpdateProfileResult> {
+  const parsedInput = profileFormSchema.safeParse(input);
 
-		const userId = session.user.id;
+  if (!parsedInput.success) {
+    return {
+      success: false,
+      message: "Please check the profile fields and try again",
+    };
+  }
 
-		await prisma.user.update({
-			where: {
-				id: userId,
-			},
-			data: {
-				name: data.name,
-				bio: data.bio,
-			},
-		});
-		return {
-			success: true,
-			message: "Profile updated successfully",
-		};
-	} catch (error) {
-		console.error("Profile update error:", error);
-		return {
-			success: false,
-			message: "Profile update failed",
-		};
-	}
+  const requestHeaders = await headers();
+  const session = await auth.api.getSession({
+    headers: requestHeaders,
+  });
+
+  if (!session) {
+    return {
+      success: false,
+      message: "You must be signed in to update your profile",
+    };
+  }
+
+  try {
+    await auth.api.updateUser({
+      body: parsedInput.data,
+      headers: requestHeaders,
+    });
+
+    revalidatePath("/settings/profile");
+
+    return {
+      success: true,
+      message: "Profile updated successfully",
+    };
+  } catch (error) {
+    console.error("Profile update error:", error);
+    return {
+      success: false,
+      message: "Profile update failed",
+    };
+  }
 }
