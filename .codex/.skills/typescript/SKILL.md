@@ -89,7 +89,7 @@ If code seems correct in a narrow local area, still inspect how it behaves in th
 - Validate on the server even when the client already has Zod validation.
 - Keep auth-required mutations behind Better Auth server-side session and authorization checks.
 - Prefer semantic app-level tokens for repeated global colors, sizes, and layout values.
-- Prefer focused patches. Do not rewrite whole files when a local patch is enough.
+- Prefer precise, line-level patches. Change only the necessary fragments; do not delete and reinsert unchanged code, large blocks, or whole files when an in-place edit is possible.
 - Prefer central wrappers for repeated behavior, such as toast messages, only when repetition is real.
 - Do not call hook-like components as plain functions; make them either real components or real hooks.
 
