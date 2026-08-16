@@ -8,7 +8,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { toast } from "sonner";
-import { updateProfile } from "@/lib/actions/profile";
+import { updateProfile } from "@/lib/actions/profile.action";
 import {
   type ProfileFormValues,
   profileFormSchema,

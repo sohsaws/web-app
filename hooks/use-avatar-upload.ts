@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { type ChangeEvent, type RefObject, useRef, useState } from "react";
 import { toast } from "sonner";
+import { getApiResponseError } from '@/lib/utils/responseError';
 import {
   AVATAR_MAX_SIZE_BYTES,
   isAvatarContentType,
@@ -20,23 +21,6 @@ interface UseAvatarUploadResult {
   removeAvatar: () => Promise<void>;
 }
 
-async function getResponseError(
-  response: Response,
-  fallbackMessage: string,
-): Promise<string> {
-  const data: unknown = await response.json().catch(() => null);
-
-  if (
-    typeof data === "object" &&
-    data !== null &&
-    "error" in data &&
-    typeof data.error === "string"
-  ) {
-    return data.error;
-  }
-
-  return fallbackMessage;
-}
 
 export function useAvatarUpload({
   hasAvatar,
@@ -81,7 +65,7 @@ export function useAvatarUpload({
 
       if (!response.ok) {
         throw new Error(
-          await getResponseError(response, "Avatar upload failed"),
+          await getApiResponseError(response, "Avatar upload failed"),
         );
       }
 
@@ -116,7 +100,7 @@ export function useAvatarUpload({
 
       if (!response.ok) {
         throw new Error(
-          await getResponseError(response, "Avatar removal failed"),
+          await getApiResponseError(response, "Avatar removal failed"),
         );
       }
 
