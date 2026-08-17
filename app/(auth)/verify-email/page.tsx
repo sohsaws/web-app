@@ -1,40 +1,35 @@
-import prisma from "@/lib/prisma";
-import { VerifyEmailResult } from "./_component/VerfiedEmailResult";
+import type { ReactElement } from "react";
+import type { TokenStatus } from "@/app/(auth)/verify-email/_components/token-status-card.client";
+import { VerifyEmailResult } from "./_components/verify-email-result.client";
 
-export default async function VerifyEmail({
-	searchParams,
-}: {
-	searchParams: Promise<{ token?: string }>;
-}) {
-	const { token } = await searchParams;
+interface VerifyEmailSearchParams {
+  verified?: string;
+  error?: string;
+}
 
-	if (!token) {
-		return <VerifyEmailResult status="invalid_token" />;
-	}
+interface VerifyEmailPageProps {
+  searchParams: Promise<VerifyEmailSearchParams>;
+}
 
-	const verificationToken = await prisma.verificationToken.findUnique({
-		where: { token },
-	});
+function getVerificationStatus({
+  verified,
+  error,
+}: VerifyEmailSearchParams): TokenStatus {
+  if (error === "TOKEN_EXPIRED") {
+    return "expired_token";
+  }
 
-	if (!verificationToken) {
-		return <VerifyEmailResult status="invalid_token" />;
-	}
+  if (error || verified !== "true") {
+    return "invalid_token";
+  }
 
-	if (verificationToken.expiresAt < new Date()) {
-		await prisma.verificationToken.delete({
-			where: { token },
-		});
-		return <VerifyEmailResult status="expired_token" />;
-	}
+  return "success";
+}
 
-	await prisma.user.update({
-		where: { id: verificationToken.userId },
-		data: { emailVerified: new Date() },
-	});
+export default async function VerifyEmailPage({
+  searchParams,
+}: VerifyEmailPageProps): Promise<ReactElement> {
+  const status = getVerificationStatus(await searchParams);
 
-	await prisma.verificationToken.delete({
-		where: { token },
-	});
-
-	return <VerifyEmailResult status="success" />;
+  return <VerifyEmailResult status={status} />;
 }

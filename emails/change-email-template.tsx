@@ -9,10 +9,9 @@ import {
 	Section,
 	Text,
 } from "@react-email/components";
-import { getBaseUrl } from "@/lib/utils/baseUrl";
 
 const CONTACT_EMAIL_ADDRESS = process.env.BASE_EMAIL_ADDRESS;
-const baseUrl = getBaseUrl();
+const baseUrl =  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://localhost:3000";
 
 interface ChangeEmailTemplateProps {
 	username: string;

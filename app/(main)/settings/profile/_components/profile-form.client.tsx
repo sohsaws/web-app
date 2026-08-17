@@ -62,7 +62,7 @@ export default function ProfileForm({
             >
               Email
             </label>
-            {!emailVerified ? <EmailVerificationWarning /> : null}
+            {!emailVerified ? <EmailVerificationWarning email={email} /> : null}
           </div>
           <input
             id="email"

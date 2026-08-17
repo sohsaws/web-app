@@ -1,7 +1,6 @@
 "use server";
 
 import React from "react";
-import * as z from "zod";
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
 import { getUser } from "@/lib/actions/User";
@@ -9,13 +8,11 @@ import { generateToken } from "@/lib/utils/tokenGenerator";
 import { sendEmail } from "@/lib/actions/email-actions";
 import { ChangePasswordTemp } from "@/emails/change-password-template";
 import { ChangeEmailTemp } from "@/emails/change-email-template";
-import { VerificationTemp } from "@/emails/verification-template";
 import { PasswordResetTemp } from "@/emails/reset-password-template";
 
 interface config {
 	passwordRequest: boolean;
 	emailRequest: boolean;
-	emailVerif: boolean;
 	passwordReset: boolean;
 }
 
@@ -49,7 +46,7 @@ export async function requestForChange(mintues: number, template: config) {
 		},
 	});
 
-	const { passwordRequest, emailRequest, emailVerif, passwordReset } = template;
+	const { passwordRequest, emailRequest, passwordReset } = template;
 	let result;
 
 	if (passwordRequest) {
@@ -68,15 +65,6 @@ export async function requestForChange(mintues: number, template: config) {
 			react: React.createElement(ChangeEmailTemp, {
 				username: user.username ?? user.name,
 				confirmToken: tokenObject.token,
-			}),
-		});
-	} else if (emailVerif) {
-		result = await sendEmail({
-			to: [user.email],
-			subject: "Verify your Swiipy email",
-			react: React.createElement(VerificationTemp, {
-				username: user.username ?? user.name,
-				emailVerificationToken: tokenObject.token,
 			}),
 		});
 	} else if (passwordReset) {

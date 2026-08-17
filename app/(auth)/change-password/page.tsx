@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { TokenStatusCard } from "@/components/TokenStatusCard";
+import { TokenStatusCard } from "@/app/(auth)/verify-email/_components/token-status-card.client";
 import { NewPasswordForm } from "./_components/NewPasswordForm";
 
 export default async function ChangePasswordPage({
@@ -13,7 +13,7 @@ export default async function ChangePasswordPage({
 		return <TokenStatusCard status="invalid_token" />;
 	}
 
-	const verificationToken = await prisma.verificationToken.findUnique({
+	const verificationToken = await prisma.verification.findUnique({
 		where: { token },
 	});
 

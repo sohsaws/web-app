@@ -1,6 +1,6 @@
 
 import prisma from "@/lib/prisma";
-import { TokenStatusCard } from "@/components/TokenStatusCard";
+import { TokenStatusCard } from "@/app/(auth)/verify-email/_components/token-status-card.client";
 import { NewEmailForm } from "./_components/NewEmailForm";
 
 export default async function ChangeEmailPage({

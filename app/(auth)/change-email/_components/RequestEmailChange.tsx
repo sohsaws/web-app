@@ -14,7 +14,6 @@ export function RequestEmailChange({ userEmail }: { userEmail: string }) {
 		const result = await requestForChange(5, {
 			passwordRequest: false,
 			emailRequest: true,
-			emailVerif: false,
 			passwordReset: false,
 		});
 		if (result.success) {

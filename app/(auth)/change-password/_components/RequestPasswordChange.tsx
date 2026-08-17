@@ -14,7 +14,6 @@ export function RequestPasswordChange({ userEmail }: { userEmail: string }) {
 			const result = await requestForChange(5, {
 				passwordRequest: true,
 				emailRequest: false,
-				emailVerif: false,
 				passwordReset: false,
 			});
 			if (result.success) {

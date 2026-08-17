@@ -5,7 +5,6 @@ export default async function ForgotPassword() {
 	const result = await requestForChange(5, {
 		passwordRequest: false,
 		emailRequest: false,
-		emailVerif: false,
 		passwordReset: true,
 	});
 
