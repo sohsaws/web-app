@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Swiipy
 
-## Getting Started
+> Платформа для быстрого поиска идей и принятия решений в формате «swipe, decide, done».
 
-First, run the development server:
+Swiipy помогает превратить размытый запрос — например, выбор места для отпуска или идеи для стартапа — в короткий и понятный процесс. Сейчас проект находится на стадии MVP: готовы интерфейс, аккаунты, профиль и основа поиска, а основной swipe-сценарий и часть продуктовых разделов ещё разрабатываются.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Цели проекта
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Сократить время между появлением идеи и принятием решения.
+- Предлагать релевантные темы по мере ввода запроса.
+- Дать пользователю простой визуальный способ сравнивать и отбирать варианты.
+- Собрать аккаунт, профиль, безопасность и будущую подписку в одном приложении.
+- Создать строгую типизированную основу, которую можно развивать до полноценного SaaS-продукта.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Текущий статус
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Проект является активно разрабатываемым MVP и пока не готов к production-развёртыванию без дополнительной проверки.
 
-## Learn More
+### Уже реализовано
 
-To learn more about Next.js, take a look at the following resources:
+- Маркетинговые страницы: главная, описание проекта, тарифы и контакты.
+- Анимированная строка поиска с подсказками из PostgreSQL.
+- Регистрация и вход по email/паролю через Better Auth.
+- Подготовлена конфигурация входа через Google OAuth.
+- Сессии и защита маршрутов `/dashboard` и `/settings/*`.
+- Подтверждение email и React Email-шаблоны для писем.
+- Редактирование имени и биографии пользователя.
+- Загрузка, замена и удаление аватара через Vercel Blob.
+- Интерфейсы настроек профиля, безопасности, уведомлений и оплаты.
+- Prisma-схема, миграции PostgreSQL и seed-данные для поисковых тем.
+- Тёмная адаптивная дизайн-система на Tailwind CSS.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### В разработке
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Главный сценарий со свайпами, сравнением и финальным выбором.
+- Полноценная обработка отправленного поискового запроса.
+- Рабочая аналитика на dashboard.
+- Сохранение настроек уведомлений.
+- Платежи, подписки и кнопки выбора тарифа.
+- Отправка формы обратной связи.
+- Двухфакторная аутентификация.
+- Production-конфигурация Google OAuth.
 
-## Deploy on Vercel
+## Технологии
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Область | Инструменты |
+| --- | --- |
+| Приложение | Next.js 16, React 19, TypeScript 5 |
+| Интерфейс | Tailwind CSS 4, Motion, Lucide React, Sonner |
+| Формы и валидация | React Hook Form, Zod |
+| Авторизация | Better Auth, Google OAuth |
+| База данных | PostgreSQL, Prisma 7, `@prisma/adapter-pg` |
+| Email | Resend, React Email |
+| Файлы | Vercel Blob |
+| Качество кода | Biome, TypeScript strict mode |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Основные маршруты
+
+| Маршрут | Назначение | Доступ |
+| --- | --- | --- |
+| `/` | Главная и поиск идей | Публичный |
+| `/about` | Описание продукта | Публичный |
+| `/pricing` | Тарифы | Публичный |
+| `/contact` | Контакты и форма обратной связи | Публичный |
+| `/login` | Вход | Публичный |
+| `/register` | Регистрация | Публичный |
+| `/verify-email` | Подтверждение email | По токену |
+| `/forgot-password` | Запрос восстановления пароля | Публичный |
+| `/dashboard` | Личный кабинет | Требуется сессия |
+| `/settings/profile` | Профиль и аватар | Требуется сессия |
+| `/settings/security` | Безопасность аккаунта | Требуется сессия |
+| `/settings/notifications` | Настройки уведомлений | Требуется сессия |
+| `/settings/billing` | Тариф и оплата | Требуется сессия |
+
+### Требования
+
+- Node.js 20.9 или новее.
+- npm (поставляется вместе с Node.js).
+- Доступная база данных PostgreSQL.
+- Аккаунты Resend, Google Cloud и Vercel Blob — для соответствующих интеграций.
+
+## Лицензия
+
+Проект распространяется по лицензии [MIT](./LICENSE).
