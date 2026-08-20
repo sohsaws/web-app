@@ -74,7 +74,7 @@ export default function ProfileForm({
           />
           <div className="flex justify-end">
             <Link
-              href="/change-email/pending"
+              href="/change-email"
               className="text-xs text-blue-400 transition-colors hover:text-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
             >
               Change my email address

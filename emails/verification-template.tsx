@@ -12,8 +12,8 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import { pretty, render, toPlainText } from "@react-email/render";
 import type { ComponentProps, ReactElement } from "react";
-import { render, pretty, toPlainText } from "@react-email/render";
 
 type EmailTailwindConfig = NonNullable<
   ComponentProps<typeof Tailwind>["config"]
@@ -28,7 +28,9 @@ interface RenderedVerificationEmail {
   text: string;
 }
 
-export function VerificationEmail({ url }: VerificationEmailProps): ReactElement  {
+export function VerificationEmail({
+  url,
+}: VerificationEmailProps): ReactElement {
   return (
     <Tailwind config={verificationEmailTailwindConfig}>
       <Html lang="en">
@@ -45,7 +47,10 @@ export function VerificationEmail({ url }: VerificationEmailProps): ReactElement
                         Swiipy
                       </Text>
                     </Column>
-                    <Column align="right" className="w-1/2 py-1.75 align-middle">
+                    <Column
+                      align="right"
+                      className="w-1/2 py-1.75 align-middle"
+                    >
                       <Text className="font-13 m-0 text-right font-sans">
                         <span className="text-fg-3">Email verification</span>
                       </Text>
@@ -62,15 +67,13 @@ export function VerificationEmail({ url }: VerificationEmailProps): ReactElement
                       S
                     </Text>
                     <Heading as="h1" className="font-28 text-fg m-0 font-sans">
-                      We&apos;re almost there!
+                      Confirm your email
                     </Heading>
                   </Section>
 
                   <Text className="font-16 text-fg-2 mx-auto mt-0 mb-8 max-w-95 text-center font-sans">
-                    Thank you for joining Swiipy.
-                    <br />
-                    To verify your account, we just need to confirm your email
-                    address.
+                    Use the button below to confirm that this email address
+                    belongs to you.
                   </Text>
 
                   <Section className="mb-6 text-center">
@@ -103,8 +106,9 @@ export function VerificationEmail({ url }: VerificationEmailProps): ReactElement
   );
 }
 
-export async function renderVerificationEmail(url: string,): Promise<RenderedVerificationEmail> {
-
+export async function renderVerificationEmail(
+  url: string,
+): Promise<RenderedVerificationEmail> {
   const html = await pretty(await render(<VerificationEmail url={url} />));
   const text = toPlainText(html);
 
