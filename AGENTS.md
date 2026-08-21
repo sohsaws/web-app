@@ -58,6 +58,7 @@ These instructions govern work in this repository. They are written for Codex an
 
 ## Editing Rules
 
+- Before modifying any file, describe the intended change and ask the user for explicit permission. Do not edit until the user confirms. A direct request in the current message to make a specific edit counts as permission only for that exact edit.
 - Keep patches focused around the requested lines and related behavior.
 - Do not delete and recreate a whole file unless the file is genuinely unrecoverable or the user explicitly requests it.
 - Do not modify unrelated files while fixing a local issue.

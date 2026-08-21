@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import {
   type ProfileFormValues,
   profileFormSchema,
-} from "@/lib/entities/profile";
+} from "@/lib/config/profile";
 
 export type UpdateProfileResult =
   | { success: true; message: string }

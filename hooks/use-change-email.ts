@@ -57,15 +57,16 @@ export function useChangeEmail(currentEmail: string): UseChangeEmailResult {
       });
 
       if (error) {
-        toast.error(error.message ?? "Unable to request an email change");
+        toast.error(error.message ?? "Unable to change your email");
         return;
       }
 
       setRequestedEmail(normalizedEmail);
       setIsRequested(true);
+      toast.success("The link has been sent to your inbox, please check");
     } catch (error: unknown) {
-      console.error("Email change request failed:", error);
-      toast.error("Unable to request an email change");
+      console.error("Email change failed:", error);
+      toast.error("Unable to change your email");
     }
   };
 

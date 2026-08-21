@@ -2,43 +2,11 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { username } from "better-auth/plugins";
-import { Resend } from "resend";
 import { renderChangeEmailConfirmation } from "@/emails/change-email-confirmation-template";
 import { renderVerificationEmail } from "@/emails/verification-template";
 import { profileBioSchema } from "@/lib/config/profile";
+import { sendAuthEmail } from "@/lib/email/send-auth-email";
 import prisma from "./prisma";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-const authEmailSender =
-  process.env.RESEND_FROM_EMAIL ?? "Swiipy <onboarding@resend.dev>";
-
-interface SendAuthEmailOptions {
-  html: string;
-  subject: string;
-  text: string;
-  to: string;
-}
-
-async function sendAuthEmail({
-  html,
-  subject,
-  text,
-  to,
-}: SendAuthEmailOptions): Promise<void> {
-  const { error } = await resend.emails.send({
-    from: authEmailSender,
-    to,
-    subject,
-    html,
-    text,
-  });
-
-  if (error) {
-    throw new Error("Failed to send authentication email", {
-      cause: error,
-    });
-  }
-}
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {

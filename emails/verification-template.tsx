@@ -13,11 +13,8 @@ import {
   Text,
 } from "@react-email/components";
 import { pretty, render, toPlainText } from "@react-email/render";
-import type { ComponentProps, ReactElement } from "react";
-
-type EmailTailwindConfig = NonNullable<
-  ComponentProps<typeof Tailwind>["config"]
->;
+import type { ReactElement } from "react";
+import { emailTailwindConfig } from "./config/email-tailwind";
 
 interface VerificationEmailProps {
   url: string;
@@ -32,7 +29,7 @@ export function VerificationEmail({
   url,
 }: VerificationEmailProps): ReactElement {
   return (
-    <Tailwind config={verificationEmailTailwindConfig}>
+    <Tailwind config={emailTailwindConfig}>
       <Html lang="en">
         <Head />
         <Body className="bg-bg-2 m-0 text-center font-sans">
@@ -123,33 +120,3 @@ VerificationEmail.PreviewProps = {
 };
 
 export default VerificationEmail;
-
-const verificationEmailTailwindConfig = {
-  theme: {
-    extend: {
-      colors: {
-        bg: "#ffffff",
-        "bg-2": "#f3f4f6",
-        fg: "#17191f",
-        "fg-2": "#363a44",
-        "fg-3": "#7a7f89",
-        "fg-inverted": "#ffffff",
-      },
-      fontFamily: {
-        sans: ["Arial", "Helvetica", "sans-serif"],
-        serif: ["Georgia", "Times New Roman", "serif"],
-      },
-      fontSize: {
-        11: ["11px", { lineHeight: "16px" }],
-        13: ["13px", { lineHeight: "20px" }],
-        16: ["16px", { lineHeight: "26px" }],
-        20: ["20px", { lineHeight: "28px" }],
-        24: ["24px", { lineHeight: "48px" }],
-        28: ["28px", { lineHeight: "36px" }],
-      },
-      screens: {
-        mobile: { max: "480px" },
-      },
-    },
-  },
-} satisfies EmailTailwindConfig;

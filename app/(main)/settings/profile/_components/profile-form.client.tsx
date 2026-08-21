@@ -7,7 +7,7 @@ import { useProfileForm } from "@/hooks/use-profile-form";
 import {
   PROFILE_BIO_MAX_LENGTH,
   type ProfileFormValues,
-} from "@/lib/entities/profile";
+} from "@/lib/config/profile";
 import EmailVerificationWarning from "./email-verification-warning.client";
 
 interface ProfileFormProps {

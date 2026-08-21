@@ -9,26 +9,10 @@ import {
 } from "react-hook-form";
 import { toast } from "sonner";
 import { updateProfile } from "@/lib/actions/profile.action";
-import * as z from "zod";
-
-export const PROFILE_BIO_MAX_LENGTH = 400;
-
-export const profileFormSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "Name cannot be empty")
-    .max(50, "Name cannot be longer than 50 characters"),
-  bio: z
-  .string()
-  .trim()
-  .max(
-    PROFILE_BIO_MAX_LENGTH,
-    `Bio cannot be longer than ${PROFILE_BIO_MAX_LENGTH} characters`,
-  )
-});
-
-export type ProfileFormValues = z.infer<typeof profileFormSchema>;
+import {
+  type ProfileFormValues,
+  profileFormSchema,
+} from "@/lib/config/profile";
 
 interface UseProfileFormResult {
   form: UseFormReturn<ProfileFormValues>;
