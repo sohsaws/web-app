@@ -13,15 +13,14 @@ export function ChangeEmailForm({
   currentEmail,
   currentEmailVerified,
 }: ChangeEmailFormProps): ReactElement {
-  const { form, isRequested, onSubmit, requestedEmail } =
-    useChangeEmail(currentEmail);
+  const { form, onSubmit, requestedEmail } = useChangeEmail(currentEmail);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = form;
 
-  if (isRequested && requestedEmail) {
+  if (requestedEmail) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#080808] px-4">
         <div className="flex w-full max-w-md flex-col items-center gap-6 rounded-2xl border border-white/5 px-8 py-12 text-center">

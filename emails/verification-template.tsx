@@ -118,5 +118,3 @@ export async function renderVerificationEmail(
 VerificationEmail.PreviewProps = {
   url: "https://example.com/verify-email",
 };
-
-export default VerificationEmail;

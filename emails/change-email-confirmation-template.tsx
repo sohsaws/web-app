@@ -127,4 +127,3 @@ ChangeEmailConfirmationEmail.PreviewProps = {
   url: "https://example.com/confirm-email-change",
 } satisfies ChangeEmailConfirmationProps;
 
-export default ChangeEmailConfirmationEmail;

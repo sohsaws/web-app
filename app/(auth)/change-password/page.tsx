@@ -1,30 +1,30 @@
-import prisma from "@/lib/prisma";
-import { TokenStatusCard } from "@/app/(auth)/verify-email/_components/token-status-card.client";
-import { NewPasswordForm } from "./_components/NewPasswordForm";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import type { ReactElement } from "react";
+import { auth } from "@/lib/auth";
+import { ChangePasswordForm } from "./_components/change-password-form.client";
+import { PasswordUnavailable } from "./_components/password-unavailable.server";
 
-export default async function ChangePasswordPage({
-	searchParams,
-}: {
-	searchParams: Promise<{ token?: string }>;
-}) {
-	const { token } = await searchParams;
+export default async function ChangePasswordPage(): Promise<ReactElement> {
+  const requestHeaders = await headers();
+  const session = await auth.api.getSession({
+    headers: requestHeaders,
+  });
 
-	if (!token) {
-		return <TokenStatusCard status="invalid_token" />;
-	}
+  if (!session) {
+    redirect("/login?callbackUrl=/change-password");
+  }
 
-	const verificationToken = await prisma.verification.findUnique({
-		where: { token },
-	});
+  const accounts = await auth.api.listUserAccounts({
+    headers: requestHeaders,
+  });
+  const hasCredentialAccount = accounts.some(({ providerId }) => {
+    return providerId === "credential";
+  });
 
-	if (!verificationToken) {
-		return <TokenStatusCard status="invalid_token" />;
-	}
+  if (!hasCredentialAccount) {
+    return <PasswordUnavailable />;
+  }
 
-	if (verificationToken.expiresAt < new Date()) {
-		await prisma.verificationToken.delete({ where: { token } });
-		return <TokenStatusCard status="expired_token" />;
-	}
-
-	return <NewPasswordForm token={token} />;
+  return <ChangePasswordForm />;
 }

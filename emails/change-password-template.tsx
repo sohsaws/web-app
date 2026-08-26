@@ -1,114 +1,120 @@
 import {
-	Body,
-	Button,
-	Container,
-	Head,
-	Hr,
-	Html,
-	Preview,
-	Section,
-	Text,
+  Body,
+  Button,
+  Column,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Preview,
+  Row,
+  Section,
+  Tailwind,
+  Text,
 } from "@react-email/components";
+import { pretty, render, toPlainText } from "@react-email/render";
+import type { ReactElement } from "react";
+import { emailTailwindConfig } from "./config/email-tailwind";
 
-const CONTACT_EMAIL_ADDRESS = process.env.BASE_EMAIL_ADDRESS;
-const baseUrl =  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://localhost:3000";
-
-interface ChangePasswordTemplateProps {
-	username: string;
-	resetToken: string;
+interface ChangePasswordEmailProps {
+  url: string;
 }
 
-export const ChangePasswordTemp = ({
-	username,
-	resetToken,
-}: ChangePasswordTemplateProps) => {
-	return (
-		<Html>
-			<Head>
-				<Preview>Reset your Swiipy password</Preview>
-			</Head>
-			<Body style={main}>
-				<Container style={container}>
-					<Section style={section}>
-						<Text style={text}>Hello, {username}!</Text>
-						<Text style={textMuted}>
-							You requested a password reset for your Swiipy account. Click the
-							button below to set a new password.
-						</Text>
-						<Button
-							style={buttonStyle}
-							href={`${baseUrl}/change-password?token=${resetToken}`}
-						>
-							Reset Password
-						</Button>
-						<Text style={textMuted}>
-							If you did not request this, you can safely ignore this email.
-							Your password will not change.
-						</Text>
-					</Section>
-					<Hr style={hrStyle} />
-					<Section style={footer}>
-						<Text style={footerText}>
-							This email was sent to you by Swiipy. Questions? Contact us at{" "}
-							{CONTACT_EMAIL_ADDRESS}
-						</Text>
-					</Section>
-				</Container>
-			</Body>
-		</Html>
-	);
-};
+interface RenderedChangePasswordEmail {
+  html: string;
+  text: string;
+}
 
-const main = {
-	backgroundColor: "#000000",
-	padding: "20px",
-	fontFamily: "Arial, sans-serif",
-};
+export function ChangePasswordEmail({
+  url,
+}: ChangePasswordEmailProps): ReactElement {
+  return (
+    <Tailwind config={emailTailwindConfig}>
+      <Html lang="en">
+        <Head />
+        <Body className="bg-bg-2 m-0 text-center font-sans">
+          <Preview>Your Swiipy password was changed</Preview>
+          <Container className="mobile:mt-0 mx-auto mt-8 w-full max-w-160">
+            <Section>
+              <Section className="bg-bg mobile:px-2 px-6 py-4">
+                <Section className="mb-3 px-6">
+                  <Row>
+                    <Column className="w-1/2 py-1.75 align-middle">
+                      <Text className="font-20 text-fg m-0 text-left font-serif font-bold">
+                        Swiipy
+                      </Text>
+                    </Column>
+                    <Column
+                      align="right"
+                      className="w-1/2 py-1.75 align-middle"
+                    >
+                      <Text className="font-13 m-0 text-right font-sans">
+                        <span className="text-fg-3">Password changed</span>
+                      </Text>
+                    </Column>
+                  </Row>
+                </Section>
 
-const container = {
-	maxWidth: "600px",
-	margin: "0 auto",
-	backgroundColor: "#1a1a1a",
-	borderRadius: "8px",
-	padding: "20px",
-};
+                <Section className="bg-bg-2 mobile:px-6 mobile:py-12 rounded-lg px-10 py-16 text-center">
+                  <Section className="mb-3">
+                    <Text
+                      aria-hidden="true"
+                      className="font-24 text-fg mx-auto mb-7 h-12 w-12 rounded-full border-2 border-solid border-fg text-center font-serif font-bold leading-[48px]"
+                    >
+                      S
+                    </Text>
+                    <Heading as="h1" className="font-28 text-fg m-0 font-sans">
+                      Your password was changed
+                    </Heading>
+                  </Section>
 
-const section = {
-	margin: "20px 0",
-};
+                  <Text className="font-16 text-fg-2 mx-auto mt-0 mb-8 max-w-95 text-center font-sans">
+                    The password for your Swiipy account has been updated
+                    successfully.
+                  </Text>
 
-const text = {
-	fontSize: "16px",
-	color: "#ffffff",
-};
+                  <Section className="mb-6 text-center">
+                    <Button
+                      href={url}
+                      className="bg-fg font-16 text-fg-inverted inline-block rounded-lg px-7 py-4 text-center font-sans leading-6"
+                    >
+                      Review security settings
+                    </Button>
+                  </Section>
 
-const textMuted = {
-	fontSize: "14px",
-	color: "#a3a3a3",
-	lineHeight: "1.6",
-};
+                  <Text className="font-13 text-fg-3 mx-auto mt-8 mb-0 max-w-100 text-center font-sans">
+                    If you didn&apos;t make this change,
+                    <br />
+                    reset your password immediately.
+                  </Text>
+                </Section>
 
-const buttonStyle = {
-	backgroundColor: "#ffffff",
-	color: "#000000",
-	padding: "10px 20px",
-	borderRadius: "4px",
-	textDecoration: "none",
-	display: "inline-block",
-	fontWeight: "600",
-	margin: "12px 0",
-};
+                <Section className="bg-bg">
+                  <Text className="font-11 text-fg-3 m-0 px-6 py-8 text-center font-sans">
+                    Other active sessions may have been signed out for your
+                    security.
+                  </Text>
+                </Section>
+              </Section>
+            </Section>
+          </Container>
+        </Body>
+      </Html>
+    </Tailwind>
+  );
+}
 
-const hrStyle = {
-	margin: "20px 0",
-	borderColor: "#2a2a2a",
-};
+export async function renderChangePasswordEmail(
+  url: string,
+): Promise<RenderedChangePasswordEmail> {
+  const html = await pretty(await render(<ChangePasswordEmail url={url} />));
 
-const footer = {
-	margin: "20px 0",
-};
+  return {
+    html,
+    text: toPlainText(html),
+  };
+}
 
-const footerText = {
-	fontSize: "12px",
-	color: "#525252",
-};
+ChangePasswordEmail.PreviewProps = {
+  url: "https://example.com/settings/security",
+} satisfies ChangePasswordEmailProps;

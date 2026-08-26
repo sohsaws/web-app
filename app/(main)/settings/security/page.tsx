@@ -1,12 +1,26 @@
-import Link from "next/link";
-import { getUser } from "@/lib/actions/User";
-import { DeleteAccountModal } from "./_components/DeleteAccountModal";
-
 import { Lock, ShieldAlert } from "lucide-react";
+import Link from "next/link";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import type { ReactElement } from "react";
+import { auth } from "@/lib/auth";
 
-export default async function SecurityPage() {
-	const user = await getUser();
-	const hasPassword = !!user?.passwordHash;
+export default async function SecurityPage(): Promise<ReactElement> {
+	const requestHeaders = await headers();
+	const session = await auth.api.getSession({
+		headers: requestHeaders,
+	});
+
+	if (!session) {
+		redirect("/login?callbackUrl=/settings/security");
+	}
+
+	const accounts = await auth.api.listUserAccounts({
+		headers: requestHeaders,
+	});
+	const hasPassword = accounts.some(({ providerId }) => {
+		return providerId === "credential";
+	});
 
 	return (
 		<div className="flex-1 px-10">
@@ -42,7 +56,7 @@ export default async function SecurityPage() {
 							Secure passwords help protect your data.
 						</p>
 						<Link
-							href="/change-password/pending"
+							href="/change-password"
 							className="inline-flex items-center gap-1.5 text-sm font-medium text-white hover:text-neutral-300 transition-colors group underline underline-offset-4 decoration-white/30 hover:decoration-white"
 						>
 							<Lock
@@ -96,7 +110,7 @@ export default async function SecurityPage() {
 						<p className="text-xs text-red-500/60 font-medium tracking-wide uppercase">
 							Danger Zone
 						</p>
-						<DeleteAccountModal hasPassword={hasPassword} />
+						<p>Delete account, SSO: {hasPassword}</p>
 					</div>
 				</div>
 			</div>

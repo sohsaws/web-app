@@ -1,4 +1,4 @@
-import { Camera } from "lucide-react";
+// import { Camera } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -31,19 +31,19 @@ export default async function ProfilePage(): Promise<ReactElement> {
         </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-12 p-6 rounded-3xl border border-white/5 bg-[#080808]">
-          <div className="relative h-20 w-20 shrink-0 rounded-full overflow-hidden bg-neutral-900 border border-neutral-800 group">
+          <div className="relative h-20 w-20 shrink-0 rounded-full overflow-hidden bg-neutral-900 border border-neutral-800">
             <Image
               src={user.image ?? "/imgs/User.png"}
               alt={`${user.name}'s profile picture`}
               fill
-              className="object-cover transition-opacity group-hover:opacity-50"
+              className="object-cover transition-opacity"
             />
-            <div
+            {/* <div
               aria-hidden="true"
               className="absolute inset-1 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100"
             >
               <Camera size={24} strokeWidth={1.5} className="text-white" />
-            </div>
+            </div> */}
           </div>
           <AvatarUpload hasAvatar={Boolean(user.image)} />
         </div>

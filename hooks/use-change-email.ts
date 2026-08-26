@@ -23,13 +23,11 @@ type ChangeEmailFormValues = z.infer<typeof changeEmailSchema>;
 
 interface UseChangeEmailResult {
   form: UseFormReturn<ChangeEmailFormValues>;
-  isRequested: boolean;
   onSubmit: SubmitHandler<ChangeEmailFormValues>;
   requestedEmail: string | undefined;
 }
 
 export function useChangeEmail(currentEmail: string): UseChangeEmailResult {
-  const [isRequested, setIsRequested] = useState(false);
   const [requestedEmail, setRequestedEmail] = useState<string>();
   const form = useForm<ChangeEmailFormValues>({
     resolver: zodResolver(changeEmailSchema),
@@ -62,7 +60,6 @@ export function useChangeEmail(currentEmail: string): UseChangeEmailResult {
       }
 
       setRequestedEmail(normalizedEmail);
-      setIsRequested(true);
       toast.success("The link has been sent to your inbox, please check");
     } catch (error: unknown) {
       console.error("Email change failed:", error);
@@ -72,7 +69,6 @@ export function useChangeEmail(currentEmail: string): UseChangeEmailResult {
 
   return {
     form,
-    isRequested,
     onSubmit,
     requestedEmail,
   };

@@ -1,6 +1,6 @@
 import { BellRing } from "lucide-react";
 import Link from "next/link";
-import Dropdown from "@/components/Dropdown";
+import { Dropdown } from "@/components/dropdown";
 
 export default async function MainLayout({
 	children,

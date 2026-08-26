@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { username } from "better-auth/plugins";
 import { renderChangeEmailConfirmation } from "@/emails/change-email-confirmation-template";
+import { renderResetPasswordEmail } from "@/emails/reset-password-template";
 import { renderVerificationEmail } from "@/emails/verification-template";
 import { profileBioSchema } from "@/lib/config/profile";
 import { sendAuthEmail } from "@/lib/email/send-auth-email";
@@ -13,8 +14,31 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
+  appName: 'Swiipy',
+  baseUrl: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
+  
+  session: {
+    expiresIn: 60 * 60 * 24 * 14,
+    updateAge: 60 * 60 * 24,
+  },
+
   emailAndPassword: {
     enabled: true,
+    revokeSessionsOnPasswordReset: true,
+    resetPasswordTokenExpiresIn: 60 * 60,
+    sendResetPassword: async ({ user, url }): Promise<void> => {
+      const { html, text } = await renderResetPasswordEmail(url);
+
+      void sendAuthEmail({
+        to: user.email,
+        subject: "Reset your Swiipy password",
+        html,
+        text,
+      });
+    },
+    onPasswordReset: async ({ user }) => {
+      console.log(`Password for user ${user.email} has been reset.`)
+    }
   },
 
   emailVerification: {
@@ -22,7 +46,7 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, url }): Promise<void> => {
       const { html, text } = await renderVerificationEmail(url);
 
-      await sendAuthEmail({
+      void sendAuthEmail({
         to: user.email,
         subject: "Verify your Swiipy email",
         html,
@@ -44,7 +68,7 @@ export const auth = betterAuth({
           url,
         });
 
-        await sendAuthEmail({
+        void sendAuthEmail({
           to: user.email,
           subject: "Confirm your Swiipy email change",
           html,

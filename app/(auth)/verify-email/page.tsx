@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import type { TokenStatus } from "@/app/(auth)/verify-email/_components/token-status-card.client";
+import type { TokenStatus } from "@/components/token-status-card";
 import { VerifyEmailResult } from "./_components/verify-email-result.client";
 
 interface VerifyEmailSearchParams {

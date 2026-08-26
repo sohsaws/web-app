@@ -1,34 +1,56 @@
 import Link from "next/link";
-import { requestForChange } from "@/lib/actions/creds-changes";
+import type { ReactElement } from "react";
+import { TokenStatusCard } from "@/components/token-status-card";
+import { ForgotPasswordForm } from "./_components/forgot-password-form.client";
+import { ResetPasswordForm } from "./_components/reset-password-form.client";
 
-export default async function ForgotPassword() {
-	const result = await requestForChange(5, {
-		passwordRequest: false,
-		emailRequest: false,
-		passwordReset: true,
-	});
+interface ForgotPasswordPageProps {
+  searchParams: Promise<{
+    error?: string | string[];
+    token?: string | string[];
+  }>;
+}
 
-	if (!result.success) {
-		return;
-	}
+export default async function ForgotPasswordPage({
+  searchParams,
+}: ForgotPasswordPageProps): Promise<ReactElement> {
+  const { error, token } = await searchParams;
 
-	return (
-		<div className="bg-zinc-950 grow flex min-h-screen items-center justify-center px-6">
-			<div className="flex max-w-2xl flex-col items-center text-center gap-6">
-				<h1 className="font-serif text-3xl md:text-4xl font-semibold text-white tracking-tight">
-					Email sent to reset your password
-				</h1>
-				<p className="text-sm md:text-base text-neutral-500 leading-relaxed">
-					Link with verification has been sent. Please check your email and
-					follow the instructions to reset your password.
-				</p>
-				<Link
-					href="/login"
-					className="mt-4 inline-flex items-center justify-center rounded-full bg-white px-6 py-2 text-sm font-semibold text-black hover:bg-neutral-200 transition-colors"
-				>
-					Back to login
-				</Link>
-			</div>
-		</div>
-	);
+  if (error !== undefined) {
+    return <TokenStatusCard status="invalid_token" />;
+  }
+
+  if (typeof token === "string") {
+    return <ResetPasswordForm token={token} />;
+  }
+
+  if (token !== undefined) {
+    return <TokenStatusCard status="invalid_token" />;
+  }
+
+  return (
+    <div className="flex grow items-center justify-center bg-zinc-950 px-4 py-12 pt-50 sm:px-6 lg:px-20 xl:px-24">
+      <div className="mx-auto w-full max-w-sm lg:w-96">
+        <div className="text-left">
+          <h1 className="font-serif text-2xl font-medium tracking-tight text-white">
+            Forgot your password?
+          </h1>
+          <p className="mt-2 text-sm text-neutral-500">
+            Enter your email address and we will send you a reset link.
+          </p>
+        </div>
+
+        <ForgotPasswordForm />
+
+        <div className="mt-6 text-center text-xs">
+          <Link
+            href="/login"
+            className="font-medium text-neutral-500 transition-colors hover:text-white"
+          >
+            Back to login
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -3,7 +3,7 @@
 import { AtSign, Lock } from "lucide-react";
 import Link from "next/link";
 import type { ReactElement } from "react";
-import { GoogleAuthButton } from "@/components/GoogleSignButton";
+import { GoogleAuthButton } from "@/components/google-sign-button";
 import { useLoginForm } from "@/hooks/use-login-form";
 
 interface LoginFormProps {
