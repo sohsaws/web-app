@@ -201,6 +201,13 @@ there are several variants.
 - Avoid large negative margins and fixed pixel offsets used to compensate for
   an incorrect parent layout.
 
+## Git Command Transparency
+
+- Keep an exact record of every Git command executed during a response,
+  including read-only, failed, and state-changing commands.
+- At the end of the response, list those commands in execution order and note
+  which commands failed. If no Git command was executed, state that explicitly.
+
 ## Review Checklist
 
 Before proposing or changing styles, verify:
