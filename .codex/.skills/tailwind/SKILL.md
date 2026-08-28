@@ -43,6 +43,10 @@ fragile class lists or one-off global CSS.
 - Put reused CSS rules and reusable global style primitives in
   `app/globals.css`. Keep one-off component styling local with Tailwind
   utilities. Do not duplicate the same stable CSS rule across components.
+- Before introducing a CSS or Tailwind value, inspect `app/globals.css` and
+  reuse an existing theme token or global primitive when its semantics match.
+  Add a new global token or rule only for a genuinely reusable style; keep
+  one-off presentation local to the component.
 - Use valid Tailwind v4 theme namespaces. Examples include `--color-*`,
   `--spacing-*`, `--container-*`, `--breakpoint-*`, `--text-*`, `--font-*`,
   `--shadow-*`, `--radius-*`, and `--animate-*`.
