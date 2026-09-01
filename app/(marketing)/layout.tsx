@@ -1,7 +1,14 @@
 import { headers } from "next/headers";
 import Link from "next/link";
+import { NavigationBar } from "@/components/navigation-bar.client";
 import { UserDropdown } from "@/components/user-dropdown.client";
 import { auth } from "@/lib/auth";
+
+const navigationItems = [
+  { href: "/contact", label: "Contact" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/about", label: "About" },
+] as const;
 
 export default async function SiteLayout({
   children,
@@ -14,7 +21,7 @@ export default async function SiteLayout({
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <nav className="fixed top-0 z-50 h-15 w-app-screen-width border-b border-white/5 bg-app-bg">
+      <header className="fixed top-0 z-50 h-15 w-app-screen-width border-b border-white/5 bg-app-bg">
         <div className="relative mx-auto flex h-app-full max-w-app-shell items-center justify-between gap-[clamp(0.125rem,2vw,2rem)] px-[clamp(0.375rem,4vw,3rem)]">
           <Link
             href="/"
@@ -23,26 +30,11 @@ export default async function SiteLayout({
             Swiipy
           </Link>
 
-          <div className="absolute left-1/2 flex w-[clamp(11.25rem,42vw,27.75rem)] min-w-45 -translate-x-1/2 items-stretch overflow-hidden rounded-full border border-white/10 bg-neutral-900/60 shadow-3xl shadow-black/50 backdrop-blur-md">
-            <Link
-              href="/contact"
-              className="flex min-w-0 flex-1 items-center justify-center rounded-l-full px-[clamp(0.5rem,2.5vw,2.5rem)] py-1.5 text-app-nav font-medium text-neutral-400 transition-all duration-200 hover:bg-white/5 hover:text-white"
-            >
-              Contact
-            </Link>
-            <Link
-              href="/pricing"
-              className="flex min-w-0 flex-1 items-center justify-center px-[clamp(0.5rem,2.5vw,2.5rem)] py-1.5 text-app-nav font-medium text-neutral-400 transition-all duration-200 hover:bg-white/5 hover:text-white"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="/about"
-              className="flex min-w-0 flex-1 items-center justify-center rounded-r-full px-[clamp(0.5rem,2.5vw,2.5rem)] py-1.5 text-app-nav font-medium text-neutral-400 transition-all duration-200 hover:bg-white/5 hover:text-white"
-            >
-              About
-            </Link>
-          </div>
+          <NavigationBar
+            ariaLabel="Marketing navigation"
+            items={navigationItems}
+            className="absolute left-1/2 -translate-x-1/2"
+          />
           {session ? (
             <UserDropdown
               user={{
@@ -67,7 +59,7 @@ export default async function SiteLayout({
             </div>
           )}
         </div>
-      </nav>
+      </header>
 
       <div className="flex flex-1 flex-col pt-app-nav-height">
         <div className="relative z-10 flex flex-1 flex-col bg-app-bg">

@@ -51,7 +51,7 @@ function AvatarMenuTrigger({
       initial={false}
       animate={isOpen ? "visible" : "hidden"}
       whileHover="visible"
-      className="relative block size-10"
+      className="relative block size-8"
     >
       <Avatar image={image} name={name} />
 

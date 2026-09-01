@@ -2,8 +2,15 @@ import { BellRing } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { NavigationBar } from "@/components/navigation-bar.client";
 import { UserDropdown } from "@/components/user-dropdown.client";
 import { auth } from "@/lib/auth";
+
+const navigationItems = [
+  { href: "/dashboard", label: "Overview" },
+  { href: "#", label: "Dive" },
+  { href: "#", label: "Explore" },
+] as const;
 
 export default async function MainLayout({
   children,
@@ -20,7 +27,7 @@ export default async function MainLayout({
 
   return (
     <>
-      <nav className="fixed top-0 w-full z-50 bg-zinc-950 border-b border-white/5 h-20">
+      <header className="fixed top-0 z-50 h-15 w-full border-b border-white/5 bg-zinc-950">
         <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
           <Link
             href="/"
@@ -29,26 +36,11 @@ export default async function MainLayout({
             Swiipy
           </Link>
 
-          <div className="hidden md:flex items-center gap-2 bg-neutral-900/60 border border-white/10 rounded-full py-1.5 px-2 backdrop-blur-md shadow-2xl shadow-black/50">
-            <Link
-              href="#"
-              className="px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 rounded-full transition-all duration-200"
-            >
-              Overview
-            </Link>
-            <Link
-              href="#"
-              className="px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 rounded-full transition-all duration-200"
-            >
-              Dive
-            </Link>
-            <Link
-              href="#"
-              className="px-4 py-1.5 text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 rounded-full transition-all duration-200"
-            >
-              Explore
-            </Link>
-          </div>
+          <NavigationBar
+            ariaLabel="Application navigation"
+            items={navigationItems}
+            className="absolute left-1/2 hidden -translate-x-1/2 md:block"
+          />
 
           <div className="flex justify-end w-24 gap-7">
             <button className="text-neutral-500 hover:text-white transition-colors cursor-pointer">
@@ -62,7 +54,7 @@ export default async function MainLayout({
             />
           </div>
         </div>
-      </nav>
+      </header>
 
       <div>{children}</div>
     </>

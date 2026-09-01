@@ -5,7 +5,7 @@ import * as z from "zod";
 import Link from "next/link";
 import { User, Mail, Lock, AtSign } from "lucide-react";
 import { authClient } from '@/lib/auth/auth-client';
-import { GoogleAuthButton } from '@/components/google-sign-button';
+import { GoogleAuthButton } from '@/components/google-sign-button.client';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from 'next/navigation';

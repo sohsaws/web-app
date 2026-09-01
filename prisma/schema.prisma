@@ -92,3 +92,13 @@ model TopicSearch {
   @@index([topic])
   @@map("topic_search")
 }
+
+model Card {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  image       String?
+  isLiked     Boolean @default(false)
+
+  @@map("card")  
+}
