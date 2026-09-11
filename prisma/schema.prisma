@@ -99,6 +99,7 @@ model Card {
   description String
   image       String?
   isLiked     Boolean @default(false)
+  createdAt   DateTime  
 
   @@map("card")  
 }

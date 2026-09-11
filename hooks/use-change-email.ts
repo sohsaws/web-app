@@ -9,6 +9,7 @@ import {
 } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useUserStore } from "@/app/stores/user-store";
 import { authClient } from "@/lib/auth/auth-client";
 
 const CHANGE_EMAIL_CALLBACK_URL = "/settings/profile";
@@ -28,7 +29,9 @@ interface UseChangeEmailResult {
 }
 
 export function useChangeEmail(currentEmail: string): UseChangeEmailResult {
+  const updateUser = useUserStore((state) => state.updateUser);
   const [requestedEmail, setRequestedEmail] = useState<string>();
+
   const form = useForm<ChangeEmailFormValues>({
     resolver: zodResolver(changeEmailSchema),
     defaultValues: {
@@ -60,6 +63,7 @@ export function useChangeEmail(currentEmail: string): UseChangeEmailResult {
       }
 
       setRequestedEmail(normalizedEmail);
+      updateUser({ email: normalizedEmail });
       toast.success("The link has been sent to your inbox, please check");
     } catch (error: unknown) {
       console.error("Email change failed:", error);

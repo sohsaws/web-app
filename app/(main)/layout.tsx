@@ -8,7 +8,7 @@ import { auth } from "@/lib/auth";
 
 const navigationItems = [
   { href: "/dashboard", label: "Overview" },
-  { href: "#", label: "Dive" },
+  { href: "/dive", label: "Dive" },
   { href: "#", label: "Explore" },
 ] as const;
 

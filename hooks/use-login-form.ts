@@ -10,6 +10,7 @@ import {
 } from "react-hook-form";
 import { z } from "zod";
 import { authClient } from "@/lib/auth/auth-client";
+import { useUserStore } from '@/app/stores/user-store';
 
 const loginFormSchema = z.object({
   identifier: z
@@ -35,6 +36,8 @@ interface UseLoginFormResult {
 }
 
 export function useLoginForm(callbackUrl: string): UseLoginFormResult {
+  const setUser = useUserStore((state) => state.setUser);
+
   const router = useRouter();
   const [error, setError] = useState<string>();
   const form = useForm<LoginFormValues>({
@@ -56,7 +59,7 @@ export function useLoginForm(callbackUrl: string): UseLoginFormResult {
         ? await authClient.signIn.email(
             { ...credentials, email: values.identifier },
             {
-              onSuccess: () => router.push(callbackUrl),
+              onSuccess: () => router.push(callbackUrl),  
               onError: (context) => setError(context.error.message),
             },
           )
@@ -70,7 +73,17 @@ export function useLoginForm(callbackUrl: string): UseLoginFormResult {
 
       if (result.error) {
         setError(result.error.message);
+        return;
       }
+
+      const { user } = result.data;
+      setUser({
+        id: user.id,
+        bio: user.bio,
+        name: user.name,
+        email: user.email
+      });
+
     } catch (caughtError: unknown) {
       console.error(caughtError);
       setError("An unexpected error occurred");

@@ -12,12 +12,15 @@
 		"dev:inspect": "next dev --inspect"
 	},
 	"dependencies": {
+		"@ai-sdk/groq": "^4.0.40",
 		"@better-auth/prisma-adapter": "^1.6.25",
 		"@hookform/resolvers": "^5.2.2",
 		"@prisma/adapter-pg": "^7.3.0",
 		"@react-email/components": "1.0.8",
 		"@react-email/render": "2.0.4",
+		"@tanstack/react-query": "^5.102.8",
 		"@vercel/blob": "^2.3.0",
+		"ai": "^7.0.97",
 		"better-auth": "^1.6.25",
 		"dotenv": "^17.2.3",
 		"lucide-react": "^0.562.0",
@@ -28,7 +31,8 @@
 		"react-hook-form": "^7.71.1",
 		"resend": "^6.9.3",
 		"sonner": "^2.0.7",
-		"zod": "^4.3.6"
+		"zod": "^4.3.6",
+		"zustand": "^5.0.15"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.5",

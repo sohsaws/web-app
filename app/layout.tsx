@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { headers } from "next/headers";
+import type { ReactElement, ReactNode } from "react";
 import { Toaster } from "sonner";
+import { QueryProvider } from "@/components/providers/query-provider.client";
+import { UserStoreProvider } from "@/components/providers/user-store-provider.client";
+import { auth } from "@/lib/auth";
+import type { User } from "@/lib/types/user/types";
 
 import "./globals.css";
-
 
 const InterFont = Inter({
   variable: "--font-inter",
@@ -14,15 +19,26 @@ export const metadata: Metadata = {
   title: "Swiipy",
   description: "AI-Powered Idea Discovery Platform",
   icons: {
-    icon: "./icon.png"
-  }
+    icon: "./icon.png",
+  },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
-}>) {
+  children: ReactNode;
+}>): Promise<ReactElement> {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const initialUser: User | null = session
+    ? {
+        id: session.user.id,
+        name: session.user.name,
+        email: session.user.email,
+        bio: session.user.bio,
+      }
+    : null;
 
   return (
     <html lang="en">
@@ -40,7 +56,11 @@ export default function RootLayout({
           closeButton
           className="border-app-toast-border/20 bg-app-toast-bg/95 backdrop-blur-md"
         />
-        {children}
+        <QueryProvider>
+          <UserStoreProvider initialUser={initialUser}>
+            {children}
+          </UserStoreProvider>
+        </QueryProvider>
       </body>
     </html>
   );
