@@ -38,10 +38,10 @@ export default async function Dive(): Promise<ReactElement> {
   }
 
   return (
-    <main className="relative z-10 mx-auto flex min-h-dvh w-full max-w-app-shell items-center text-app-fg sm:px-6 sm:pt-32">
+    <main className="relative z-10 mx-auto flex min-h-dvh w-app-screen-width items-center justify-center text-app-fg sm:px-6 sm:pt-32">
       <section
         aria-labelledby="cards-heading"
-        className="w-full rounded-3xl border border-white/5 bg-app-bg p-6 sm:p-8"
+        className="min-w-0 w-app-shell rounded-3xl border border-white/5 bg-app-bg sm:p-8"
       >
         <header>
           <h1 id="cards-heading" className="text-base font-medium text-white">

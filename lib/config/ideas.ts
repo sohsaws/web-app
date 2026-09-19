@@ -15,6 +15,10 @@ export const generatedIdeasSchema = z.object({
   ideas: z.array(generatedIdeaSchema).min(1).max(MAX_IDEAS_PER_PACK),
 });
 
+export const generatedImageSchema = z.object({
+  image: z.base64().min(1),
+});
+
 export const ideaResponseSchema = generatedIdeaSchema.extend({
   id: z.uuid(),
   createdAt: z.iso.datetime().transform((value) => new Date(value)),
