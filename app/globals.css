@@ -8,6 +8,8 @@
   --color-app-glow: #262626;
   --color-app-toast-bg: #171717;
   --color-app-toast-border: #f59e0b;
+  --color-app-action-skip: #c87a6d;
+  --color-app-action-favorite: #c8a65c;
 
   --spacing-app-screen-height: 100vh;
   --spacing-app-screen-width: 100%;
@@ -32,4 +34,10 @@
 
 body {
   font-family: var(--font-sans);
+}
+
+@utility card-action {
+  @apply inline-flex size-16 shrink-0 items-center justify-center rounded-full border border-current/20 bg-current/10;
+  @apply transition-[background-color,transform] duration-200 enabled:cursor-pointer enabled:hover:bg-current/20 enabled:active:scale-95;
+  @apply focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current disabled:cursor-not-allowed disabled:opacity-30 motion-reduce:transition-none motion-reduce:transform-none;
 }

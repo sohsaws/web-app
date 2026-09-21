@@ -19,9 +19,25 @@ export const generatedImageSchema = z.object({
   image: z.base64().min(1),
 });
 
+export const IDEA_IMAGE_DATA_URL_PREFIX = "data:image/jpeg;base64,";
+
+const ideaImageSchema = z
+  .string()
+  .max(4 * 1024 * 1024)
+  .startsWith(IDEA_IMAGE_DATA_URL_PREFIX)
+  .refine(
+    (value) =>
+      generatedImageSchema.shape.image.safeParse(value.slice(IDEA_IMAGE_DATA_URL_PREFIX.length)).success,
+    "Provide a base64-encoded JPEG image",
+  );
+
 export const ideaResponseSchema = generatedIdeaSchema.extend({
   id: z.uuid(),
   createdAt: z.iso.datetime().transform((value) => new Date(value)),
+});
+
+export const ideaSaveRequestSchema = ideaResponseSchema.extend({
+  image: ideaImageSchema.optional(),
 });
 
 export const ideasResponseSchema = z.object({

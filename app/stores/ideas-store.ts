@@ -1,34 +1,55 @@
-'use client'
+"use client";
 
 import { create } from "zustand";
-import type { IdeaGeneratedResponse } from "@/lib/types/ideas/types";
+import type { IdeaSaveRequest } from "@/lib/types/ideas/types";
 
 export interface IdeasStore {
-  ideas: IdeaGeneratedResponse[] | null;
-  setIdeas: (ideas: IdeaGeneratedResponse[]) => void;
-  addIdeas: (ideas: IdeaGeneratedResponse[]) => void;
+  ideas: IdeaSaveRequest[] | null;
+  previousCard: IdeaSaveRequest | null;
+  setIdeas: (ideas: IdeaSaveRequest[]) => void;
+  addIdeas: (ideas: IdeaSaveRequest[]) => void;
   removeIdea: (ideaId: string) => void;
+  restorePreviousCard: () => void;
   clearIdeas: () => void;
 }
 
 export const useIdeasStore = create<IdeasStore>((set) => ({
-    ideas: null,
-    setIdeas: (ideas): void => {
-      set({ ideas });
-    },
-    addIdeas: (ideas): void => {
-      set((state) => ({
-        ideas: state.ideas ? [...state.ideas, ...ideas] : state.ideas,
-      }));
-    },
-    removeIdea: (ideaId): void => {
-      set((state) => ({
-        ideas: state.ideas 
-        ? state.ideas.filter((idea) => idea.id !== ideaId)
-        : state.ideas
-      }));
-    },
-    clearIdeas: (): void => {
-      set({ ideas: [] });
-    },
+  ideas: null,
+  previousCard: null,
+  setIdeas: (ideas): void => {
+    set({ ideas, previousCard: null });
+  },
+  addIdeas: (ideas): void => {
+    set((state) => ({
+      ideas: state.ideas ? [...state.ideas, ...ideas] : state.ideas,
+    }));
+  },
+  removeIdea: (ideaId): void => {
+    set((state) => {
+      const previousCard = state.ideas?.find((idea) => idea.id === ideaId);
+      if (!previousCard || !state.ideas) return state;
+
+      return {
+        ideas: state.ideas.filter((idea) => idea.id !== ideaId),
+        previousCard,
+      };
+    });
+  },
+  restorePreviousCard: (): void => {
+    set((state) => {
+      const previousCard = state.previousCard;
+      if (!previousCard) return state;
+
+      return {
+        ideas: [
+          previousCard,
+          ...(state.ideas ?? []).filter((idea) => idea.id !== previousCard.id),
+        ],
+        previousCard: null,
+      };
+    });
+  },
+  clearIdeas: (): void => {
+    set({ ideas: [], previousCard: null });
+  },
 }));
