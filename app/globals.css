@@ -3,6 +3,9 @@
 @theme {
   --color-app-bg: #0a0a0a;
   --color-app-fg: #d4d4d4;
+  --color-app-surface: #111113;
+  --color-app-border: rgb(255 255 255 / 0.1);
+  --color-app-muted: #9ca3af;
   --color-app-selection-bg: #ffffff;
   --color-app-selection-fg: #0a0a0a;
   --color-app-glow: #262626;
@@ -34,6 +37,10 @@
 
 body {
   font-family: var(--font-sans);
+}
+
+@utility app-widget {
+  @apply min-w-0 rounded-2xl border border-app-border bg-linear-to-br from-app-surface to-app-bg;
 }
 
 @utility card-action {

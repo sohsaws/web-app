@@ -8,6 +8,7 @@ export interface IdeasStore {
   previousCard: IdeaSaveRequest | null;
   setIdeas: (ideas: IdeaSaveRequest[]) => void;
   addIdeas: (ideas: IdeaSaveRequest[]) => void;
+  updateIdeaImage: (ideaId: string, image: string) => void;
   removeIdea: (ideaId: string) => void;
   restorePreviousCard: () => void;
   clearIdeas: () => void;
@@ -23,6 +24,19 @@ export const useIdeasStore = create<IdeasStore>((set) => ({
     set((state) => ({
       ideas: state.ideas ? [...state.ideas, ...ideas] : state.ideas,
     }));
+  },
+  updateIdeaImage: (ideaId, image): void => {
+    set((state) => {
+      const ideas = state.ideas;
+      const idea = ideas?.find((item) => item.id === ideaId);
+      if (!ideas || !idea || idea.image === image) return state;
+
+      return {
+        ideas: ideas.map((item) =>
+          item.id === ideaId ? { ...item, image } : item,
+        ),
+      };
+    });
   },
   removeIdea: (ideaId): void => {
     set((state) => {

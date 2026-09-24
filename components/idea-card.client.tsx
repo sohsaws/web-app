@@ -2,7 +2,8 @@
 
 import { Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
-import type { ReactElement, ReactNode } from "react";
+import { type ReactElement, type ReactNode, useEffect } from "react";
+import { useIdeasStore } from "@/app/stores/ideas-store";
 import { ExpandableText } from "@/components/expandable-text.client";
 import { LoadingSpinner } from "@/components/loading-spinner.client";
 import { useIdeaImage } from "@/hooks/use-idea-image";
@@ -21,6 +22,13 @@ export function IdeaCard({
   dragHandle,
 }: IdeaCardProps): ReactElement {
   const { image, isPending, error } = useIdeaImage(id, description);
+  const updateIdeaImage = useIdeasStore((state) => state.updateIdeaImage);
+
+  useEffect((): void => {
+    if (!image || isPending || error) return;
+
+    updateIdeaImage(id, image);
+  }, [id, image, isPending, error, updateIdeaImage]);
 
   return (
     <article

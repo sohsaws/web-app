@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { ideaSaveRequestSchema } from "@/lib/config/ideas";
 import { saveFavoriteForUser } from "@/lib/data/save-favorite";
+import { randomUUID } from "node:crypto";
+import { del, put, PutBlobResult } from "@vercel/blob";
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
@@ -20,6 +22,32 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     const body: unknown = await request.json().catch(() => null);
     const result = ideaSaveRequestSchema.safeParse(body);
+    let imageUrl: string | undefined;
+
+    if (result.data?.image) { 
+      const parts = result.data?.image?.split(';base64,');
+
+      const contentType = parts?.[0].split(':')[1];
+      const rawBase64 = parts?.[1];
+      
+      const byteChars = atob(rawBase64);
+
+      const byteNums = new Array(byteChars?.length);
+      for (let i = 0; i < byteChars?.length; i++) {
+        byteNums[i] = byteChars?.charCodeAt(i);
+      }
+      
+      const byteArray = new Uint8Array();
+      const imageBlob = new Blob([byteArray], { type: contentType });
+      const extension = contentType.split('/')[1];
+      const pathname = `ideas-images/${session.user.id}/${randomUUID()}.${extension}`;
+
+      const blob = await put(pathname, imageBlob, {
+        access: 'public',
+      });
+
+      imageUrl = blob.url;
+    }
 
     if (!result.success) {
       return NextResponse.json(
@@ -28,7 +56,8 @@ export async function POST(request: Request): Promise<NextResponse> {
       );
     }
 
-    const saved = await saveFavoriteForUser(session.user.id, result.data);
+    const newIdeaObject = { ...result.data, image: imageUrl };
+    const saved = await saveFavoriteForUser(session.user.id, newIdeaObject);
 
     if (!saved) {
       return NextResponse.json(

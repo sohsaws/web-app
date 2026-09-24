@@ -1,7 +1,12 @@
 "use client";
 
-import { useIsMutating, useMutation } from "@tanstack/react-query";
+import {
+  useIsMutating,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
+import { FAVORITES_QUERY_KEY } from "@/lib/config/favorites";
 import type { IdeaSaveRequest } from "@/lib/types/ideas/types";
 import { getApiResponseError } from "@/lib/utils/responseError";
 
@@ -14,6 +19,7 @@ interface UseSaveFavoriteResult {
 }
 
 export function useSaveFavorite(): UseSaveFavoriteResult {
+  const queryClient = useQueryClient();
   const { mutate, error } = useMutation<void, Error, IdeaSaveRequest>({
     mutationKey: FAVORITE_MUTATION_KEY,
     mutationFn: async (idea: IdeaSaveRequest): Promise<void> => {
@@ -30,8 +36,9 @@ export function useSaveFavorite(): UseSaveFavoriteResult {
       }
     },
     retry: false,
-    onSuccess: (_data, idea): void => {
+    onSuccess: async (_data, idea): Promise<void> => {
       toast.dismiss(idea.id);
+      await queryClient.invalidateQueries({ queryKey: FAVORITES_QUERY_KEY });
     },
     onError: (failure, idea): void => {
       toast.error(`Could not save the card"`, {

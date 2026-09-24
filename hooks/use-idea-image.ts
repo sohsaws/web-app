@@ -1,7 +1,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { generatedImageSchema } from "@/lib/config/ideas";
+import {
+  generatedImageSchema,
+  IDEA_IMAGE_DATA_URL_PREFIX,
+} from "@/lib/config/ideas";
 import type { GeneratedImage } from "@/lib/types/ideas/types";
 import { getApiResponseError } from "@/lib/utils/responseError";
 
@@ -42,7 +45,7 @@ export function useIdeaImage(
   });
 
   return {
-    image: data ? `data:image/jpeg;charset=utf-8;base64,${data.image}` : null,
+    image: data ? `${IDEA_IMAGE_DATA_URL_PREFIX}${data.image}` : null,
     isPending,
     error,
   };

@@ -44,8 +44,6 @@ export async function POST(request: Request): Promise<NextResponse> {
       );
     }
 
-    console.log(error);
-
     return NextResponse.json(
       { error: "Failed to generate an image. Please try again." },
       { status: 502 },
