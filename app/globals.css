@@ -14,6 +14,16 @@
   --color-app-action-skip: #c87a6d;
   --color-app-action-favorite: #c8a65c;
 
+  --color-category-scarlet: #ff7166;
+  --color-category-emerald: #5bd6a2;
+  --color-category-navy: #8196d9;
+  --color-category-lavender: #c4a7ef;
+  --color-category-burgundy: #cf7a8b;
+  --color-category-white: #ffffff;
+  --color-category-amber: #f2c15c;
+  --color-category-orange: #ff9b61;
+  --color-category-pink: #f3a0cf;
+
   --spacing-app-screen-height: 100vh;
   --spacing-app-screen-width: 100%;
   --spacing-app-full: 100%;

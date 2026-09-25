@@ -130,6 +130,7 @@ function SwipeableIdea({
             id={idea.id}
             title={idea.title}
             description={idea.description}
+            categories={idea.categories}
             dragHandle={
               <div
                 aria-hidden="true"

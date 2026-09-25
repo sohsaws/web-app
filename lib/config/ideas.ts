@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { IDEA_CATEGORIES } from "@/lib/config/categories-array";
 
 export const MAX_IDEAS_PER_PACK = 10;
 
@@ -9,10 +10,28 @@ export const generatedIdeaSchema = z.object({
     .trim()
     .min(1)
     .describe("Concise, actionable description of the idea."),
+  categories: z
+    .array(z.enum(IDEA_CATEGORIES))
+    .min(1)
+    .max(3)
+    .refine(
+      (categories) => new Set(categories).size === categories.length,
+      "Categories must not repeat",
+    )
+    .describe(
+      "Choose 1–3 distinct categories based on the title and description.",
+    ),
 });
 
 export const generatedIdeasSchema = z.object({
   ideas: z.array(generatedIdeaSchema).min(1).max(MAX_IDEAS_PER_PACK),
+});
+
+export const generatedIdeasTextSchema = z.object({
+  ideas: z
+    .array(generatedIdeaSchema.pick({ title: true, description: true }))
+    .min(1)
+    .max(MAX_IDEAS_PER_PACK),
 });
 
 export const generatedImageSchema = z.object({
@@ -27,7 +46,9 @@ const ideaImageSchema = z
   .startsWith(IDEA_IMAGE_DATA_URL_PREFIX)
   .refine(
     (value) =>
-      generatedImageSchema.shape.image.safeParse(value.slice(IDEA_IMAGE_DATA_URL_PREFIX.length)).success,
+      generatedImageSchema.shape.image.safeParse(
+        value.slice(IDEA_IMAGE_DATA_URL_PREFIX.length),
+      ).success,
     "Provide a base64-encoded JPEG image",
   );
 

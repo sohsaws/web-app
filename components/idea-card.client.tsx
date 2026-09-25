@@ -5,13 +5,16 @@ import Image from "next/image";
 import { type ReactElement, type ReactNode, useEffect } from "react";
 import { useIdeasStore } from "@/app/stores/ideas-store";
 import { ExpandableText } from "@/components/expandable-text.client";
+import { IdeaCategories } from "@/components/idea-categories.client";
 import { LoadingSpinner } from "@/components/loading-spinner.client";
 import { useIdeaImage } from "@/hooks/use-idea-image";
+import type { IdeaCategory } from "@/lib/config/categories-array";
 
 export interface IdeaCardProps {
   id: string;
   description: string;
   title: string;
+  categories: readonly IdeaCategory[];
   dragHandle?: ReactNode;
 }
 
@@ -19,6 +22,7 @@ export function IdeaCard({
   id,
   description,
   title,
+  categories,
   dragHandle,
 }: IdeaCardProps): ReactElement {
   const { image, isPending, error } = useIdeaImage(id, description);
@@ -73,10 +77,11 @@ export function IdeaCard({
         {dragHandle}
       </div>
 
-      <div className="aspect-475/260 min-w-0 w-full shrink-0 cursor-text select-text px-4 pt-4 pb-6 sm:px-5">
+      <div className="aspect-475/260 min-w-0 w-full shrink-0 cursor-text select-text px-4 pt-1 pb-6 sm:px-5">
         <h2 className="wrap-anywhere font-serif text-xl leading-tight text-white sm:text-2xl">
           {title}
         </h2>
+        <IdeaCategories key={id} categories={categories} />
         <ExpandableText
           key={`${id}:${description}`}
           className="mt-4 text-sm leading-6 text-app-fg sm:text-base"

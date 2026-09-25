@@ -95,15 +95,15 @@ model TopicSearch {
 }
 
 model Card {
-  id          String  @id @default(cuid()) 
+  id          String   @id @default(cuid()) 
   title       String
   description String
   image       String?
-  isFavorited Boolean @default(false)
+  isFavorited Boolean  @default(false)
   createdAt   DateTime @default(now())
-
+  category    String[]   
   userId      String
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)  
 
   @@map("card")  
 }

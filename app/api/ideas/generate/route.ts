@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { generateIdeas } from "@/lib/ai/generate-ideas";
+import { assignIdeaCategories, generateIdeas } from "@/lib/ai/generate-ideas";
 import { auth } from "@/lib/auth";
 import { profileBioSchema } from "@/lib/config/profile";
 import type { IdeaGeneratedResponse } from "@/lib/types/ideas/types";
@@ -42,13 +42,15 @@ export async function POST(request: Request): Promise<NextResponse> {
   const { bio } = parsedBody.data;
   try {
     const generated = await generateIdeas(bio);
+    const categorizedIdeas = await assignIdeaCategories(generated.ideas);
     const createdAt = new Date();
 
-    const ideas: IdeaGeneratedResponse[] = generated.ideas.map(
-      ({ title, description }): IdeaGeneratedResponse => ({
+    const ideas: IdeaGeneratedResponse[] = categorizedIdeas.map(
+      ({ title, description, categories }): IdeaGeneratedResponse => ({
         id: randomUUID(),
         title,
         description,
+        categories,
         createdAt,
       }),
     );
@@ -61,7 +63,8 @@ export async function POST(request: Request): Promise<NextResponse> {
         status: 200,
       },
     );
-  } catch {
+  } catch(e) {
+    console.log(e);
     return NextResponse.json(
       {
         error: "Failed to generate ideas. Please try again.",
