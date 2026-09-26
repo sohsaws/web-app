@@ -33,22 +33,6 @@ const cloudeflareResponseSchema = z.object({
   result: generatedImageSchema,
 });
 
-{
-  /* Следующий промт для продолжения проекта: 
-  
-sХорошо - теперь в /dashboard будем отображать следющией виджет: 
-
-Каков процент сохранения категории каждой карточки. 
-
-Например, 
-
-Например: Astronomy— 45%, Mathematics— 35%, Engineering— 20%  
-
-Важно: Отображаем статистику долей сохраненных карточек с данной категорий не весь список всех возможных категорий и уже - долей процентов каждой категории во всей стопки карточек. А именно берем из существующих карточек. 
-
-Будем отображать виджет в данном месте, отмеченным голубым. (Смотри вложение) */
-}
-
 export async function generateIdeas(bio: string): Promise<GeneratedIdeasText> {
   const { output } = await generateText({
     model: groq(model),

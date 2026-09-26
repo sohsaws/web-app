@@ -7,6 +7,7 @@ import { IdeasStack } from "@/components/ideas-stack.client";
 import { LoadingSpinner } from "@/components/loading-spinner.client";
 import { Widget } from "@/components/widget.client";
 import { useFavoritesPreview } from "@/hooks/use-favorites-preview";
+import { CategoryDistribution } from "./category-distribution.client";
 
 interface DashboardFavoritesProps {
   userId: string;
@@ -15,13 +16,14 @@ interface DashboardFavoritesProps {
 export function DashboardFavorites({
   userId,
 }: DashboardFavoritesProps): ReactElement {
-  const { data, isPending, isFetching, error, refetch } = useFavoritesPreview(userId);
+  const { data, isPending, isFetching, error, refetch } =
+    useFavoritesPreview(userId);
   const total = data?.total;
 
   return (
     <section
       aria-label="Your saved ideas"
-      className="grid items-start gap-5 sm:grid-cols-[minmax(0,17.5rem)_minmax(0,21rem)]"
+      className="grid items-start gap-5 sm:grid-cols-2 xl:grid-cols-[minmax(0,17.5rem)_minmax(0,21rem)_minmax(0,1fr)]"
     >
       <Widget className="p-6">
         <h2 className="text-xs tracking-widest text-app-muted uppercase">
@@ -97,6 +99,7 @@ export function DashboardFavorites({
           </Link>
         </div>
       </Widget>
+      <CategoryDistribution userId={userId} />
     </section>
   );
 }

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { IDEA_CATEGORIES } from "@/lib/config/categories-array";
 import { generatedIdeaSchema } from "@/lib/config/ideas";
 
 export const FAVORITES_PREVIEW_LIMIT = 10;
@@ -12,6 +13,7 @@ export const favoritePreviewCardSchema = generatedIdeaSchema
   .extend({
     id: z.string().min(1),
     image: z.string().min(1).nullable(),
+    categories: z.array(z.enum(IDEA_CATEGORIES)).max(3),
   });
 
 export const favoritesPreviewSchema = z.object({

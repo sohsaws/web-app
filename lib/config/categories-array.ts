@@ -102,3 +102,9 @@ export const IDEA_CATEGORIES = [
 ] as const;
 
 export type IdeaCategory = (typeof IDEA_CATEGORIES)[number];
+
+const ideaCategorySet: ReadonlySet<string> = new Set(IDEA_CATEGORIES);
+
+export function isIdeaCategory(value: string): value is IdeaCategory {
+  return ideaCategorySet.has(value);
+}
