@@ -1,9 +1,9 @@
 import { headers } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { ReactElement } from "react";
 import { auth } from "@/lib/auth";
 import { CardsPool } from "./_components/cards-pool.client";
-import Link from 'next/link';
 
 export default async function Dive(): Promise<ReactElement> {
   const session = await auth.api.getSession({
@@ -23,9 +23,9 @@ export default async function Dive(): Promise<ReactElement> {
           <div className="p-8 flex items-center justify-between">
             <h2 className="text-base font-medium text-white">
               Your bio is empty. Please, type something to see ideas
-            </h2>					
+            </h2>
             <Link
-              href='/settings/profile' 
+              href="/settings/profile"
               className="p-2 text-neutral-500 hover:text-white transition-colors border 
               border-transparent hover:border-white/10 hover:bg-white/5 rounded-lg"
             >
@@ -33,8 +33,8 @@ export default async function Dive(): Promise<ReactElement> {
             </Link>
           </div>
         </section>
-		  </main>
-    )
+      </main>
+    );
   }
 
   return (
@@ -53,7 +53,7 @@ export default async function Dive(): Promise<ReactElement> {
         </header>
 
         <div className="flex min-h-72 flex-col items-center justify-center gap-3 text-center sm:min-h-96">
-          <CardsPool userBio={userBio}/>
+          <CardsPool userBio={userBio} />
         </div>
       </section>
     </main>

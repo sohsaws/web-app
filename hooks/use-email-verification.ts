@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { authClient } from "@/lib/auth/auth-client";
 
 const VERIFICATION_CALLBACK_URL = "/verify-email?verified=true";
-const VERIFICATION_SENT_MESSAGE = "The verification link has been sent to your inbox, please check";
+const VERIFICATION_SENT_MESSAGE =
+  "The verification link has been sent to your inbox, please check";
 
 interface UseEmailVerificationResult {
   isSending: boolean;

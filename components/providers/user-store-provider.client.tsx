@@ -15,9 +15,5 @@ export function UserStoreProvider({
 }: UserStoreProviderProps): ReactElement {
   const [store] = useState(() => createUserStore(initialUser));
 
-  return (
-    <UserStoreContext value={store}>
-      {children}
-    </UserStoreContext>
-  );
+  return <UserStoreContext value={store}>{children}</UserStoreContext>;
 }

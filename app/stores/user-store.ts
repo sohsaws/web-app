@@ -26,13 +26,13 @@ export const createUserStore = (initialUser: User | null = null) =>
     clearUser: (): void => {
       set({ user: null });
     },
-}));
+  }));
 
 type UserStoreApi = ReturnType<typeof createUserStore> | null;
 
 export const UserStoreContext = createContext<UserStoreApi>(null);
 
-export function useUserStore<T,>(selector: (state: UserStore) => T): T {
+export function useUserStore<T>(selector: (state: UserStore) => T): T {
   const store = useContext(UserStoreContext);
 
   if (!store) {

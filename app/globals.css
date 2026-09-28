@@ -49,6 +49,13 @@ body {
   font-family: var(--font-sans);
 }
 
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-app-glow) transparent;
+  }
+}
+
 @utility app-widget {
   @apply min-w-0 rounded-2xl border border-app-border bg-linear-to-br from-app-surface to-app-bg;
 }

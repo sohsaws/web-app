@@ -24,9 +24,10 @@ const positions = [
 
 interface IdeasStackProps {
   cards: readonly FavoritePreviewCard[];
+  onOpen?: () => void;
 }
 
-export function IdeasStack({ cards }: IdeasStackProps): ReactElement {
+export function IdeasStack({ cards, onOpen }: IdeasStackProps): ReactElement {
   if (cards.length === 0) {
     return (
       <div className="flex min-h-60 flex-col items-center justify-center gap-3 text-center text-app-muted">
@@ -39,24 +40,35 @@ export function IdeasStack({ cards }: IdeasStackProps): ReactElement {
   }
 
   return (
-    <ul
-      aria-label="Recently saved ideas"
-      className="relative isolate mx-auto h-60 w-full max-w-64"
-    >
-      {cards.slice(0, FAVORITES_PREVIEW_LIMIT).map((idea, index) => {
-        const position = positions[index] ?? positions[0];
+    <div className="relative mx-auto h-60 w-full max-w-64">
+      <ul
+        aria-label="Recently saved ideas"
+        className="relative isolate size-full"
+      >
+        {cards.slice(0, FAVORITES_PREVIEW_LIMIT).map((idea, index) => {
+          const position = positions[index] ?? positions[0];
 
-        return (
-          <li
-            key={idea.id}
-            className={`absolute top-6 left-1/2 w-[72%] -translate-x-1/2 ${position.layer}`}
-          >
-            <div className={position.className}>
-              <MiniIdeaCard idea={idea} tone={position.tone} />
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+          return (
+            <li
+              key={idea.id}
+              className={`absolute top-6 left-1/2 w-[72%] -translate-x-1/2 ${position.layer}`}
+            >
+              <div className={position.className}>
+                <MiniIdeaCard idea={idea} tone={position.tone} />
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      {onOpen ? (
+        <button
+          type="button"
+          aria-haspopup="dialog"
+          aria-label="Open saved ideas"
+          onClick={onOpen}
+          className="absolute inset-0 z-40 cursor-pointer rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+        />
+      ) : null}
+    </div>
   );
 }

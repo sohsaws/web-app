@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import { type ChangeEvent, type RefObject, useRef, useState } from "react";
 import { toast } from "sonner";
-import { getApiResponseError } from '@/lib/utils/responseError';
 import {
   AVATAR_MAX_SIZE_BYTES,
   isAvatarContentType,
 } from "@/lib/config/avatar";
+import { getApiResponseError } from "@/lib/utils/responseError";
 
 interface UseAvatarUploadOptions {
   hasAvatar: boolean;
@@ -20,7 +20,6 @@ interface UseAvatarUploadResult {
   handleFileChange: (event: ChangeEvent<HTMLInputElement>) => Promise<void>;
   removeAvatar: () => Promise<void>;
 }
-
 
 export function useAvatarUpload({
   hasAvatar,

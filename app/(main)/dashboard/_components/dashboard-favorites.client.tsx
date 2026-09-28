@@ -3,11 +3,14 @@
 import { Bookmark } from "lucide-react";
 import Link from "next/link";
 import type { ReactElement } from "react";
+import { useCarouselStore } from "@/app/stores/carousel-store";
+import { Carousel } from "@/components/carousel.client";
 import { IdeasStack } from "@/components/ideas-stack.client";
 import { LoadingSpinner } from "@/components/loading-spinner.client";
 import { Widget } from "@/components/widget.client";
 import { useFavoritesPreview } from "@/hooks/use-favorites-preview";
 import { CategoryDistribution } from "./category-distribution.client";
+import { YouWouldLike } from "./you-would-like.client";
 
 interface DashboardFavoritesProps {
   userId: string;
@@ -19,29 +22,33 @@ export function DashboardFavorites({
   const { data, isPending, isFetching, error, refetch } =
     useFavoritesPreview(userId);
   const total = data?.total;
+  const openCarousel = useCarouselStore((state) => state.open);
 
   return (
     <section
       aria-label="Your saved ideas"
       className="grid items-start gap-5 sm:grid-cols-2 xl:grid-cols-[minmax(0,17.5rem)_minmax(0,21rem)_minmax(0,1fr)]"
     >
-      <Widget className="p-6">
-        <h2 className="text-xs tracking-widest text-app-muted uppercase">
-          Saved ideas
-        </h2>
-        <div className="mt-3" aria-live="polite">
-          {isPending ? (
-            <LoadingSpinner label="Loading saved ideas count..." />
-          ) : (
-            <p className="font-serif text-4xl leading-none text-white">
-              {total === undefined ? "—" : total.toLocaleString("en-US")}
-            </p>
-          )}
-        </div>
-        <p className="mt-3 text-xs text-app-muted">
-          {error ? "Unable to refresh your collection" : "In your collection"}
-        </p>
-      </Widget>
+      <div className="flex flex-col gap-5 self-stretch">
+        <Widget className="p-6">
+          <h2 className="text-xs tracking-widest text-app-muted uppercase">
+            Saved ideas
+          </h2>
+          <div className="mt-3" aria-live="polite">
+            {isPending ? (
+              <LoadingSpinner label="Loading saved ideas count..." />
+            ) : (
+              <p className="font-serif text-4xl leading-none text-white">
+                {total === undefined ? "—" : total.toLocaleString("en-US")}
+              </p>
+            )}
+          </div>
+          <p className="mt-3 text-xs text-app-muted">
+            {error ? "Unable to refresh your collection" : "In your collection"}
+          </p>
+        </Widget>
+        <YouWouldLike />
+      </div>
 
       <Widget className="p-6">
         <div className="flex items-center justify-between gap-4">
@@ -62,7 +69,10 @@ export function DashboardFavorites({
             <LoadingSpinner label="Loading your saved ideas..." />
           </div>
         ) : data ? (
-          <IdeasStack cards={data.cards} />
+          <>
+            <IdeasStack cards={data.cards} onOpen={openCarousel} />
+            <Carousel items={data.cards} />
+          </>
         ) : null}
 
         {error ? (

@@ -14,9 +14,9 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
-  appName: 'Swiipy',
-  baseUrl: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
-  
+  appName: "Swiipy",
+  baseUrl: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+
   session: {
     expiresIn: 60 * 60 * 24 * 14,
     updateAge: 60 * 60 * 24,
@@ -37,8 +37,8 @@ export const auth = betterAuth({
       });
     },
     onPasswordReset: async ({ user }) => {
-      console.log(`Password for user ${user.email} has been reset.`)
-    }
+      console.log(`Password for user ${user.email} has been reset.`);
+    },
   },
 
   emailVerification: {

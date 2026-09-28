@@ -7,19 +7,20 @@ import {
 } from "@/lib/config/favorites";
 import prisma from "@/lib/prisma";
 
-export async function getFavoritesPreview(userId: string): Promise<FavoritesPreview> {
+export async function getFavoritesPreview(
+  userId: string,
+): Promise<FavoritesPreview> {
   const where = { userId, isFavorited: true };
-  const rows = await prisma.card.findMany
-  ({
+  const rows = await prisma.card.findMany({
     where,
     take: FAVORITES_PREVIEW_LIMIT,
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-    select: { 
-      id: true, 
-      title: true, 
-      description: true, 
+    select: {
+      id: true,
+      title: true,
+      description: true,
       image: true,
-      category: true, 
+      category: true,
     },
   });
   const cards = rows.map(({ category, ...card }) => ({

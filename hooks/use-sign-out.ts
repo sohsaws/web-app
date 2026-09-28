@@ -32,7 +32,7 @@ export function useSignOut(): UseSignOutResult {
       }
 
       clearUser();
-      
+
       toast.success("Signed out successfully");
       router.replace("/login");
     } catch {

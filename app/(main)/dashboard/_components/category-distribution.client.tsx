@@ -12,10 +12,11 @@ interface CategoryDistributionProps {
 export function CategoryDistribution({
   userId,
 }: CategoryDistributionProps): ReactElement {
-  const { data, isPending, isFetching, error, refetch } = useCategoryDistribution(userId);
+  const { data, isPending, isFetching, error, refetch } =
+    useCategoryDistribution(userId);
 
   return (
-    <Widget className="flex min-h-96 flex-col self-stretch p-6 sm:col-span-2 xl:col-span-1">
+    <Widget className="flex max-h-102 flex-col self-stretch p-6 sm:col-span-2 xl:col-span-1">
       <h2 className="text-xs tracking-widest text-app-muted uppercase">
         Your interests
       </h2>

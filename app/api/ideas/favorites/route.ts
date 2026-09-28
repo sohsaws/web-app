@@ -1,9 +1,31 @@
+import { randomUUID } from "node:crypto";
+import { del, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { ideaSaveRequestSchema } from "@/lib/config/ideas";
+import {
+  IDEA_IMAGE_DATA_URL_PREFIX,
+  ideaSaveRequestSchema,
+} from "@/lib/config/ideas";
 import { saveFavoriteForUser } from "@/lib/data/save-favorite";
-import { randomUUID } from "node:crypto";
-import { del, put, PutBlobResult } from "@vercel/blob";
+
+const IDEA_IMAGE_CONTENT_TYPE = "image/jpeg";
+const IDEA_IMAGE_EXTENSION = "jpg";
+
+async function uploadIdeaImage(
+  userId: string,
+  imageDataUrl: string,
+): Promise<string> {
+  const base64 = imageDataUrl.slice(IDEA_IMAGE_DATA_URL_PREFIX.length);
+  const imageBytes = Buffer.from(base64, "base64");
+  const pathname = `ideas-images/${userId}/${randomUUID()}.${IDEA_IMAGE_EXTENSION}`;
+
+  const blob = await put(pathname, imageBytes, {
+    access: "public",
+    contentType: IDEA_IMAGE_CONTENT_TYPE,
+  });
+
+  return blob.url;
+}
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
@@ -22,32 +44,6 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     const body: unknown = await request.json().catch(() => null);
     const result = ideaSaveRequestSchema.safeParse(body);
-    let imageUrl: string | undefined;
-
-    if (result.data?.image) { 
-      const parts = result.data?.image?.split(';base64,');
-
-      const contentType = parts?.[0].split(':')[1];
-      const rawBase64 = parts?.[1];
-      
-      const byteChars = atob(rawBase64);
-
-      const byteNums = new Array(byteChars?.length);
-      for (let i = 0; i < byteChars?.length; i++) {
-        byteNums[i] = byteChars?.charCodeAt(i);
-      }
-      
-      const byteArray = new Uint8Array();
-      const imageBlob = new Blob([byteArray], { type: contentType });
-      const extension = contentType.split('/')[1];
-      const pathname = `ideas-images/${session.user.id}/${randomUUID()}.${extension}`;
-
-      const blob = await put(pathname, imageBlob, {
-        access: 'public',
-      });
-
-      imageUrl = blob.url;
-    }
 
     if (!result.success) {
       return NextResponse.json(
@@ -56,8 +52,21 @@ export async function POST(request: Request): Promise<NextResponse> {
       );
     }
 
-    const newIdeaObject = { ...result.data, image: imageUrl };
-    const saved = await saveFavoriteForUser(session.user.id, newIdeaObject);
+    const imageUrl = result.data.image
+      ? await uploadIdeaImage(session.user.id, result.data.image)
+      : undefined;
+
+    let saved = false;
+    try {
+      saved = await saveFavoriteForUser(session.user.id, {
+        ...result.data,
+        image: imageUrl,
+      });
+    } finally {
+      if (!saved && imageUrl) {
+        await del(imageUrl);
+      }
+    }
 
     if (!saved) {
       return NextResponse.json(
@@ -67,6 +76,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     return NextResponse.json(
+      { saved: true },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch {

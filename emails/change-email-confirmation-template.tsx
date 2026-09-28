@@ -126,4 +126,3 @@ ChangeEmailConfirmationEmail.PreviewProps = {
   newEmail: "new-email@example.com",
   url: "https://example.com/confirm-email-change",
 } satisfies ChangeEmailConfirmationProps;
-

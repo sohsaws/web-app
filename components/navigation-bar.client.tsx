@@ -53,10 +53,9 @@ export function NavigationBar({
                   focus-visible:ring-inset focus-visible:ring-white 
                   ${
                     isActive
-                    ? "bg-white/10 text-white"
-                    : "text-neutral-400 hover:bg-white/5 hover:text-white"
-                  }`
-                }
+                      ? "bg-white/10 text-white"
+                      : "text-neutral-400 hover:bg-white/5 hover:text-white"
+                  }`}
               >
                 <span className="truncate">{item.label}</span>
               </Link>

@@ -1,4 +1,3 @@
-
 export async function getApiResponseError(
   response: Response,
   fallbackMessage: string,

@@ -83,4 +83,4 @@ export function IdeaCategories({
       ))}
     </ul>
   );
-};
+}

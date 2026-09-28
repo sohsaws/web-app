@@ -73,6 +73,12 @@ Migrated from `.codex/memory/MEMORY.md` on 2026-09-26.
   cards, eventually run by a free task scheduler at an undecided interval. The
   MVP shows only a placeholder.
 
+- **Favorites carousel (2026-09-26).** Clicking the "Your pocket" stack opens
+  a portal carousel that starts at the top card of the stack. Only `isOpen`
+  lives in `app/stores/carousel-store.ts`; cards come in as props. Saved cards
+  render with `IdeaCardView` and their stored image. Never use `IdeaCard` for
+  saved cards, because it calls the AI image generation endpoint.
+
 ## Dashboard metrics
 
 - Planned MVP metrics: `Saved ideas` (total plus a recent-period delta),

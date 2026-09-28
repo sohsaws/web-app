@@ -63,7 +63,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         status: 200,
       },
     );
-  } catch(e) {
+  } catch (e) {
     console.log(e);
     return NextResponse.json(
       {

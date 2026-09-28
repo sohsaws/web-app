@@ -32,7 +32,6 @@ export function useProfileForm(
   });
 
   const onSubmit: SubmitHandler<ProfileFormValues> = async (values) => {
-
     try {
       const result = await updateProfile(values);
 
@@ -45,7 +44,7 @@ export function useProfileForm(
 
       form.reset(values);
       toast.success(result.message);
-      
+
       router.refresh();
     } catch (error: unknown) {
       console.error("Profile update failed:", error);
