@@ -38,7 +38,10 @@ export const generatedImageSchema = z.object({
   image: z.base64().min(1),
 });
 
-export const IDEA_IMAGE_DATA_URL_PREFIX = "data:image/jpeg;base64,";
+// Gemini image models return PNG. Every other image constant derives from these.
+export const IDEA_IMAGE_MEDIA_TYPE = "image/png";
+export const IDEA_IMAGE_FILE_EXTENSION = "png";
+export const IDEA_IMAGE_DATA_URL_PREFIX = `data:${IDEA_IMAGE_MEDIA_TYPE};base64,`;
 
 const ideaImageSchema = z
   .string()
@@ -49,7 +52,7 @@ const ideaImageSchema = z
       generatedImageSchema.shape.image.safeParse(
         value.slice(IDEA_IMAGE_DATA_URL_PREFIX.length),
       ).success,
-    "Provide a base64-encoded JPEG image",
+    "Provide a base64-encoded PNG image",
   );
 
 export const ideaResponseSchema = generatedIdeaSchema.extend({

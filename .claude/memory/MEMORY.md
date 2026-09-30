@@ -34,6 +34,23 @@ Migrated from `.codex/memory/MEMORY.md` on 2026-09-26.
 - Destructive auth/database migrations are acceptable while the database holds
   only disposable test data. Still say when a migration drops data.
 - Database is on Neon's Free plan.
+- **Env files are off limits (2026-09-28).** The user forbade reading `.env` or
+  `.env.*` under any circumstances. Refer to variables by name only.
+- **AI gateway is MixRoute (2026-09-28).** It replaces Groq for text and
+  Cloudflare Workers AI for images. Env vars: `MIXROUTE_API_BASE_URL` and
+  `MIXROUTE_API_KEY`.
+- **No AI SDK (2026-09-30).** The user chose direct calls after weighing the
+  risks: `openai` client (`chat.completions.parse` + `zodResponseFormat`) with
+  `gpt-4o-mini-2024-07-18` for idea text and category choice, and `fetch` to
+  Gemini `generateContent` with `gemini-2.5-flash-image` for images. `ai` and
+  all `@ai-sdk/*` packages were uninstalled. Category logic stays two calls per
+  idea by the user's choice. Gemini text was dropped earlier because MixRoute
+  returned 400 on the large category enum. Idea images are PNG end to end,
+  driven by `IDEA_IMAGE_MEDIA_TYPE` in `lib/config/ideas.ts`. See the mixroute
+  skill.
+- **Open (2026-09-28):** MixRoute answered `403 insufficient_user_quota` on a
+  valid request although the console shows a balance. The user set it aside;
+  it is an account or billing issue, not code.
 
 ## File conventions
 

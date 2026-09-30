@@ -4,12 +4,11 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import {
   IDEA_IMAGE_DATA_URL_PREFIX,
+  IDEA_IMAGE_FILE_EXTENSION,
+  IDEA_IMAGE_MEDIA_TYPE,
   ideaSaveRequestSchema,
 } from "@/lib/config/ideas";
 import { saveFavoriteForUser } from "@/lib/data/save-favorite";
-
-const IDEA_IMAGE_CONTENT_TYPE = "image/jpeg";
-const IDEA_IMAGE_EXTENSION = "jpg";
 
 async function uploadIdeaImage(
   userId: string,
@@ -17,11 +16,11 @@ async function uploadIdeaImage(
 ): Promise<string> {
   const base64 = imageDataUrl.slice(IDEA_IMAGE_DATA_URL_PREFIX.length);
   const imageBytes = Buffer.from(base64, "base64");
-  const pathname = `ideas-images/${userId}/${randomUUID()}.${IDEA_IMAGE_EXTENSION}`;
+  const pathname = `ideas-images/${userId}/${randomUUID()}.${IDEA_IMAGE_FILE_EXTENSION}`;
 
   const blob = await put(pathname, imageBytes, {
     access: "public",
-    contentType: IDEA_IMAGE_CONTENT_TYPE,
+    contentType: IDEA_IMAGE_MEDIA_TYPE,
   });
 
   return blob.url;

@@ -12,9 +12,6 @@
     "dev:inspect": "next dev --inspect"
   },
   "dependencies": {
-    "@ai-sdk/google": "^4.0.82",
-    "@ai-sdk/groq": "^4.0.40",
-    "@ai-sdk/openai": "^4.0.78",
     "@better-auth/prisma-adapter": "^1.6.25",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/adapter-pg": "^7.3.0",
@@ -22,12 +19,12 @@
     "@react-email/render": "2.0.4",
     "@tanstack/react-query": "^5.102.8",
     "@vercel/blob": "^2.3.0",
-    "ai": "^7.0.97",
     "better-auth": "^1.6.25",
     "dotenv": "^17.2.3",
     "lucide-react": "^0.562.0",
     "motion": "^12.26.2",
     "next": "^16.2.11",
+    "openai": "^7.25.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.71.1",
