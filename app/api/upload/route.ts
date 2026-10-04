@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { del, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { isManagedBlobUrl } from "@/lib/blob/managed-blob-url";
 import {
   AVATAR_CONTENT_TYPE_TO_EXTENSION,
   AVATAR_MAX_SIZE_BYTES,
@@ -10,22 +11,6 @@ import {
 
 function errorResponse(message: string, status: number): NextResponse {
   return NextResponse.json({ error: message }, { status });
-}
-
-function isManagedBlobUrl(value: string | null | undefined): value is string {
-  if (!value) {
-    return false;
-  }
-
-  try {
-    const url = new URL(value);
-    return (
-      url.protocol === "https:" &&
-      url.hostname.endsWith(".blob.vercel-storage.com")
-    );
-  } catch {
-    return false;
-  }
 }
 
 async function deleteManagedBlob(

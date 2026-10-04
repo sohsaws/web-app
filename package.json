@@ -12,6 +12,7 @@
     "dev:inspect": "next dev --inspect"
   },
   "dependencies": {
+    "@better-auth/infra": "^0.4.14",
     "@better-auth/prisma-adapter": "^1.6.25",
     "@hookform/resolvers": "^5.2.2",
     "@openrouter/sdk": "^1.4.16",

@@ -43,8 +43,12 @@ export default async function MainLayout({
           />
 
           <div className="flex justify-end w-24 gap-7">
-            <button className="text-neutral-500 hover:text-white transition-colors cursor-pointer">
-              <BellRing className="w-6 h-6" />
+            <button
+              type="button"
+              aria-label="Notifications"
+              className="text-neutral-300 hover:text-white transition-colors cursor-pointer"
+            >
+              <BellRing aria-hidden="true" className="w-6 h-6" />
             </button>
             <UserDropdown
               user={{

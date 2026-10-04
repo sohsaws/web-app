@@ -47,6 +47,23 @@
   --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
 
   --animate-shine: shine 6s linear infinite;
+  --animate-hue-shift: hue-shift 6s ease-in-out infinite;
+
+  @keyframes hue-shift {
+    0%,
+    100% {
+      color: var(--color-category-lavender);
+    }
+    25% {
+      color: var(--color-category-navy);
+    }
+    50% {
+      color: var(--color-category-emerald);
+    }
+    75% {
+      color: var(--color-category-amber);
+    }
+  }
 
   @keyframes shine {
     0% {

@@ -200,6 +200,16 @@ on every recommendation.
 - Destructive auth/database migrations are acceptable while the database holds
   only disposable test data. Still say when a migration drops data.
 - Database is on Neon's Free plan.
+- **Account deletion (2026-10-04).** Better Auth `user.deleteUser` is enabled
+  in `lib/auth.ts`. Its `beforeDelete` hook calls `deleteUserBlobs`
+  (`lib/data/delete-user-blobs.ts`) to remove the avatar and saved-card images
+  from Vercel Blob before the DB cascade (Account, Session, Card all cascade on
+  User). A Blob failure aborts the deletion on purpose. UI:
+  `settings/security/_components/delete-account.client.tsx` + `hooks/use-delete-account.ts`;
+  type DELETE, plus password for credential users; Google users need a session
+  younger than Better Auth's 1-day `freshAge`, otherwise `SESSION_EXPIRED`
+  prompts a re-sign-in. No email confirmation step yet.
+  `isManagedBlobUrl` lives in `lib/blob/managed-blob-url.ts`.
 - **Env files are off limits (2026-09-28).** The user forbade reading `.env` or
   `.env.*` under any circumstances. Refer to variables by name only.
 - **⚠️ AI TEXT MOVED TO OPENROUTER, NOT YET VERIFIED LIVE (paused 2026-10-03) ⚠️**
@@ -280,8 +290,9 @@ on every recommendation.
   saved cards, because it calls the AI image generation endpoint.
 
 - **MVP release scope (2026-10-04).** Goal now is shipping the MVP. No
-  subscriptions: the Pricing page was deleted and the marketing nav is only
-  About and Contact. The landing-page topic search was removed completely: its
+  subscriptions: the Pricing page was deleted, the marketing nav is only
+  About and Contact, and the settings Billing section was removed (settings:
+  Profile, Security, Notifications). The landing-page topic search was removed completely: its
   two components, `app/api/search`, the Prisma `TopicSearch` model, the
   `topic_search` table (migration `20261004120000_remove_topic_search`, applied
   with `migrate deploy`), `prisma/seed.ts`, `mock.json`, and both seed configs.

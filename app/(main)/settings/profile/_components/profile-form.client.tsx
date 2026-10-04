@@ -8,6 +8,7 @@ import {
   PROFILE_BIO_MAX_LENGTH,
   type ProfileFormValues,
 } from "@/lib/config/profile";
+import { BioHint } from "./bio-hint.client";
 import EmailVerificationWarning from "./email-verification-warning.client";
 
 interface ProfileFormProps {
@@ -84,19 +85,22 @@ export default function ProfileForm({
       </div>
 
       <div className="space-y-2">
-        <label
-          htmlFor="bio"
-          className="block text-xs font-medium text-neutral-500"
-        >
-          Bio
-        </label>
+        <div className="flex items-center gap-1">
+          <label
+            htmlFor="bio"
+            className="block text-xs font-medium text-neutral-500"
+          >
+            Bio
+          </label>
+          <BioHint />
+        </div>
         <textarea
           id="bio"
           {...register("bio")}
           aria-invalid={Boolean(errors.bio)}
           aria-describedby={errors.bio ? "bio-error" : "bio-description"}
           rows={4}
-          placeholder="Write something about yourself…"
+          placeholder="Describe your interests and what you want to try"
           maxLength={PROFILE_BIO_MAX_LENGTH}
           className="block w-full resize-none rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white shadow-sm outline-none transition-colors placeholder:text-neutral-600 focus:border-white/20 focus:ring-1 focus:ring-white/20"
         />

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { ReactElement } from "react";
 import { auth } from "@/lib/auth";
+import { DeleteAccount } from "./_components/delete-account.client";
 
 export default async function SecurityPage(): Promise<ReactElement> {
   const requestHeaders = await headers();
@@ -106,12 +107,7 @@ export default async function SecurityPage(): Promise<ReactElement> {
               with caution.
             </p>
           </div>
-          <div className="px-6 py-4 bg-red-500/2 border-t border-red-500/10 flex items-center justify-between">
-            <p className="text-xs text-red-500/60 font-medium tracking-wide uppercase">
-              Danger Zone
-            </p>
-            <p>Delete account, SSO: {hasPassword}</p>
-          </div>
+          <DeleteAccount requiresPassword={hasPassword} />
         </div>
       </div>
     </div>

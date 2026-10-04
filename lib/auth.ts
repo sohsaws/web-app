@@ -1,3 +1,4 @@
+import { dash } from "@better-auth/infra";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
@@ -6,6 +7,7 @@ import { renderChangeEmailConfirmation } from "@/emails/change-email-confirmatio
 import { renderResetPasswordEmail } from "@/emails/reset-password-template";
 import { renderVerificationEmail } from "@/emails/verification-template";
 import { profileBioSchema } from "@/lib/config/profile";
+import { deleteUserBlobs } from "@/lib/data/delete-user-blobs";
 import { sendAuthEmail } from "@/lib/email/send-auth-email";
 import prisma from "./prisma";
 
@@ -56,6 +58,12 @@ export const auth = betterAuth({
   },
 
   user: {
+    deleteUser: {
+      enabled: true,
+      beforeDelete: async (user): Promise<void> => {
+        await deleteUserBlobs(user.id, user.image);
+      },
+    },
     changeEmail: {
       enabled: true,
       sendChangeEmailConfirmation: async ({
@@ -95,5 +103,5 @@ export const auth = betterAuth({
     },
   },
 
-  plugins: [username(), nextCookies()],
+  plugins: [username(), nextCookies(), dash()],
 });
