@@ -86,14 +86,6 @@ model Verification {
   @@map("verification")
 }
 
-model TopicSearch {
-  id    Int    @id @default(autoincrement())
-  topic String
-
-  @@index([topic])
-  @@map("topic_search")
-}
-
 model Card {
   id          String   @id @default(cuid()) 
   title       String

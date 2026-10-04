@@ -14,6 +14,7 @@
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.6.25",
     "@hookform/resolvers": "^5.2.2",
+    "@openrouter/sdk": "^1.4.16",
     "@prisma/adapter-pg": "^7.3.0",
     "@react-email/components": "1.0.8",
     "@react-email/render": "2.0.4",
@@ -24,7 +25,6 @@
     "lucide-react": "^0.562.0",
     "motion": "^12.26.2",
     "next": "^16.2.11",
-    "openai": "^7.25.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.71.1",
@@ -44,8 +44,5 @@
     "tailwindcss": "^4.3.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
-  },
-  "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

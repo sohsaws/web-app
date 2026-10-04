@@ -1,6 +1,13 @@
-import { AnimatedSearch } from "@/components/search/animated-search.client";
+import { headers } from "next/headers";
+import type { ReactElement } from "react";
+import { auth } from "@/lib/auth";
+import { HeroCta } from "./_components/hero-cta.server";
 
-export default function Home() {
+export default async function Home(): Promise<ReactElement> {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   return (
     <main className="flex w-full min-w-0 flex-1 flex-col relative items-center justify-center px-4 pb-15">
       <div className="w-full mx-auto space-y-10 mb-10 text-center">
@@ -14,7 +21,7 @@ export default function Home() {
           From vacation spots to startup ideas — clarity is just a swipe away
         </p>
       </div>
-      <AnimatedSearch />
+      <HeroCta isSignedIn={session !== null} />
     </main>
   );
 }

@@ -13,6 +13,8 @@
   --color-app-toast-border: #f59e0b;
   --color-app-action-skip: #c87a6d;
   --color-app-action-favorite: #c8a65c;
+  --color-app-status-online: #7cc8a2;
+  --color-app-status-offline: #525252;
 
   --color-category-scarlet: #ff7166;
   --color-category-emerald: #5bd6a2;
@@ -43,6 +45,20 @@
   --text-app-footer-meta: 0.75rem;
 
   --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
+
+  --animate-shine: shine 6s linear infinite;
+
+  @keyframes shine {
+    0% {
+      background-position: 0% 0%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    100% {
+      background-position: 0% 0%;
+    }
+  }
 }
 
 body {
@@ -58,6 +74,26 @@ body {
 
 @utility app-widget {
   @apply min-w-0 rounded-2xl border border-app-border bg-linear-to-br from-app-surface to-app-bg;
+}
+
+/* A 1px light that travels around the element's outline. The mask removes the
+   content box, so only the border ring shows the moving gradient. Pair with
+   `animate-shine` on an absolutely positioned overlay. */
+@utility shine-border {
+  padding: 1px;
+  background-image: radial-gradient(
+    transparent,
+    transparent,
+    #ffffff,
+    #737373,
+    transparent,
+    transparent
+  );
+  background-size: 300% 300%;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
 }
 
 @utility card-action {

@@ -5,9 +5,8 @@ import { UserDropdown } from "@/components/user-dropdown.client";
 import { auth } from "@/lib/auth";
 
 const navigationItems = [
-  { href: "/contact", label: "Contact" },
-  { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ] as const;
 
 export default async function SiteLayout({

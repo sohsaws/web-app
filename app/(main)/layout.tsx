@@ -9,7 +9,7 @@ import { auth } from "@/lib/auth";
 const navigationItems = [
   { href: "/dashboard", label: "Overview" },
   { href: "/dive", label: "Dive" },
-  { href: "#", label: "Explore" },
+  { href: "/for-you", label: "For you" },
 ] as const;
 
 export default async function MainLayout({
