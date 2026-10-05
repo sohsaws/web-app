@@ -32,7 +32,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   try {
     const image = await generateImages(parsedBody.data.description);
-
+    console.log(image);
     return NextResponse.json(image, {
       headers: { "Cache-Control": "no-store" },
     });

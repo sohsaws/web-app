@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const PROFILE_BIO_MAX_LENGTH = 400;
+export const PROFILE_BIO_MAX_LENGTH = 2000;
 
 export const profileFormSchema = z.object({
   name: z

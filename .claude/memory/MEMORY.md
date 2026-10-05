@@ -212,38 +212,27 @@ on every recommendation.
   `isManagedBlobUrl` lives in `lib/blob/managed-blob-url.ts`.
 - **Env files are off limits (2026-09-28).** The user forbade reading `.env` or
   `.env.*` under any circumstances. Refer to variables by name only.
-- **⚠️ AI TEXT MOVED TO OPENROUTER, NOT YET VERIFIED LIVE (paused 2026-10-03) ⚠️**
-  Idea text and category choice use `@openrouter/sdk` with
-  `OPENROUTER_API_KEY`, strict JSON schema from `z.toJSONSchema`, and
-  `provider.requireParameters: true`. The user is testing free models; the
-  current `IDEA_TEXT_MODEL_ID` in `lib/ai/openrouter.ts` is the source of
-  truth (was `qwen/qwen3.8-27b:free`, later
-  `inclusionai/ling-3.0-flash-sante:free`). Structured output is inline in
-  `generate-ideas.ts`: no helper functions (user decision 2026-10-02), just
-  `"choices" in response`, a string check, and `schema.parse(JSON.parse(...))`.
-  A pack costs 21 calls: 1 for ideas plus 2 category calls per idea, which
-  matters for free-model rate limits. The user dropped hand-written
-  Request/Response types; SDK types are used. `openai` was uninstalled. Image generation is still
-  disconnected (MixRoute code left in place, cards show the icon fallback)
-  until the user brings it back. See the openrouter and mixroute skills. History of the MixRoute failure:
-  structured output returned `400 'additionalProperties' is required ... In
-  context=()` although `zodResponseFormat` sent it at the root (verified
-  locally), and an earlier call hit `403 insufficient_user_quota`.
-- **AI gateway was MixRoute (2026-09-28 to 2026-10-01).** It replaces Groq for text and
-  Cloudflare Workers AI for images. Env vars: `MIXROUTE_API_BASE_URL` and
-  `MIXROUTE_API_KEY`.
-- **No AI SDK (2026-09-30).** The user chose direct calls after weighing the
-  risks: `openai` client (`chat.completions.parse` + `zodResponseFormat`) with
-  `gpt-4o-mini-2024-07-18` for idea text and category choice, and `fetch` to
-  Gemini `generateContent` with `gemini-2.5-flash-image` for images. `ai` and
-  all `@ai-sdk/*` packages were uninstalled. Category logic stays two calls per
-  idea by the user's choice. Gemini text was dropped earlier because MixRoute
-  returned 400 on the large category enum. Idea images are PNG end to end,
-  driven by `IDEA_IMAGE_MEDIA_TYPE` in `lib/config/ideas.ts`. See the mixroute
-  skill.
-- **Open (2026-09-28):** MixRoute answered `403 insufficient_user_quota` on a
-  valid request although the console shows a balance. The user set it aside;
-  it is an account or billing issue, not code.
+- **⚠️ AI = DEEPINFRA (2026-10-05), NOT YET VERIFIED LIVE ⚠️** Text and
+  images go through DeepInfra with the official `openai` client
+  (`lib/ai/deepinfra.ts`, base URL `https://api.deepinfra.com/v1/openai`,
+  `DEEPINFRA_API_KEY`). Text: `deepseek-ai/DeepSeek-V4-Flash-0731` with
+  `chat.completions.parse` + `zodResponseFormat`. Images:
+  `black-forest-labs/FLUX-2-dev`, `1024x1024`, `b64_json`, checked against the
+  PNG base64 signature. The user funded $5 prepaid. Category logic stays two
+  calls per idea (21 calls per deck) by the user's choice. Idea images are PNG
+  end to end (`IDEA_IMAGE_MEDIA_TYPE`,S in
+  `lib/config/ideas.ts`). See the deepinfra skill. Unverified: `$schema` key and
+  the 100-value category enum under DeepInfra's strict mode, and the real
+  image format.
+- **Provider history (do not go back without the user):** Groq + Cloudflare
+  Workers AI → Vercel AI SDK + MixRoute (Gemini 400 on the large category enum,
+  later `400 additionalProperties ... context=()` and `403
+  insufficient_user_quota`) → no AI SDK, direct calls (2026-09-30) → OpenRouter
+  free models (2026-10-01, unusable for the user) → DeepInfra (2026-10-05).
+  Rejected along the way: Together AI (dearer), Cloudflare free tier for
+  images (user wants high quality and a prepaid split budget), native
+  OpenAI/Anthropic (kept as later options; Anthropic has no image generation).
+  `ai`, `@ai-sdk/*`, and `@openrouter/sdk` are uninstalled.
 
 ## File conventions
 
