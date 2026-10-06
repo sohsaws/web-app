@@ -1,172 +1,74 @@
-"use client";
+import { Mail, MessageCircle } from "lucide-react";
+import type { ReactElement } from "react";
+import { ContactForm } from "./_components/contact-form.client";
 
-import { Bug, Handshake, Lightbulb, MessageCircle } from "lucide-react";
-import { useState } from "react";
+const CONTACT_EMAIL = "hello@swiipy.com";
 
-export default function Contact() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+const ICON_BOX_CLASS =
+  "flex size-8 shrink-0 items-center justify-center rounded-lg border border-app-action-skip/30 bg-app-action-skip/10 text-app-action-skip";
 
+export default function Contact(): ReactElement {
   return (
-    <section className="max-w-6xl mx-auto px-6 border-t border-white/5 pt-10 pb-10">
-      <div className="grid md:grid-cols-2 gap-16 md:gap-24">
-        <div>
-          <h1 className="text-3xl font-medium text-white tracking-tight mb-2">
-            Get in Touch
-          </h1>
-          <h2 className="text-lg text-white font-medium mb-4">
-            We&apos;d love to hear from you
-          </h2>
-          <p className="text-sm text-neutral-400 mb-10 leading-relaxed">
-            Whether you have a question, feedback, or just want to say hi —
-            we&apos;re here to listen.
+    <main className="relative isolate flex w-full min-w-0 flex-1 items-center overflow-x-clip px-4 py-16 sm:px-6 lg:py-24">
+      {/* Soft background glow; decorative only. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10"
+      >
+        <div className="absolute top-1/4 left-0 size-128 -translate-x-1/3 rounded-full bg-app-glow/60 blur-3xl" />
+      </div>
+
+      <div className="mx-auto grid w-full max-w-5xl items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-24">
+        <div className="min-w-0">
+          <p className="flex items-center gap-3 text-xs font-medium tracking-[0.25em] text-neutral-400 uppercase motion-safe:animate-fade-up">
+            <span aria-hidden="true" className="h-px w-6 bg-app-action-skip" />
+            Let&apos;s talk
           </p>
 
-          <div className="border-t border-white/5 pt-10">
-            <h3 className="text-xs font-semibold text-neutral-500 uppercase tracking-widest mb-6">
-              Quick Links
-            </h3>
+          <h1 className="mt-6 font-serif text-5xl leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl motion-safe:animate-fade-up motion-safe:[animation-delay:100ms]">
+            Make the next <span className="text-neutral-400">conversation</span>{" "}
+            count.
+          </h1>
 
-            <div className="space-y-6">
-              <div className="flex items-start gap-3">
-                <MessageCircle
-                  className="text-white mt-0.5"
-                  size={18}
-                  strokeWidth={1.5}
-                />
-                <div>
-                  <div className="text-sm font-medium text-white mb-1">
-                    General Questions
-                  </div>
-                  <a
-                    href="mailto:hello@swiipy.com"
-                    className="text-xs text-neutral-500 hover:text-white transition-colors"
-                  >
-                    hello@swiipy.com
-                  </a>
-                </div>
-              </div>
+          <p className="mt-8 max-w-md text-base leading-relaxed font-light text-neutral-300 motion-safe:animate-fade-up motion-safe:[animation-delay:200ms]">
+            Questions, thoughtful feedback, or just a good idea? We&apos;re
+            listening. Send a note and we&apos;ll get back to you soon.
+          </p>
 
-              <div className="flex items-start gap-3">
-                <Bug
-                  className="text-white mt-0.5"
-                  size={18}
-                  strokeWidth={1.5}
-                />
-                <div>
-                  <div className="text-sm font-medium text-white mb-1">
-                    Report a Bug
-                  </div>
-                  <a
-                    href="mailto:bugs@swiipy.com"
-                    className="text-xs text-neutral-500 hover:text-white transition-colors"
-                  >
-                    bugs@swiipy.com
-                  </a>
-                </div>
+          <ul className="mt-10 flex flex-wrap gap-x-8 gap-y-5 motion-safe:animate-fade-up motion-safe:[animation-delay:300ms]">
+            <li className="flex items-start gap-3">
+              <span aria-hidden="true" className={ICON_BOX_CLASS}>
+                <Mail className="size-4" strokeWidth={1.75} />
+              </span>
+              <div>
+                <p className="text-xs font-medium text-white">Email us</p>
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  className="mt-1 block text-xs text-neutral-500 transition-colors hover:text-white"
+                >
+                  {CONTACT_EMAIL}
+                </a>
               </div>
+            </li>
 
-              <div className="flex items-start gap-3">
-                <Lightbulb
-                  className="text-white mt-0.5"
-                  size={18}
-                  strokeWidth={1.5}
-                />
-                <div>
-                  <div className="text-sm font-medium text-white mb-1">
-                    Feature Request
-                  </div>
-                  <a
-                    href="mailto:feedback@swiipy.com"
-                    className="text-xs text-neutral-500 hover:text-white transition-colors"
-                  >
-                    feedback@swiipy.com
-                  </a>
-                </div>
+            <li className="flex items-start gap-3">
+              <span aria-hidden="true" className={ICON_BOX_CLASS}>
+                <MessageCircle className="size-4" strokeWidth={1.75} />
+              </span>
+              <div>
+                <p className="text-xs font-medium text-white">
+                  Usually replies within
+                </p>
+                <p className="mt-1 text-xs text-neutral-500">
+                  one thoughtful day
+                </p>
               </div>
-
-              <div className="flex items-start gap-3">
-                <Handshake
-                  className="text-white mt-0.5"
-                  size={18}
-                  strokeWidth={1.5}
-                />
-                <div>
-                  <div className="text-sm font-medium text-white mb-1">
-                    Partnerships
-                  </div>
-                  <a
-                    href="mailto:partnerships@swiipy.com"
-                    className="text-xs text-neutral-500 hover:text-white transition-colors"
-                  >
-                    partnerships@swiipy.com
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+            </li>
+          </ul>
         </div>
 
-        <div className="bg-neutral-900/10 border border-white/5 p-8 rounded-2xl h-fit">
-          <form className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs text-neutral-500 ml-1">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full bg-neutral-900/50 border border-neutral-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-white/40 transition-colors"
-                  placeholder="Jane"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs text-neutral-500 ml-1">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className="w-full bg-neutral-900/50 border border-neutral-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-white/40 transition-colors"
-                  placeholder="Doe"
-                />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs text-neutral-500 ml-1">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-neutral-900/50 border border-neutral-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-white/40 transition-colors"
-                placeholder="jane@company.com"
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs text-neutral-500 ml-1">Message</label>
-              <textarea
-                rows={5}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="w-full bg-neutral-900/50 border border-neutral-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-white/40 transition-colors resize-none"
-                placeholder="How can we help?"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3 bg-white text-black font-medium text-sm rounded-lg hover:bg-neutral-200 transition-colors mt-2"
-            >
-              Send Message
-            </button>
-          </form>
-        </div>
+        <ContactForm />
       </div>
-    </section>
+    </main>
   );
 }
