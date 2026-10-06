@@ -46,34 +46,16 @@
 
   --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
 
-  --animate-shine: shine 6s linear infinite;
-  --animate-hue-shift: hue-shift 6s ease-in-out infinite;
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 
-  @keyframes hue-shift {
-    0%,
-    100% {
-      color: var(--color-category-lavender);
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
     }
-    25% {
-      color: var(--color-category-navy);
-    }
-    50% {
-      color: var(--color-category-emerald);
-    }
-    75% {
-      color: var(--color-category-amber);
-    }
-  }
-
-  @keyframes shine {
-    0% {
-      background-position: 0% 0%;
-    }
-    50% {
-      background-position: 100% 100%;
-    }
-    100% {
-      background-position: 0% 0%;
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }
@@ -91,26 +73,6 @@ body {
 
 @utility app-widget {
   @apply min-w-0 rounded-2xl border border-app-border bg-linear-to-br from-app-surface to-app-bg;
-}
-
-/* A 1px light that travels around the element's outline. The mask removes the
-   content box, so only the border ring shows the moving gradient. Pair with
-   `animate-shine` on an absolutely positioned overlay. */
-@utility shine-border {
-  padding: 1px;
-  background-image: radial-gradient(
-    transparent,
-    transparent,
-    #ffffff,
-    #737373,
-    transparent,
-    transparent
-  );
-  background-size: 300% 300%;
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask-composite: exclude;
 }
 
 @utility card-action {

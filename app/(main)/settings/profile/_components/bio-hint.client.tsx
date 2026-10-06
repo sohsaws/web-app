@@ -1,23 +1,43 @@
 "use client";
 
 import { GraduationCap } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import type { ReactElement } from "react";
 
 const BIO_HINT_ID = "bio-hint";
 
+// Starts and ends on lavender so each loop restarts without a jump. Values
+// come from the category tokens in globals.css.
+const HINT_COLOR_CYCLE = [
+  "var(--color-category-lavender)",
+  "var(--color-category-navy)",
+  "var(--color-category-emerald)",
+  "var(--color-category-amber)",
+  "var(--color-category-lavender)",
+];
+const HINT_COLOR_CYCLE_SECONDS = 6;
+
 export function BioHint(): ReactElement {
+  const reducedMotion = useReducedMotion();
+
   return (
     <span className="group relative inline-flex">
-      <button
+      <motion.button
         type="button"
         aria-label="What is the bio for?"
         aria-describedby={BIO_HINT_ID}
+        animate={reducedMotion ? undefined : { color: HINT_COLOR_CYCLE }}
+        transition={{
+          duration: HINT_COLOR_CYCLE_SECONDS,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        }}
         className="inline-flex size-6 cursor-help items-center justify-center rounded-full
         text-category-lavender focus-visible:outline-2 focus-visible:outline-offset-2
-        focus-visible:outline-white motion-safe:animate-hue-shift"
+        focus-visible:outline-white"
       >
         <GraduationCap aria-hidden="true" className="size-4" />
-      </button>
+      </motion.button>
       <span
         id={BIO_HINT_ID}
         role="tooltip"

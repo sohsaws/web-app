@@ -285,10 +285,34 @@ on every recommendation.
   two components, `app/api/search`, the Prisma `TopicSearch` model, the
   `topic_search` table (migration `20261004120000_remove_topic_search`, applied
   with `migrate deploy`), `prisma/seed.ts`, `mock.json`, and both seed configs.
-  The project has no seed now. The hero has a black-and-white "Dare to decide"
-  link (`HeroCta` in `app/(marketing)/_components/hero-cta.server.tsx`) with a
-  travelling shine border (`shine-border` utility + `animate-shine` in
-  `globals.css`). It goes to `/register`, or to `/dive` for signed-in users.
+  The project has no seed now.
+- **Landing page (redesigned 2026-10-06 from a user mockup).** The marketing
+  layout and pill nav are untouched. `app/(marketing)/page.tsx`: eyebrow
+  "A calmer way to choose", large serif "Swipe. Decide. / Done.", subtitle,
+  one centred CTA, an honest note ("Free to use. Built for curious minds." —
+  the mockup's "3,240 decisions made today" was dropped as a fabricated stat),
+  soft blurred glows, and a fan of three `MiniIdeaCard`s with static sample
+  ideas (`hero-cards.client.tsx`, `motion` entrance + gentle float). Text uses
+  the CSS `animate-fade-up` token so it stays visible without JS. `HeroCta`
+  (`hero-cta.server.tsx`) is a cream pill that lifts and turns bright white on
+  hover; it goes to `/register`, or to `/dive` for signed-in users. The old
+  `ShineBorder` and `shine-border` utility were deleted with this redesign.
+- **Notification preferences (2026-10-05).** Postgres, not NoSQL: table
+  `NotificationPreference` (1:1 with User, cascade) with `securityEmails`
+  (DB default true, never written by app code, locked "Always on" switch in
+  the UI), `productUpdates` and `weeklyDigest` (both default false: EU opt-in).
+  No row means defaults; the row is upserted on first save by
+  `lib/actions/notification-preferences.action.ts`. The user chose a plain
+  `interface` instead of Zod here (2026-10-06); the action still checks at
+  runtime that it got exactly two booleans and builds the DB data field by
+  field, because server actions are public endpoints. Nothing sends product
+  updates or the weekly digest yet; any future optional email must include an
+  unsubscribe link. The old template switches (direct messages, mentions,
+  workspace activity, quiet hours) were removed.
+  ⚠️ Migration `20261005120000_add_notification_preference` was generated
+  offline (Neon returned P1001 at the time) and is NOT applied yet. Run
+  `npx prisma migrate deploy` once the database is reachable, or the page will
+  fail on the missing table.
 - **Migrations:** apply with `prisma migrate deploy` after checking
   `prisma migrate diff --from-config-datasource --to-schema
   prisma/schema.prisma --script`. Avoid `migrate dev` on the Neon database: on
