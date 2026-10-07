@@ -1,18 +1,26 @@
-import { auth } from "@/auth";
-import Image from "next/image";
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import DashBoard from "./_components/Dashboard";
+import type { ReactElement } from "react";
+import { auth } from "@/lib/auth";
+import DashBoard from "./_components/dashboard.server";
+import { DashboardFavorites } from "./_components/dashboard-favorites.client";
 
-export default async function Dashboard() {
-	const cookieStore = await cookies();
-	const session = await auth();
+export default async function Dashboard(): Promise<ReactElement> {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-	const user = session?.user;
+  if (!session) {
+    redirect("/login?reason=unauthorized");
+  }
 
-	return (
-		<div className="min-h-screen bg-zinc-950 text-neutral-400 flex flex-col">
-			<DashBoard />
-		</div>
-	);
+  const user = session.user;
+
+  return (
+    <div className="min-h-screen bg-app-bg text-app-fg flex flex-col">
+      <DashBoard user={user}>
+        <DashboardFavorites userId={user.id} />
+      </DashBoard>
+    </div>
+  );
 }

@@ -3,11 +3,28 @@
 @theme {
   --color-app-bg: #0a0a0a;
   --color-app-fg: #d4d4d4;
+  --color-app-surface: #111113;
+  --color-app-border: rgb(255 255 255 / 0.1);
+  --color-app-muted: #9ca3af;
   --color-app-selection-bg: #ffffff;
   --color-app-selection-fg: #0a0a0a;
   --color-app-glow: #262626;
   --color-app-toast-bg: #171717;
   --color-app-toast-border: #f59e0b;
+  --color-app-action-skip: #c87a6d;
+  --color-app-action-favorite: #c8a65c;
+  --color-app-status-online: #7cc8a2;
+  --color-app-status-offline: #525252;
+
+  --color-category-scarlet: #ff7166;
+  --color-category-emerald: #5bd6a2;
+  --color-category-navy: #8196d9;
+  --color-category-lavender: #c4a7ef;
+  --color-category-burgundy: #cf7a8b;
+  --color-category-white: #ffffff;
+  --color-category-amber: #f2c15c;
+  --color-category-orange: #ff9b61;
+  --color-category-pink: #f3a0cf;
 
   --spacing-app-screen-height: 100vh;
   --spacing-app-screen-width: 100%;
@@ -28,8 +45,38 @@
   --text-app-footer-meta: 0.75rem;
 
   --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
+
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 body {
   font-family: var(--font-sans);
+}
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-app-glow) transparent;
+  }
+}
+
+@utility app-widget {
+  @apply min-w-0 rounded-2xl border border-app-border bg-linear-to-br from-app-surface to-app-bg;
+}
+
+@utility card-action {
+  @apply inline-flex size-16 shrink-0 items-center justify-center rounded-full border border-current/20 bg-current/10;
+  @apply transition-[background-color,transform] duration-200 enabled:cursor-pointer enabled:hover:bg-current/20 enabled:active:scale-95;
+  @apply focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current disabled:cursor-not-allowed disabled:opacity-30 motion-reduce:transition-none motion-reduce:transform-none;
 }

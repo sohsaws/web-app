@@ -1,31 +1,22 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import prisma from "@/lib/prisma";
-import { TokenStatusCard } from "@/components/TokenStatusCard";
-import { NewEmailForm } from "./_components/NewEmailForm";
+import type { ReactElement } from "react";
+import { auth } from "@/lib/auth";
+import { ChangeEmailForm } from "./_components/change-email-form.client";
 
-export default async function ChangeEmailPage({
-	searchParams,
-}: {
-	searchParams: Promise<{ token?: string }>;
-}) {
-	const { token } = await searchParams;
+export default async function ChangeEmailPage(): Promise<ReactElement> {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-	if (!token) {
-		return <TokenStatusCard status="invalid_token" />;
-	}
+  if (!session) {
+    redirect("/login?callbackUrl=/change-email");
+  }
 
-	const verificationToken = await prisma.verificationToken.findUnique({
-		where: { token },
-	});
-
-	if (verificationToken?.token !== token || !verificationToken) {
-		return <TokenStatusCard status="invalid_token" />;
-	}
-
-	if (verificationToken.expiresAt < new Date()) {
-		await prisma.verificationToken.delete({ where: { token } });
-		return <TokenStatusCard status="expired_token" />;
-	}
-
-	return <NewEmailForm token={token} />;
+  return (
+    <ChangeEmailForm
+      currentEmail={session.user.email}
+      currentEmailVerified={session.user.emailVerified}
+    />
+  );
 }
