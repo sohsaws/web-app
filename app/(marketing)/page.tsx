@@ -5,10 +5,8 @@ import { HeroCta } from "./_components/hero-cta.client";
 export const dynamic = "error";
 
 export default function Home(): ReactElement {
-  
   return (
     <main className="relative isolate flex w-full min-w-0 flex-1 flex-col items-center overflow-x-clip px-4 pt-16 pb-16 text-center sm:pt-24">
-      
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10"

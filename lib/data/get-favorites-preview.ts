@@ -1,10 +1,7 @@
 import "server-only";
 
 import { isIdeaCategory } from "@/lib/config/categories-array";
-import {
-  FAVORITES_PREVIEW_LIMIT,
-  type FavoritesPreview,
-} from "@/lib/config/favorites";
+import type { FavoritesPreview } from "@/lib/config/favorites";
 import prisma from "@/lib/prisma";
 
 export async function getFavoritesPreview(

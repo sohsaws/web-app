@@ -17,7 +17,7 @@ export const favoritePreviewCardSchema = generatedIdeaSchema
   });
 
 export const favoritesPreviewSchema = z.object({
-  cards: z.array(favoritePreviewCardSchema).max(FAVORITES_PREVIEW_LIMIT),
+  cards: z.array(favoritePreviewCardSchema),
   total: z.number().int().nonnegative(),
 });
 

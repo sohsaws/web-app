@@ -1,4 +1,3 @@
-
 export interface NotificationPreferences {
   productUpdates: boolean;
   weeklyDigest: boolean;

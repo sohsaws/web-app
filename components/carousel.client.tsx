@@ -33,7 +33,6 @@ const SIDE_CARD_ROTATE_DEGREES = 40;
 const SWIPE_DISTANCE_PX = 60;
 const SWIPE_VELOCITY_PX = 400;
 
-
 const NAVIGATION_BUTTON_CLASS =
   "fixed top-1/2 z-20 flex size-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-app-border bg-app-bg/80 text-white backdrop-blur-sm transition-colors hover:bg-app-glow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-30 motion-reduce:transition-none";
 
