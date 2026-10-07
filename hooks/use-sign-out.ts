@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useUserStore } from "@/app/stores/user-store";
 import { authClient } from "@/lib/auth/auth-client";
 
 interface UseSignOutResult {
@@ -12,7 +11,6 @@ interface UseSignOutResult {
 }
 
 export function useSignOut(): UseSignOutResult {
-  const clearUser = useUserStore((state) => state.clearUser);
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
 
@@ -30,8 +28,6 @@ export function useSignOut(): UseSignOutResult {
         toast.error(error.message ?? "Unable to sign out");
         return;
       }
-
-      clearUser();
 
       toast.success("Signed out successfully");
       router.replace("/login");

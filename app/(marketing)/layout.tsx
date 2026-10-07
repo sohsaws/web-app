@@ -1,23 +1,17 @@
-import { headers } from "next/headers";
 import Link from "next/link";
 import { NavigationBar } from "@/components/navigation-bar.client";
-import { UserDropdown } from "@/components/user-dropdown.client";
-import { auth } from "@/lib/auth";
+import { HeaderActions } from "./_components/header-actions.client";
 
 const navigationItems = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ] as const;
 
-export default async function SiteLayout({
+export default function SiteLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="fixed top-0 z-50 h-15 w-app-screen-width border-b border-white/5 bg-app-bg">
@@ -34,29 +28,7 @@ export default async function SiteLayout({
             items={navigationItems}
             className="absolute left-1/2 -translate-x-1/2"
           />
-          {session ? (
-            <UserDropdown
-              user={{
-                image: session.user.image,
-                name: session.user.name,
-              }}
-            />
-          ) : (
-            <div className="relative flex gap-2 lg:left-4 xl:left-8 2xl:left-12">
-              <Link
-                href="/login"
-                className="shrink-0 rounded-full bg-white px-[clamp(0.75rem,3vw,1.75rem)] py-1.5 text-app-nav font-semibold tracking-tight text-black transition-colors duration-200 hover:bg-neutral-300"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/register"
-                className="shrink-0 rounded-full bg-white px-[clamp(0.75rem,3vw,1.75rem)] py-1.5 text-app-nav font-semibold tracking-tight text-black transition-colors duration-200 hover:bg-neutral-300"
-              >
-                Sign Up
-              </Link>
-            </div>
-          )}
+          <HeaderActions />
         </div>
       </header>
 

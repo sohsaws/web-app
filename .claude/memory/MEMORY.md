@@ -294,9 +294,19 @@ on every recommendation.
   soft blurred glows, and a fan of three `MiniIdeaCard`s with static sample
   ideas (`hero-cards.client.tsx`, `motion` entrance + gentle float). Text uses
   the CSS `animate-fade-up` token so it stays visible without JS. `HeroCta`
-  (`hero-cta.server.tsx`) is a cream pill that lifts and turns bright white on
+  (`hero-cta.client.tsx`) is a cream pill that lifts and turns bright white on
   hover; it goes to `/register`, or to `/dive` for signed-in users. The old
   `ShineBorder` and `shine-border` utility were deleted with this redesign.
+- **Marketing pages are static (decided 2026-10-07).** `/`, `/about` and
+  `/contact` are prerendered (`○` in `next build`) and export
+  `dynamic = "error"`, so any request-time API there fails the build. The
+  session for the marketing header (`_components/header-actions.client.tsx`)
+  and for `HeroCta` is read on the client with Better Auth `useSession`. The
+  root `app/layout.tsx` must never read the session or call `headers()`,
+  `cookies()`: that would make every route dynamic again. The Zustand user
+  store (`app/stores/user-store.ts`, `UserStoreProvider`) was deleted on
+  2026-10-07 with the user's approval: nothing ever read its `user`. Client
+  code that needs the current user uses Better Auth `useSession`.
 - **Notification preferences (2026-10-05).** Postgres, not NoSQL: table
   `NotificationPreference` (1:1 with User, cascade) with `securityEmails`
   (DB default true, never written by app code, locked "Always on" switch in

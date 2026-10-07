@@ -1,4 +1,3 @@
-// import { Camera } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import type { ReactElement } from "react";

@@ -8,7 +8,6 @@ import {
   useForm,
 } from "react-hook-form";
 import { toast } from "sonner";
-import { useUserStore } from "@/app/stores/user-store";
 import { updateProfile } from "@/lib/actions/profile.action";
 import {
   type ProfileFormValues,
@@ -24,7 +23,6 @@ interface UseProfileFormResult {
 export function useProfileForm(
   defaultValues: ProfileFormValues,
 ): UseProfileFormResult {
-  const updateUser = useUserStore((state) => state.updateUser);
   const router = useRouter();
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -39,8 +37,6 @@ export function useProfileForm(
         toast.error(result.message);
         return;
       }
-
-      updateUser({ name: values.name, bio: values.bio });
 
       form.reset(values);
       toast.success(result.message);

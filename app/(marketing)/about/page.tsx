@@ -1,5 +1,7 @@
 import type { ReactElement } from "react";
 
+export const dynamic = "error";
+
 const steps = [
   {
     number: "01",
@@ -33,7 +35,6 @@ const EYEBROW_CLASS =
 export default function About(): ReactElement {
   return (
     <main className="relative isolate w-full min-w-0 flex-1 overflow-x-clip px-4 py-16 sm:px-6 lg:py-24">
-      {/* Soft background glow; decorative only. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10"

@@ -1,17 +1,14 @@
-import { headers } from "next/headers";
 import type { ReactElement } from "react";
-import { auth } from "@/lib/auth";
 import { HeroCards } from "./_components/hero-cards.client";
-import { HeroCta } from "./_components/hero-cta.server";
+import { HeroCta } from "./_components/hero-cta.client";
 
-export default async function Home(): Promise<ReactElement> {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+export const dynamic = "error";
 
+export default function Home(): ReactElement {
+  
   return (
     <main className="relative isolate flex w-full min-w-0 flex-1 flex-col items-center overflow-x-clip px-4 pt-16 pb-16 text-center sm:pt-24">
-      {/* Soft background glow; decorative only. */}
+      
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10"
@@ -37,7 +34,7 @@ export default async function Home(): Promise<ReactElement> {
       </p>
 
       <div className="mt-10 motion-safe:animate-fade-up motion-safe:[animation-delay:300ms]">
-        <HeroCta isSignedIn={session !== null} />
+        <HeroCta />
       </div>
 
       <p className="mt-6 text-xs text-neutral-500 motion-safe:animate-fade-up motion-safe:[animation-delay:400ms]">

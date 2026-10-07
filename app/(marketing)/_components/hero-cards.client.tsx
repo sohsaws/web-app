@@ -95,9 +95,6 @@ export function HeroCards(): ReactElement {
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
               }}
-              // Own compositor layer: the card moves as one bitmap. Without it
-              // each frame repaints at a fractional offset and the text snaps
-              // to whole pixels apart from the border and background.
               className="will-change-transform"
             >
               <MiniIdeaCard idea={card} tone={tone} />

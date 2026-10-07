@@ -2,6 +2,8 @@ import { Mail, MessageCircle } from "lucide-react";
 import type { ReactElement } from "react";
 import { ContactForm } from "./_components/contact-form.client";
 
+export const dynamic = "error";
+
 const CONTACT_EMAIL = "hello@swiipy.com";
 
 const ICON_BOX_CLASS =
