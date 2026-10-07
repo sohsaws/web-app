@@ -17,6 +17,7 @@ import {
 } from "react";
 import { useIdeasStore } from "@/app/stores/ideas-store";
 import { IdeaCard } from "@/components/idea-card.client";
+import { LoadingSpinner } from "@/components/loading-spinner.client";
 import { useGeneratePackIdeas } from "@/hooks/use-generate-pack-ideas";
 import { useSaveFavorite } from "@/hooks/use-save-favorite";
 import { swipeAway } from "@/lib/animations/swipe-away";
@@ -155,21 +156,50 @@ interface CardsPoolProps {
   userBio: string;
 }
 
+const DECK_PLACEHOLDER_CLASS =
+  "flex aspect-475/650 w-full flex-col items-center justify-center gap-6 rounded-2xl border border-app-border bg-linear-to-br from-app-surface to-app-bg px-8 text-center shadow-2xl shadow-black/40";
+
 export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
-  const { isPending, error } = useGeneratePackIdeas(userBio);
+  const { generate, isPending, error } = useGeneratePackIdeas(userBio);
   const { save } = useSaveFavorite();
 
   const currentIdea = useIdeasStore((state) => state.ideas?.[0]);
   if (!currentIdea) {
+    if (error && !isPending) {
+      return (
+        <div className="w-full max-w-100">
+          <div className={DECK_PLACEHOLDER_CLASS}>
+            <p className="font-serif text-3xl tracking-tight text-white">
+              Couldn&apos;t shuffle
+              <span className="block text-neutral-400">your deck.</span>
+            </p>
+            <p className="text-sm leading-relaxed text-neutral-400">
+              Something went wrong while generating ideas.
+            </p>
+            <button
+              type="button"
+              onClick={generate}
+              className="inline-flex min-h-12 cursor-pointer items-center rounded-full bg-[#ece8e1] px-7 text-sm font-semibold text-black transition-colors duration-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              Try again
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // Also covers the first render, before the generation request starts.
     return (
       <div className="w-full max-w-100">
-        <p role="status" className="text-sm text-app-fg">
-          {isPending
-            ? "Generating ideas..."
-            : error
-              ? "Unable to load ideas."
-              : "Your idea cards will appear here."}
-        </p>
+        <div className={DECK_PLACEHOLDER_CLASS}>
+          <LoadingSpinner label="Generating ideas" className="size-10" />
+          <p
+            aria-hidden="true"
+            className="text-xs font-medium tracking-[0.25em] text-neutral-400 uppercase"
+          >
+            Shuffling your deck
+          </p>
+        </div>
       </div>
     );
   }

@@ -1,7 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { type ChangeEvent, type RefObject, useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  type RefObject,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { toast } from "sonner";
 import {
   AVATAR_MAX_SIZE_BYTES,
@@ -25,8 +31,17 @@ export function useAvatarUpload({
   hasAvatar,
 }: UseAvatarUploadOptions): UseAvatarUploadResult {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isPending, setIsPending] = useState(false);
+  const [isRequestPending, setIsRequestPending] = useState(false);
+  const [isRefreshing, startRefresh] = useTransition();
   const router = useRouter();
+
+  // The new image URL only arrives with the refreshed server data, so the
+  // transition keeps the pending state on until it is on screen.
+  const refreshAvatar = (): void => {
+    startRefresh(() => {
+      router.refresh();
+    });
+  };
 
   const handleFileChange = async (
     event: ChangeEvent<HTMLInputElement>,
@@ -50,7 +65,7 @@ export function useAvatarUpload({
       return;
     }
 
-    setIsPending(true);
+    setIsRequestPending(true);
     const toastId = toast.loading("Uploading image...");
 
     try {
@@ -69,7 +84,7 @@ export function useAvatarUpload({
       }
 
       toast.success("Avatar updated successfully", { id: toastId });
-      router.refresh();
+      refreshAvatar();
     } catch (error: unknown) {
       console.error("Avatar upload failed:", error);
       toast.error(
@@ -80,7 +95,7 @@ export function useAvatarUpload({
       );
     } finally {
       input.value = "";
-      setIsPending(false);
+      setIsRequestPending(false);
     }
   };
 
@@ -89,7 +104,7 @@ export function useAvatarUpload({
       return;
     }
 
-    setIsPending(true);
+    setIsRequestPending(true);
     const toastId = toast.loading("Removing image...");
 
     try {
@@ -104,7 +119,7 @@ export function useAvatarUpload({
       }
 
       toast.success("Avatar removed successfully", { id: toastId });
-      router.refresh();
+      refreshAvatar();
     } catch (error: unknown) {
       console.error("Avatar removal failed:", error);
       toast.error(
@@ -114,13 +129,13 @@ export function useAvatarUpload({
         { id: toastId },
       );
     } finally {
-      setIsPending(false);
+      setIsRequestPending(false);
     }
   };
 
   return {
     fileInputRef,
-    isPending,
+    isPending: isRequestPending || isRefreshing,
     openFilePicker: () => fileInputRef.current?.click(),
     handleFileChange,
     removeAvatar,

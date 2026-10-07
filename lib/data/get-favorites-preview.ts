@@ -13,7 +13,6 @@ export async function getFavoritesPreview(
   const where = { userId, isFavorited: true };
   const rows = await prisma.card.findMany({
     where,
-    take: FAVORITES_PREVIEW_LIMIT,
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     select: {
       id: true,
