@@ -30,9 +30,11 @@ URLs redirect or refuse connections).
   cost on a paid API.
 - The key comes only from `process.env.DEEPINFRA_API_KEY`, with a clear error
   when missing. Never open `.env` files.
-- Model ids are constants there: `IDEA_TEXT_MODEL_ID`
-  (`deepseek-ai/DeepSeek-V4-Flash-0731`) and `IDEA_IMAGE_MODEL_ID`
-  (`black-forest-labs/FLUX-2-dev`). Change constants, not call sites.
+- Model ids are constants there: `IDEA_TEXT_MODEL_ID` and
+  `IDEA_IMAGE_MODEL_ID`. Change constants, not call sites. The user switches
+  models without notice, so read the file for the current values instead of
+  trusting this list. As of 2026-10-08: text `deepseek-ai/DeepSeek-V4.1-Flash`,
+  image `Qwen/Qwen-Image-Edit-Max`.
 
 ## Structured text
 
@@ -48,6 +50,32 @@ URLs redirect or refuse connections).
   "I don't know". Keep prompts explicit and treat user text as data.
 - Not yet verified live: whether DeepInfra accepts the `$schema` key that
   `zodResponseFormat` adds, and the 100-value category enum.
+
+## Deck generation flow (`POST /api/ideas/generate`)
+
+A deck is `1 + MAX_IDEAS_PER_PACK × 2` text calls (21 with the current
+`MAX_IDEAS_PER_PACK = 10` in `lib/config/ideas.ts`). Derive the count from the
+constant; never hardcode 21.
+
+1. `generateIdeas(bio)`: one call returns all titles and descriptions.
+2. `assignIdeaCategories(ideas)`: two calls per idea, by the user's choice
+   (2026-10-05). Inside one idea the calls are **sequential**, because the
+   second call chooses from the categories left after the first
+   (`categorizeIdea`). Across ideas they run **in parallel** with
+   `Promise.all(ideas.map(categorizeIdea))` (2026-10-08), so the wait is about
+   3 calls deep instead of 21. Do not turn it back into a sequential loop.
+- `Promise.all` keeps the input order and rejects on the first failure; the
+  route then answers 502 and the client shows "Try again". Requests already
+  sent still finish and are billed.
+- DeepInfra allows **200 concurrent requests per model** per account and
+  answers HTTP 429 above that
+  (https://docs.deepinfra.com/account/rate-limits.md). One deck opens at most
+  `MAX_IDEAS_PER_PACK` concurrent requests, so about 20 users generating at the
+  same moment reach the limit. Add a concurrency cap (for example `p-limit`)
+  or a retry on 429 before that becomes realistic.
+- The route returns one JSON body at the end, so the client cannot show real
+  progress. A streamed NDJSON progress bar was discussed and postponed by the
+  user (2026-10-08); the UI keeps a spinner.
 
 ## Images
 
@@ -84,10 +112,16 @@ URLs redirect or refuse connections).
 - Routes map AI failures to 502 and invalid input to 400. Only the image prompt
   length check throws with a `ZodError` cause, which the image route maps to
   400. Never forward provider messages or keys to the client.
+- Log caught errors with `console.error` and a short context prefix, for
+  example `console.error("Idea generation failed:", error)`. Never use
+  `console.log` for errors, and never log generated images, prompts with user
+  data, or API keys.
 
 ## Budget
 
 - The user funds the account with small prepaid amounts ($5 at the start).
   Recommend a spending limit in the DeepInfra dashboard.
 - A deck is 21 text calls (~10k in / 2k out tokens): about $0.0013 on
-  DeepSeek-V4-Flash. Ten FLUX-2-dev images add about $0.10.
+  DeepSeek-V4-Flash at 2026-10-05 prices. Ten FLUX-2-dev images added about
+  $0.10. Both models have since been replaced; re-check the current models'
+  prices on `https://deepinfra.com/<model-id>/api` before quoting costs.

@@ -10,6 +10,7 @@ import {
 } from "motion/react";
 import {
   type ReactElement,
+  type ReactNode,
   type PointerEvent as ReactPointerEvent,
   useEffect,
   useRef,
@@ -156,8 +157,19 @@ interface CardsPoolProps {
   userBio: string;
 }
 
-const DECK_PLACEHOLDER_CLASS =
-  "flex aspect-475/650 w-full flex-col items-center justify-center gap-6 rounded-2xl border border-app-border bg-linear-to-br from-app-surface to-app-bg px-8 text-center shadow-2xl shadow-black/40";
+// Mirrors the IdeaCardView box (image ratio + text minimum height), so the
+// first card replaces the placeholder without a jump in height.
+function DeckPlaceholder({ children }: { children: ReactNode }): ReactElement {
+  return (
+    <div className="relative w-full overflow-hidden rounded-3xl border border-app-border bg-linear-to-b from-app-surface to-app-bg shadow-2xl shadow-black/40">
+      <div aria-hidden="true" className="aspect-475/390" />
+      <div aria-hidden="true" className="min-h-72" />
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-8 text-center">
+        {children}
+      </div>
+    </div>
+  );
+}
 
 export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
   const { generate, isPending, error } = useGeneratePackIdeas(userBio);
@@ -168,7 +180,7 @@ export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
     if (error && !isPending) {
       return (
         <div className="w-full max-w-100">
-          <div className={DECK_PLACEHOLDER_CLASS}>
+          <DeckPlaceholder>
             <p className="font-serif text-3xl tracking-tight text-white">
               Couldn&apos;t shuffle
               <span className="block text-neutral-400">your deck.</span>
@@ -183,7 +195,7 @@ export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
             >
               Try again
             </button>
-          </div>
+          </DeckPlaceholder>
         </div>
       );
     }
@@ -191,7 +203,7 @@ export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
     // Also covers the first render, before the generation request starts.
     return (
       <div className="w-full max-w-100">
-        <div className={DECK_PLACEHOLDER_CLASS}>
+        <DeckPlaceholder>
           <LoadingSpinner label="Generating ideas" className="size-10" />
           <p
             aria-hidden="true"
@@ -199,7 +211,7 @@ export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
           >
             Shuffling your deck
           </p>
-        </div>
+        </DeckPlaceholder>
       </div>
     );
   }

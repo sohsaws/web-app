@@ -38,9 +38,6 @@ export const auth = betterAuth({
         text,
       });
     },
-    onPasswordReset: async ({ user }) => {
-      console.log(`Password for user ${user.email} has been reset.`);
-    },
   },
 
   emailVerification: {

@@ -64,7 +64,7 @@ export default function Register() {
     try {
       setSubmitting(true);
 
-      const { data, error } = await authClient.signUp.email(
+      const { error } = await authClient.signUp.email(
         {
           name: Data.name,
           username: Data.username,
@@ -73,9 +73,6 @@ export default function Register() {
           callbackURL: `${BaseUrl}/dashboard`,
         },
         {
-          onRequest: (ctx) => {
-            console.log(JSON.stringify(ctx, null, 2));
-          },
           onError: (ctx) => {
             console.error(JSON.stringify(ctx.error, null, 2));
             setError(ctx.error.message);
@@ -89,12 +86,9 @@ export default function Register() {
       if (error) {
         setError(error.message);
         console.error(JSON.stringify(error, null, 2));
-        return;
       }
-
-      console.log(data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setError("An unexpected error occurred");
     } finally {
       setSubmitting(false);

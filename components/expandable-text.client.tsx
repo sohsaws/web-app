@@ -53,10 +53,10 @@ export function ExpandableText({
             type="button"
             aria-controls={contentId}
             aria-expanded={isExpanded}
-            aria-label={isExpanded ? "Show less text" : "Show full text"}
             onClick={(): void => setIsExpanded((current) => !current)}
-            className="mx-auto mt-2 flex size-10 cursor-pointer items-center justify-center rounded-full text-white transition-colors hover:bg-app-glow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none"
+            className="mt-3 inline-flex cursor-pointer items-center gap-1.5 rounded-sm text-[0.6875rem] font-medium tracking-[0.2em] text-neutral-400 uppercase transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white motion-reduce:transition-none"
           >
+            {isExpanded ? "Show less" : "Read more"}
             <motion.span
               aria-hidden="true"
               initial={false}
@@ -64,7 +64,7 @@ export function ExpandableText({
               transition={{ duration: reducedMotion ? 0 : 0.3 }}
               className="flex"
             >
-              <ChevronDown className="size-5" />
+              <ChevronDown className="size-3.5" />
             </motion.span>
           </button>
         </>

@@ -103,30 +103,29 @@ async function chooseIdeaCategory(
   return choice.category;
 }
 
+// The second choice excludes the first category, so the two calls for one
+// idea stay sequential.
+async function categorizeIdea(
+  idea: IdeaText,
+): Promise<GeneratedIdeasType["ideas"][number]> {
+  const firstCategory = await chooseIdeaCategory(idea, [...IDEA_CATEGORIES]);
+  const remainingCategories = IDEA_CATEGORIES.filter(
+    (category) => category !== firstCategory,
+  );
+  const secondCategory = await chooseIdeaCategory(idea, remainingCategories);
+
+  return {
+    ...idea,
+    categories: [firstCategory, secondCategory],
+  };
+}
+
 export async function assignIdeaCategories(
   ideas: readonly IdeaText[],
 ): Promise<GeneratedIdeasType["ideas"]> {
-  const categorizedIdeas: GeneratedIdeasType["ideas"] = [];
-
-  for (const idea of ideas) {
-    const firstCategory = await chooseIdeaCategory(idea, [...IDEA_CATEGORIES]);
-    const remainingCategories = IDEA_CATEGORIES.filter(
-      (category) => category !== firstCategory,
-    );
-    const secondCategory = await chooseIdeaCategory(idea, remainingCategories);
-
-    categorizedIdeas.push({
-      ...idea,
-      categories: [firstCategory, secondCategory],
-    });
-  }
-
-  return categorizedIdeas;
+  return Promise.all(ideas.map(categorizeIdea));
 }
 
-// Image models copy prompt text into the picture as typography. Passing the
-// full idea description produced cards covered in garbled words, so a text
-// model first turns the idea into a short scene with nothing to write.
 async function describeImageScene(description: string): Promise<string> {
   const completion = await deepInfra.chat.completions.parse({
     model: IDEA_TEXT_MODEL_ID,

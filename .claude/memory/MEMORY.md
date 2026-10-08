@@ -215,10 +215,13 @@ on every recommendation.
 - **⚠️ AI = DEEPINFRA (2026-10-05), NOT YET VERIFIED LIVE ⚠️** Text and
   images go through DeepInfra with the official `openai` client
   (`lib/ai/deepinfra.ts`, base URL `https://api.deepinfra.com/v1/openai`,
-  `DEEPINFRA_API_KEY`). Text: `deepseek-ai/DeepSeek-V4-Flash-0731` with
-  `chat.completions.parse` + `zodResponseFormat`. Images:
-  `black-forest-labs/FLUX-2-dev`, `1024x1024`, `b64_json`, checked against the
-  PNG base64 signature. The user funded $5 prepaid. Category logic stays two
+  `DEEPINFRA_API_KEY`). Text with `chat.completions.parse` +
+  `zodResponseFormat`; images with `images.generate`, `1024x1024`, `b64_json`,
+  checked against the PNG base64 signature. Model ids live in
+  `IDEA_TEXT_MODEL_ID` / `IDEA_IMAGE_MODEL_ID` and the user changes them
+  (2026-10-08: `deepseek-ai/DeepSeek-V4.1-Flash`, `Qwen/Qwen-Image-Edit-Max`).
+  Category calls for the ideas of a deck run in parallel with `Promise.all`
+  since 2026-10-08 (two sequential calls per idea). The user funded $5 prepaid. Category logic stays two
   calls per idea (21 calls per deck) by the user's choice. Idea images are PNG
   end to end (`IDEA_IMAGE_MEDIA_TYPE`,S in
   `lib/config/ideas.ts`). See the deepinfra skill. Unverified: `$schema` key and

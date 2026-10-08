@@ -22,10 +22,10 @@ export function GoogleAuthButton({
       });
       if (error) {
         // какая то обработка ошибки, в будущем пригодиться
-        console.log(error);
+        console.error(error);
       }
     } catch (error) {
-      console.log("Something went wrong: ", error);
+      console.error("Something went wrong: ", error);
     } finally {
       setLoading(false);
     }

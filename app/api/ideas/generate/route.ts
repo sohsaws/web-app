@@ -64,7 +64,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       },
     );
   } catch (e) {
-    console.log(e);
+    console.error("Idea generation failed:", e);
     return NextResponse.json(
       {
         error: "Failed to generate ideas. Please try again.",

@@ -181,7 +181,7 @@ function CarouselDialog({ items, onClose }: CarouselDialogProps): ReactElement {
               }}
               transition={cardTransition}
               style={{ zIndex: items.length - Math.abs(offset) }}
-              className="relative col-start-1 row-start-1 shadow-2xl shadow-black/60"
+              className="relative col-start-1 row-start-1"
             >
               <div inert={!isActive}>
                 <IdeaCardView
@@ -203,7 +203,7 @@ function CarouselDialog({ items, onClose }: CarouselDialogProps): ReactElement {
                   tabIndex={-1}
                   aria-hidden="true"
                   onClick={(): void => goTo(index)}
-                  className="absolute inset-0 cursor-pointer rounded-2xl"
+                  className="absolute inset-0 cursor-pointer rounded-3xl"
                 />
               )}
             </motion.li>

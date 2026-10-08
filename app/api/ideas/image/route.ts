@@ -32,11 +32,12 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   try {
     const image = await generateImages(parsedBody.data.description);
-    console.log(image);
     return NextResponse.json(image, {
       headers: { "Cache-Control": "no-store" },
     });
   } catch (error: unknown) {
+    console.error("Image generation failed:", error);
+
     if (error instanceof Error && error.cause instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Image description exceeds the supported prompt length" },
