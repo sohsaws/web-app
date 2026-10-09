@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ReactElement } from "react";
-import { UserDropdown } from "@/components/user-dropdown.client";
+import { UserDropdown } from "@/components/layout/user-dropdown.client";
 import { useSession } from "@/lib/auth/auth-client";
 
 const authLinkClass =

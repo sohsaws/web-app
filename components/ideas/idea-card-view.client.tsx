@@ -3,8 +3,8 @@
 import { Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 import type { ReactElement, ReactNode } from "react";
-import { ExpandableText } from "@/components/expandable-text.client";
-import { LoadingSpinner } from "@/components/loading-spinner.client";
+import { ExpandableText } from "@/components/ui/expandable-text.client";
+import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
 import type { IdeaCategory } from "@/lib/config/categories-array";
 
 export interface IdeaCardViewProps {

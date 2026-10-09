@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import type { ReactElement } from "react";
-import { MiniIdeaCard } from "@/components/mini-idea-card.client";
+import { MiniIdeaCard } from "@/components/ideas/mini-idea-card.client";
 import type { FavoritePreviewCard } from "@/lib/config/favorites";
 
 interface FanCard {

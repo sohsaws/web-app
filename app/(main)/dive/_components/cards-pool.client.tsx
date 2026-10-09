@@ -17,8 +17,8 @@ import {
   useState,
 } from "react";
 import { useIdeasStore } from "@/app/stores/ideas-store";
-import { IdeaCard } from "@/components/idea-card.client";
-import { LoadingSpinner } from "@/components/loading-spinner.client";
+import { IdeaCard } from "@/components/ideas/idea-card.client";
+import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
 import { useGeneratePackIdeas } from "@/hooks/use-generate-pack-ideas";
 import { useSaveFavorite } from "@/hooks/use-save-favorite";
 import { swipeAway } from "@/lib/animations/swipe-away";

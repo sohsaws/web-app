@@ -2,7 +2,11 @@ import { randomUUID } from "node:crypto";
 import { del, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { isManagedBlobUrl } from "@/lib/blob/managed-blob-url";
+import {
+  BLOB_FOLDERS,
+  getUserBlobPathname,
+  isUserBlobUrl,
+} from "@/lib/blob/managed-blob-url";
 import {
   AVATAR_CONTENT_TYPE_TO_EXTENSION,
   AVATAR_MAX_SIZE_BYTES,
@@ -13,10 +17,11 @@ function errorResponse(message: string, status: number): NextResponse {
   return NextResponse.json({ error: message }, { status });
 }
 
-async function deleteManagedBlob(
+async function deleteUserAvatarBlob(
   value: string | null | undefined,
+  userId: string,
 ): Promise<void> {
-  if (!isManagedBlobUrl(value)) {
+  if (!isUserBlobUrl(value, BLOB_FOLDERS.avatars, userId)) {
     return;
   }
 
@@ -53,7 +58,11 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   const extension = AVATAR_CONTENT_TYPE_TO_EXTENSION[contentType];
-  const pathname = `avatars/${session.user.id}/${randomUUID()}.${extension}`;
+  const pathname = getUserBlobPathname(
+    BLOB_FOLDERS.avatars,
+    session.user.id,
+    `${randomUUID()}.${extension}`,
+  );
   const previousImage = session.user.image;
   let uploadedUrl: string | undefined;
 
@@ -70,11 +79,11 @@ export async function POST(request: Request): Promise<NextResponse> {
       headers: request.headers,
     });
 
-    await deleteManagedBlob(previousImage);
+    await deleteUserAvatarBlob(previousImage, session.user.id);
 
     return NextResponse.json({ url: blob.url });
   } catch (error: unknown) {
-    await deleteManagedBlob(uploadedUrl);
+    await deleteUserAvatarBlob(uploadedUrl, session.user.id);
     console.error("Avatar upload failed:", error);
     return errorResponse("Avatar upload failed", 500);
   }
@@ -103,7 +112,7 @@ export async function DELETE(request: Request): Promise<NextResponse> {
       headers: request.headers,
     });
 
-    await deleteManagedBlob(previousImage);
+    await deleteUserAvatarBlob(previousImage, session.user.id);
 
     return NextResponse.json({ success: true });
   } catch (error: unknown) {

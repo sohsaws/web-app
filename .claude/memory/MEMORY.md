@@ -173,6 +173,78 @@ on every recommendation.
 - Which paid model and which search provider.
 - The safety policy above.
 
+## 🌐 INTERNATIONALIZATION: EN / RU / KK — PLAN (agreed 2026-10-08, NOT STARTED)
+
+**Postponed until after the MVP deploy, like For you. Nothing is built. Read
+this before any i18n work.** Languages: English (default), Russian, Kazakh.
+
+### Architecture (decided)
+
+- **Library: `next-intl`** (not installed yet). Supports Next 16 and
+  `proxy.ts`; in Next 16.3 it uses `next/root-params`, so static rendering
+  works with `generateStaticParams` (docs: next-intl.dev/docs/routing/setup).
+- **Locale in the URL ("variant B"):** all routes move under
+  `app/[locale]/...` (`api/` stays outside); files `i18n/routing.ts`
+  (`locales: ["en", "ru", "kk"]`, `defaultLocale: "en"`), `i18n/request.ts`,
+  `i18n/navigation.ts` (next-intl `Link`/`redirect`/`useRouter`), plugin in
+  `next.config.ts`. `proxy.ts` must combine the existing auth check with
+  next-intl locale handling.
+- **Rejected: locale from a cookie without a URL prefix.** The root layout
+  would have to read the cookie for `<html lang>`, which makes every route
+  dynamic and breaks the static marketing pages (`dynamic = "error"`).
+- **The user's language is a profile setting, not a header switcher.** New
+  `locale` field on `User` (Better Auth `additionalFields`, like `bio`, plus a
+  migration), validated server-side against `en | ru | kk`. The URL prefix is
+  only the mechanism; the profile is the source of the choice:
+  - after sign-in, redirect to `/{user.locale}/dashboard`;
+  - Settings → Profile has a language select; saving updates the DB and
+    `router.replace`s the same path with the new prefix;
+  - no language switcher in the app (`(main)`) header.
+- **Onboarding asks explicitly** (like the planned city field): after
+  registration a short step pre-selects the language detected from the
+  browser's `Accept-Language` (done in `proxy.ts` on the first visit) and asks
+  the user to confirm. The same step should collect the bio (required for
+  `/dive`) and later the city.
+- **Why the profile:** same language on every device; emails (React Email)
+  can be sent in the user's language; `/api/ideas/generate` reads the locale
+  from the session on the server instead of trusting the client.
+
+### Discussed details to respect
+
+- **Locale codes:** Kazakh is `kk` (ISO 639-1). `kz` is the country code and
+  may only appear as a visible label.
+- **Flags, if ever shown:** SVG files, never emoji (Windows renders flag emoji
+  as two letters). A flag means a country, not a language, so pair it with a
+  language label. The user first wanted a 3-cell KZ/RU/EN flag switcher in the
+  top nav (client component, links via next-intl `Link`, `aria-current`,
+  `hrefLang`, names "English" / "Русский" / "Қазақша"); this was replaced by
+  the profile setting.
+- **Fonts:** Inter is loaded with `subsets: ["latin"]` only. Russian needs
+  `cyrillic`; Kazakh letters (ә ғ қ ң ө ұ ү һ) need `cyrillic-ext`. Any future
+  serif font must support Cyrillic (Instrument Serif likely does not; verify).
+- **AI content:** pass the locale into the generation prompt. Check Kazakh
+  output quality on real samples. Saved cards keep the language they were
+  generated in; switching language does not translate an existing deck.
+- **Categories:** keep English enum keys in the DB and AI schema; translate
+  only display labels via messages, so the category distribution keeps working.
+- **Strings outside components:** Zod messages (`lib/config/*`), Better Auth
+  error messages (map by error code), toasts, metadata, React Email templates.
+- **Kazakh translations need a native speaker's review.**
+- **Estimate:** setup + `[locale]` move + proxy ≈ 1 day; extracting strings and
+  RU/KK translations ≈ 2–3 days; AI language, categories, emails ≈ 1 day.
+
+### Open decisions (ask the user)
+
+- Onboarding as a separate page (e.g. `/welcome`, enforceable in `proxy.ts`
+  until `locale`/`bio` are set) or as a modal over the dashboard. Claude
+  recommended the page.
+- Marketing for anonymous visitors: browser detection only, or also a small
+  EN · RU · ҚАЗ switcher in the landing footer (Claude recommended the footer
+  switcher).
+- A signed-in user opens a link in another language: redirect to the profile
+  language or show it as is.
+- English flag (UK or US), if flags are used at all.
+
 ## Working relationship
 
 - Act as the user's pair-programming partner and technical mentor, not an
@@ -195,8 +267,14 @@ on every recommendation.
   referenced removed legacy fields and models such as `clerkId`, `username`,
   `bio`, `passwordHash`, and `verificationToken`. Verify the current state
   before relying on auth or user data.
-- Known leftovers (2026-09-26): a `clerk-captcha` element in the register page,
-  and a NextAuth path in the `include` list of `tsconfig.json`.
+- Known leftover (2026-09-26): a NextAuth path in the `include` list of
+  `tsconfig.json`. The `clerk-captcha` element was removed from the register
+  page on 2026-10-10.
+- **Register page (2026-10-10):** `app/(auth)/register/page.tsx` is a Server
+  Component; the form lives in `_components/register-form.client.tsx`, like
+  login. Sign-up uses a relative `callbackURL: "/dashboard"`; Better Auth
+  resolves it against its server-side base URL, so no `NEXT_PUBLIC_*` URL is
+  needed (client components cannot read non-`NEXT_PUBLIC_` env vars).
 - Destructive auth/database migrations are acceptable while the database holds
   only disposable test data. Still say when a migration drops data.
 - Database is on Neon's Free plan.
@@ -209,7 +287,11 @@ on every recommendation.
   type DELETE, plus password for credential users; Google users need a session
   younger than Better Auth's 1-day `freshAge`, otherwise `SESSION_EXPIRED`
   prompts a re-sign-in. No email confirmation step yet.
-  `isManagedBlobUrl` lives in `lib/blob/managed-blob-url.ts`.
+  Blob ownership (2026-10-09): `lib/blob/managed-blob-url.ts` exports
+  `BLOB_FOLDERS` (`avatars`, `ideas-images`), `getUserBlobPathname` (used when
+  uploading) and `isUserBlobUrl(url, folder, userId)` (checked before every
+  delete). Code deletes a blob only inside `/<folder>/<userId>/`, because
+  Better Auth lets a client set `user.image` to any URL.
 - **Env files are off limits (2026-09-28).** The user forbade reading `.env` or
   `.env.*` under any circumstances. Refer to variables by name only.
 - **⚠️ AI = DEEPINFRA (2026-10-05), NOT YET VERIFIED LIVE ⚠️** Text and

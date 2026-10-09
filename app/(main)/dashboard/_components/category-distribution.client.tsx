@@ -1,8 +1,8 @@
 "use client";
 
 import type { ReactElement } from "react";
-import { LoadingSpinner } from "@/components/loading-spinner.client";
-import { Widget } from "@/components/widget.client";
+import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
+import { Widget } from "@/components/ui/widget.client";
 import { useCategoryDistribution } from "@/hooks/use-category-distribution";
 
 interface CategoryDistributionProps {

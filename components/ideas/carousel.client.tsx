@@ -20,7 +20,7 @@ import { useCarouselStore } from "@/app/stores/carousel-store";
 import {
   IdeaCardView,
   type IdeaCardViewProps,
-} from "@/components/idea-card-view.client";
+} from "@/components/ideas/idea-card-view.client";
 
 export type CarouselItem = Pick<
   IdeaCardViewProps,

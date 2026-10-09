@@ -11,13 +11,17 @@ import { deleteUserBlobs } from "@/lib/data/delete-user-blobs";
 import { sendAuthEmail } from "@/lib/email/send-auth-email";
 import prisma from "./prisma";
 
+// One source for the public app URL, so the auth base URL and the Google
+// redirect always point to the same origin.
+const appBaseUrl = process.env.BETTER_AUTH_URL || "http://localhost:3000";
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
 
   appName: "Swiipy",
-  baseUrl: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  baseUrl: appBaseUrl,
 
   session: {
     expiresIn: 60 * 60 * 24 * 14,
@@ -96,7 +100,8 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      redirectURI: "http://localhost:3000/api/auth/callback/google",
+      // Must match an "Authorized redirect URI" in the Google Cloud Console.
+      redirectURI: `${appBaseUrl}/api/auth/callback/google`,
     },
   },
 

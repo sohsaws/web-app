@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactElement } from "react";
-import { TokenStatusCard } from "@/components/token-status-card.client";
+import { TokenStatusCard } from "@/app/(auth)/_components/token-status-card.client";
 import { ForgotPasswordForm } from "./_components/forgot-password-form.client";
 import { ResetPasswordForm } from "./_components/reset-password-form.client";
 

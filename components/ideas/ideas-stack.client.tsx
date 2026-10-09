@@ -2,7 +2,7 @@
 
 import { Bookmark } from "lucide-react";
 import type { ReactElement } from "react";
-import { MiniIdeaCard } from "@/components/mini-idea-card.client";
+import { MiniIdeaCard } from "@/components/ideas/mini-idea-card.client";
 import {
   FAVORITES_PREVIEW_LIMIT,
   type FavoritePreviewCard,

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactElement } from "react";
-import { IdeaCategories } from "@/components/idea-categories.client";
+import { IdeaCategories } from "@/components/ideas/idea-categories.client";
 import type { FavoritePreviewCard } from "@/lib/config/favorites";
 
 const toneClasses = {

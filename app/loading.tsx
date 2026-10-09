@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { LoadingIndicator } from "@/components/loading-indicator.server";
+import { LoadingIndicator } from "@/components/ui/loading-indicator.server";
 
 export default function Loading(): ReactElement {
   return (

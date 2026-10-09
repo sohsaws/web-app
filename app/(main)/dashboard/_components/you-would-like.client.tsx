@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactElement } from "react";
-import { Widget } from "@/components/widget.client";
+import { Widget } from "@/components/ui/widget.client";
 
 export function YouWouldLike(): ReactElement {
   return (

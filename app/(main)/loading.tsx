@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { LoadingIndicator } from "@/components/loading-indicator.server";
+import { LoadingIndicator } from "@/components/ui/loading-indicator.server";
 
 // Renders below the fixed app header, so the top padding matches the pages.
 export default function MainLoading(): ReactElement {

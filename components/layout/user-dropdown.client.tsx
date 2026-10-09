@@ -3,8 +3,8 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import type { ReactElement } from "react";
-import { Avatar } from "@/components/avatar.client";
 import { DropdownMenu } from "@/components/layout/dropdown-menu.client";
+import { Avatar } from "@/components/ui/avatar.client";
 import { useSignOut } from "@/hooks/use-sign-out";
 
 interface UserDropdownProps {

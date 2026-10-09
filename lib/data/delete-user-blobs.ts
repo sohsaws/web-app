@@ -1,7 +1,7 @@
 import "server-only";
 
 import { del } from "@vercel/blob";
-import { isManagedBlobUrl } from "@/lib/blob/managed-blob-url";
+import { BLOB_FOLDERS, isUserBlobUrl } from "@/lib/blob/managed-blob-url";
 import prisma from "@/lib/prisma";
 
 // Runs before Better Auth deletes the user. The database cascade removes the
@@ -17,9 +17,12 @@ export async function deleteUserBlobs(
     select: { image: true },
   });
 
-  const urls = [avatarUrl, ...cards.map((card) => card.image)].filter(
-    isManagedBlobUrl,
-  );
+  const cardImageUrls = cards
+    .map((card) => card.image)
+    .filter((url) => isUserBlobUrl(url, BLOB_FOLDERS.ideaImages, userId));
+  const urls = isUserBlobUrl(avatarUrl, BLOB_FOLDERS.avatars, userId)
+    ? [avatarUrl, ...cardImageUrls]
+    : cardImageUrls;
 
   if (urls.length > 0) {
     await del(urls);

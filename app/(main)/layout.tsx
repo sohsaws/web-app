@@ -2,8 +2,8 @@ import { BellRing } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { NavigationBar } from "@/components/navigation-bar.client";
-import { UserDropdown } from "@/components/user-dropdown.client";
+import { NavigationBar } from "@/components/layout/navigation-bar.client";
+import { UserDropdown } from "@/components/layout/user-dropdown.client";
 import { auth } from "@/lib/auth";
 
 const navigationItems = [

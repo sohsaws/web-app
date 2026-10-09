@@ -2,7 +2,7 @@
 
 import { type ReactElement, type ReactNode, useEffect } from "react";
 import { useIdeasStore } from "@/app/stores/ideas-store";
-import { IdeaCardView } from "@/components/idea-card-view.client";
+import { IdeaCardView } from "@/components/ideas/idea-card-view.client";
 import { useIdeaImage } from "@/hooks/use-idea-image";
 import type { IdeaCategory } from "@/lib/config/categories-array";
 

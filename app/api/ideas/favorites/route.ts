@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { del, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { BLOB_FOLDERS, getUserBlobPathname } from "@/lib/blob/managed-blob-url";
 import {
   IDEA_IMAGE_DATA_URL_PREFIX,
   IDEA_IMAGE_FILE_EXTENSION,
@@ -16,7 +17,11 @@ async function uploadIdeaImage(
 ): Promise<string> {
   const base64 = imageDataUrl.slice(IDEA_IMAGE_DATA_URL_PREFIX.length);
   const imageBytes = Buffer.from(base64, "base64");
-  const pathname = `ideas-images/${userId}/${randomUUID()}.${IDEA_IMAGE_FILE_EXTENSION}`;
+  const pathname = getUserBlobPathname(
+    BLOB_FOLDERS.ideaImages,
+    userId,
+    `${randomUUID()}.${IDEA_IMAGE_FILE_EXTENSION}`,
+  );
 
   const blob = await put(pathname, imageBytes, {
     access: "public",

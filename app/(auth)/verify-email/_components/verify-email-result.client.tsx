@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import {
   type TokenStatus,
   TokenStatusCard,
-} from "@/components/token-status-card.client";
+} from "@/app/(auth)/_components/token-status-card.client";
 
 interface EmailVerificationResultProps {
   status: TokenStatus;

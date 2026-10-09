@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# The job only reads the repository; it never deploys or writes.
+permissions:
+  contents: read
+
+# A new push to the same branch or PR cancels the outdated run.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint, typecheck, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      # Placeholders, not secrets. CI only checks the code: it never calls the
+      # database, DeepInfra, Resend or Google. They exist because some modules
+      # read these variables at import time (for example the DeepInfra and
+      # Resend clients), and `next build` imports every route. Real values
+      # live in .env.local and in the Vercel project settings.
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      BETTER_AUTH_SECRET: ci-placeholder-secret-not-used-anywhere-real
+      BETTER_AUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_BETTER_AUTH_URL: http://localhost:3000
+      BETTER_AUTH_API_KEY: ci-placeholder
+      DEEPINFRA_API_KEY: ci-placeholder
+      RESEND_API_KEY: re_ci_placeholder
+      GOOGLE_CLIENT_ID: ci-placeholder
+      GOOGLE_CLIENT_SECRET: ci-placeholder
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+
+      # Vercel builds on Node 24 by default, so CI matches it.
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+        
+      # `biome ci` only reports problems; unlike `npm run check` it never
+      # rewrites files.
+      - name: Lint and format check
+        run: npx biome ci .
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Restore Next.js build cache
+        uses: actions/cache@v6
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.css') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+
+      - name: Build
+        run: npm run build

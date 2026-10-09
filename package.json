@@ -9,7 +9,8 @@
     "lint": "biome lint .",
     "check": "biome check --write",
     "format": "biome format . --write",
-    "dev:inspect": "next dev --inspect"
+    "dev:inspect": "next dev --inspect",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@better-auth/infra": "^0.4.14",

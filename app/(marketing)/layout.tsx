@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { NavigationBar } from "@/components/navigation-bar.client";
+import { NavigationBar } from "@/components/layout/navigation-bar.client";
 import { HeaderActions } from "./_components/header-actions.client";
 
 const navigationItems = [

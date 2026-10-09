@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { LoadingIndicator } from "@/components/loading-indicator.server";
+import { LoadingIndicator } from "@/components/ui/loading-indicator.server";
 
 // Takes the page's place next to the settings sidebar.
 export default function SettingsLoading(): ReactElement {
