@@ -98,6 +98,43 @@ Walk through every step before proposing or applying code:
 
 A change that looks correct locally must still be checked in the wider app flow.
 
+## Verification loop after writing code (mandatory)
+
+Decided by the user on 2026-10-10. Code is **not valid and not done** until
+the same checks CI runs pass locally. Never report a code change as finished
+before this loop is green.
+
+```
+write code → run checks → failure? → fix the cause → run checks again
+                        → all green? → run once more → identical? → done
+```
+
+1. Format only the files you changed: `npx biome format --write <files>`.
+   Do not run `npm run check` on the whole repo without permission.
+2. Run the CI sequence locally, in the order of
+   `.github/workflows/ci.yml`:
+   1. `npx biome ci .` (lint + format, read-only)
+   2. `npx tsc --noEmit`
+   3. `npm test` (Vitest)
+   4. `npm run build`
+3. On any failure: read the full output, fix the **cause**, then restart from
+   step 2. Never make a check pass by deleting or skipping tests (`.skip`,
+   `.only`), disabling lint rules, adding `@ts-ignore` / `any`, or loosening
+   config.
+4. When everything is green, run the whole sequence a **second time**. A
+   different result is a flaky check and counts as a failure.
+5. Stop after 5 failed iterations and report to the user with the full error
+   output instead of guessing further.
+6. A failure in code you did not touch: report it with the output; do not
+   silently "fix" unrelated files.
+7. If a check cannot run (missing tool, network), say exactly which one was
+   skipped and why. Never claim a check passed without running it.
+8. Changing `.github/workflows/*.yml`: also parse the YAML (Python `yaml` is
+   installed for the user).
+
+Changes only to Markdown, skills or memory files need no run. The final
+answer lists every command run and its result.
+
 ## Project preferences
 
 - Reuse the existing stack: Next.js App Router, Prisma, Better Auth, React Hook

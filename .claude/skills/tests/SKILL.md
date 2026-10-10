@@ -89,3 +89,7 @@ version of React Email templates, preferably with `toMatchInlineSnapshot()`.
 After adding or changing tests run `npx vitest run` twice; a different result
 on the second run means a flaky test, which must be fixed, not ignored. Never
 delete or skip a failing test to make CI green.
+
+Any code change, tests included, then goes through the full verification loop
+in `.claude/skills/typescript/SKILL.md` (`biome ci .` → `tsc --noEmit` →
+`npm test` → `npm run build`, green twice) before it counts as done.
