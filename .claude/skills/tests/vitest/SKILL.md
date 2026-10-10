@@ -10,35 +10,46 @@ Part of the `tests` skill; the strategy and what to test live in
 
 ## Always read the docs first
 
-As of 2026-10-09 Vitest is **5.x**. Check the current docs before writing
-config:
+The project uses **Vitest 4.x** (4.1.11 installed 2026-10-10). Vitest 5 is
+the latest major but requires Node `^22.12 || ^24 || >=26` and
+`@types/node >=22`; the user runs Node 25 locally and the project has
+`@types/node ^20`, so npm resolved 4.x. Move to 5 together with a Node LTS
+upgrade. Check the docs for the installed major before writing config:
 
 - Next.js guide bundled with the installed version:
   `node_modules/next/dist/docs/01-app/02-guides/testing/vitest.md`
 - Config: https://vitest.dev/config/
 - Projects: https://vitest.dev/guide/projects.html. `vitest.workspace` is
-  deprecated since 3.2; use `test.projects`. Since 5.0 `extends` defaults to
-  `true`, so each project inherits root options such as `plugins`.
+  deprecated since 3.2; use `test.projects`. In Vitest 4 a project does
+  **not** inherit root options unless it sets `extends: true` (the default
+  became `true` only in 5.0), so set it explicitly.
 - Module mocking: https://vitest.dev/guide/mocking/modules
 
-## Planned setup (verify against current docs before writing)
+## Current setup (2026-10-10)
 
-- Dev dependencies to propose: `vitest`, `vite-tsconfig-paths` (the `@/*`
-  alias), `@vitejs/plugin-react` (TSX), `jsdom` (only for the component
-  project, see `../rtl/SKILL.md`).
-- `vitest.config.mts` at the project root with two `test.projects`:
-  - `node`: `lib/**`, `app/api/**`, server actions, stores; files `*.test.ts`;
-  - `jsdom`: components and hooks; files `*.test.tsx`.
-- `server-only` throws outside a server build: alias it to an empty module.
+- Dev dependency: only `vitest`. The `@/*` alias is a one-line
+  `resolve.alias` in the config, so `vite-tsconfig-paths` is not needed.
+- `vitest.config.mts` at the project root: `environment: "node"`,
+  `include: ["**/*.test.ts"]`, `exclude` adds `.next/**` and `e2e/**` to the
+  defaults, `clearMocks`, `restoreMocks`, `unstubEnvs`.
+- Scripts: `npm test` (`vitest run`, single run, used by CI) and
+  `npm run test:watch` (`vitest`, local watch mode).
+- CI: `Tests` step runs `npm test` after `Typecheck` in
+  `.github/workflows/ci.yml`.
+- Tests are colocated next to the code. Playwright E2E tests will live in a
+  root `e2e/` folder (decided 2026-10-10).
+
+## Next additions (when the first test needs them)
+
+- **`server-only`**: Next.js provides it internally, so it is not in
+  `node_modules`. The first test that imports `lib/data/**` or `lib/ai/**`
+  needs a stub module and a `resolve.alias` entry for `"server-only"`.
   Vite options such as `resolve.alias` go at the **top level**, not inside
   `test`.
-- Reset state between tests in the config (`clearMocks` / `restoreMocks`,
-  `unstubEnvs`) instead of manual cleanup in every file.
-- Scripts: `"test": "vitest run"` (CI, single run) and `"test:watch":
-  "vitest"` (local watch mode).
-- CI: add `npm test` to `.github/workflows/ci.yml` after the typecheck step,
-  only once at least one test exists (`vitest run` fails when no test files
-  are found).
+- **Component tests**: add `jsdom` and RTL (see `../rtl/SKILL.md`), then split
+  the config into two `test.projects` with `extends: true`: `node` for
+  `*.test.ts` and `jsdom` for `*.test.tsx`. `@vitejs/plugin-react` is needed
+  only if TSX transforms require it; check before adding.
 
 ## Mocking rules
 

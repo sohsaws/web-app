@@ -22,27 +22,9 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
 import { useGeneratePackIdeas } from "@/hooks/use-generate-pack-ideas";
 import { useSaveFavorite } from "@/hooks/use-save-favorite";
 import { swipeAway } from "@/lib/animations/swipe-away";
+import { getSwipeDirection } from "@/lib/animations/swipe-direction";
 import type { IdeaSaveRequest } from "@/lib/types/ideas/types";
 import { IdeaCardActions } from "./idea-card-actions.client";
-
-const SWIPE_THRESHOLD_RATIO = 1;
-const SWIPE_PROJECTION_SECONDS = 0.3;
-
-function getSwipeDirection(
-  offset: number,
-  velocity: number,
-  width: number,
-): number {
-  const threshold = width * SWIPE_THRESHOLD_RATIO;
-  if (Math.abs(offset) >= threshold) {
-    return Math.sign(offset);
-  }
-
-  const projectedOffset = offset + velocity * SWIPE_PROJECTION_SECONDS;
-  return Math.abs(projectedOffset) >= threshold
-    ? Math.sign(projectedOffset)
-    : 0;
-}
 
 function SwipeableIdea({
   idea,

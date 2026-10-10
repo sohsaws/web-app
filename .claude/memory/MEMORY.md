@@ -399,8 +399,11 @@ this before any i18n work.** Languages: English (default), Russian, Kazakh.
   No row means defaults; the row is upserted on first save by
   `lib/actions/notification-preferences.action.ts`. The user chose a plain
   `interface` instead of Zod here (2026-10-06); the action still checks at
-  runtime that it got exactly two booleans and builds the DB data field by
-  field, because server actions are public endpoints. Nothing sends product
+  runtime that both fields are booleans (`isNotificationPreferences`, moved to
+  `lib/config/notifications.ts` on 2026-10-10 so it can be unit-tested; extra
+  keys pass the guard) and builds the DB data field by field, so extra keys
+  such as `securityEmails` never reach the database. Server actions are
+  public endpoints. Nothing sends product
   updates or the weekly digest yet; any future optional email must include an
   unsubscribe link. The old template switches (direct messages, mentions,
   workspace activity, quiet hours) were removed.

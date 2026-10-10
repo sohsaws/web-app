@@ -5,9 +5,10 @@ description: Test strategy for this project and the entry point to the Vitest an
 
 # Tests: strategy and navigation
 
-Strategy agreed with the user on 2026-10-09. **Nothing is installed yet**:
-Vitest, RTL and their config arrive with the first unit tests (stage 1). Ask
-before adding dev dependencies and state why each is needed.
+Strategy agreed with the user on 2026-10-09. **Stage 1 is done
+(2026-10-10):** Vitest 4 is installed with unit tests for pure logic and runs
+in CI. RTL, `jsdom` and Playwright are not installed yet. Ask before adding
+dev dependencies and state why each is needed.
 
 ## Read the tool guide that matches the work
 
@@ -67,8 +68,12 @@ When fixing a bug, first write a test that reproduces it, then fix.
 
 ## Files and naming
 
-- Tests are **colocated** next to the code: `managed-blob-url.ts` →
-  `managed-blob-url.test.ts`; components use `.test.tsx`.
+- **Hybrid layout (decided by the user 2026-10-10):** unit and integration
+  tests are **colocated** next to the code (`managed-blob-url.ts` →
+  `managed-blob-url.test.ts`; components use `.test.tsx`). Playwright E2E
+  tests live in a root `e2e/` folder, because they test the whole app rather
+  than one module. Inside `app/`, `*.test.ts` files never become routes
+  (only special files such as `page` and `route` do).
 - Logic that needs a test but lives inside a component (for example
   `getSwipeDirection` in `cards-pool.client.tsx`) moves to `lib/` first.
 - Test names describe behavior: `it("rejects another user's avatar URL")`.

@@ -57,6 +57,11 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit
 
+      # Unit and integration tests (Vitest). They mock every external
+      # service, so the placeholder env above is enough.
+      - name: Tests
+        run: npm test
+
       - name: Restore Next.js build cache
         uses: actions/cache@v6
         with:
