@@ -245,6 +245,47 @@ this before any i18n work.** Languages: English (default), Russian, Kazakh.
   language or show it as is.
 - English flag (UK or US), if flags are used at all.
 
+## ⏭ NEXT: RATE LIMITING + REGENERATE DECK (planned 2026-10-10, NOT STARTED)
+
+**The next coding task after the first deploy, alongside more tests.** The
+user's concern: every page reload starts a full new deck generation (21 text
+calls + images) and the abandoned result is thrown away on the server, because
+the routes ignore `request.signal`; a script could also drain the DeepInfra
+budget directly through the API. Work in stages:
+
+1. **Rate limiting** on `app/api/ideas/generate/route.ts` and
+   `app/api/ideas/image/route.ts`, following the Next.js BFF guide pattern
+   (`checkRateLimit` from `@/lib/rate-limit`, 429 `{ error }`; docs in
+   `node_modules/next/dist/docs/01-app/02-guides/backend-for-frontend.md`).
+   - Limit **requests, not cards**, keyed per user (`generate:{userId}`,
+     `image:{userId}`), not per IP. Order: session (401) → rate limit (429) →
+     body validation (400) → work.
+   - In-memory counters do not work on Vercel (separate, short-lived
+     instances): use a shared store. Claude recommended a Postgres table with
+     one atomic `INSERT ... ON CONFLICT DO UPDATE ... RETURNING` (no new
+     service); alternatives: Upstash Redis + `@upstash/ratelimit`, Vercel
+     Firewall (per IP, plan-dependent).
+   - 429 carries `Retry-After` and `retryAfter`; the client throws a
+     `RateLimitError` and shows a **Sonner toast** ("try again in N min"),
+     deduplicated with one toast `id` because every card fetches its image.
+   - Tests: unit for the window logic (`vi.useFakeTimers`), integration for
+     429 and "DeepInfra not called".
+2. **Regenerate deck button on `/dive`.** Claude suggested a secondary pill
+   "Shuffle a new deck" in the left column under the gesture hints (above
+   the card on mobile), not a fourth button in the card actions row. The
+   current deck stays until the new one arrives; disabled while pending or
+   rate-limited; uses the same `/generate` limit.
+3. **Discuss carefully later:** `request.signal` passed to the DeepInfra
+   calls, `persist` for the deck (storage choice: IndexedDB with images vs
+   `localStorage` text only; per-user key, bio/TTL invalidation, Zod check on
+   rehydrate, generation must wait for hydration), and a server-side copy of
+   the last deck so a reload during generation does not waste it. Persisting
+   past tab close changes the earlier "session-scoped deck" decision.
+
+Open decisions: counter storage; limits per hour (Claude's example:
+`/generate` 10/h, `/image` 60/h plus maybe a daily image cap, since images
+cost ~$0.01–0.015 each); button placement and whether to confirm.
+
 ## Working relationship
 
 - Act as the user's pair-programming partner and technical mentor, not an

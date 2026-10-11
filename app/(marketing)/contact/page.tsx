@@ -1,10 +1,11 @@
 import { Mail, MessageCircle } from "lucide-react";
 import type { ReactElement } from "react";
+import { getContactEmail } from "@/lib/config/contact";
 import { ContactForm } from "./_components/contact-form.client";
 
 export const dynamic = "error";
 
-const CONTACT_EMAIL = "hello@swiipy.com";
+const CONTACT_EMAIL = getContactEmail();
 
 const ICON_BOX_CLASS =
   "flex size-8 shrink-0 items-center justify-center rounded-lg border border-app-action-skip/30 bg-app-action-skip/10 text-app-action-skip";

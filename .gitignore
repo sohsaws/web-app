@@ -30,9 +30,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files: real values stay local, only the empty template is committed
-.env*
-!.env.example
+# env files: .env (public values only) and .env.example are committed;
+# secrets live in .env.local, which never leaves the machine
+.env*.local
 
 # vercel
 .vercel
