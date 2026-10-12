@@ -245,9 +245,34 @@ this before any i18n work.** Languages: English (default), Russian, Kazakh.
   language or show it as is.
 - English flag (UK or US), if flags are used at all.
 
-## ⏭ NEXT: RATE LIMITING + REGENERATE DECK (planned 2026-10-10, NOT STARTED)
+## ⏭ RATE LIMITING + REGENERATE DECK (planned 2026-10-10)
 
-**The next coding task after the first deploy, alongside more tests.** The
+**Stages 1 and 2 DONE (2026-10-12); stage 3 is still open.** What was built:
+
+- **Upstash** (chosen by the user over a custom Postgres counter and Vercel
+  WAF, whose Hobby plan allows 1 rule and windows up to 10 min):
+  `@upstash/ratelimit` + `@upstash/redis`, Redis connected through the Vercel
+  Marketplace; `Redis.fromEnv()` reads `UPSTASH_REDIS_REST_*` or
+  `KV_REST_API_*`. Limits in `lib/config/rate-limit.ts`: **generate 5/h,
+  image 50/h**, sliding window, per user (user's reasoning: 5 decks = 50
+  cards, each needs an image). `lib/rate-limit.ts`: `checkRateLimit(scope,
+  userId)` with limiters created lazily (no env needed at build or in CI);
+  on a Redis error it logs and **fails open** (the DeepInfra key spending
+  limit is the backstop); `rateLimitExceededResponse` → 429 + `{ error }` +
+  `Retry-After`. **The wait time lives only in the `Retry-After` header**
+  (user's decision 2026-10-12: one source of truth; the body field
+  `retryAfter` was removed). Both routes check it right after the session.
+- Client: `createApiResponseError` / `RateLimitError` in
+  `lib/utils/responseError.ts`, `lib/utils/retry-after.ts`,
+  `showRateLimitToast` (one Sonner id) used by `use-generate-pack-ideas` and
+  `use-idea-image`; the empty-deck error panel names the wait time.
+- **Regenerate button** `dive/_components/regenerate-deck-button.client.tsx`,
+  rendered inside `CardsPool` under the card actions (not the left column: a
+  second `useGeneratePackIdeas` instance would run its own top-up and
+  generate twice). The hook has `regenerate()` (mode `replace`, the old deck
+  stays until the new one arrives) and `isRegenerating`. No confirm dialog.
+
+The original plan follows. The
 user's concern: every page reload starts a full new deck generation (21 text
 calls + images) and the abandoned result is thrown away on the server, because
 the routes ignore `request.signal`; a script could also drain the DeepInfra
@@ -265,7 +290,7 @@ budget directly through the API. Work in stages:
      one atomic `INSERT ... ON CONFLICT DO UPDATE ... RETURNING` (no new
      service); alternatives: Upstash Redis + `@upstash/ratelimit`, Vercel
      Firewall (per IP, plan-dependent).
-   - 429 carries `Retry-After` and `retryAfter`; the client throws a
+   - 429 carries `Retry-After` (header only); the client throws a
      `RateLimitError` and shows a **Sonner toast** ("try again in N min"),
      deduplicated with one toast `id` because every card fetches its image.
    - Tests: unit for the window logic (`vi.useFakeTimers`), integration for

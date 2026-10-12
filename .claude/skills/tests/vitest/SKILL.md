@@ -39,13 +39,23 @@ upgrade. Check the docs for the installed major before writing config:
 - Tests are colocated next to the code. Playwright E2E tests will live in a
   root `e2e/` folder (decided 2026-10-10).
 
-## Next additions (when the first test needs them)
+- **`server-only`** (added 2026-10-12): Next.js provides it internally, so
+  it is not in `node_modules`; `resolve.alias` maps it to
+  `test-utils/server-only.ts` (an empty module). Vite options such as
+  `resolve.alias` go at the **top level**, not inside `test`.
+- Rate limiting tests (written 2026-10-12, **removed from the project the
+  same day at the user's request** so they do not distract while the user
+  reads the feature code; to be reviewed separately): route tests for
+  `/api/ideas/generate` and `/api/ideas/image` (partial mock of
+  `@/lib/rate-limit` via `importOriginal`), `lib/rate-limit.test.ts`,
+  `lib/utils/retry-after.test.ts` and the `createApiResponseError` block of
+  `responseError.test.ts`. Ask the user before restoring them.
+- Modules with a module-level cache (for example the limiter `Map` in
+  `lib/rate-limit.ts`) are re-imported per test with `vi.resetModules()` and
+  a dynamic `import()`, so tests do not depend on run order. Fake timers are
+  restored in `afterEach` (`restoreMocks` does not reset timers).
 
-- **`server-only`**: Next.js provides it internally, so it is not in
-  `node_modules`. The first test that imports `lib/data/**` or `lib/ai/**`
-  needs a stub module and a `resolve.alias` entry for `"server-only"`.
-  Vite options such as `resolve.alias` go at the **top level**, not inside
-  `test`.
+## Next additions (when the first test needs them)
 - **Component tests**: add `jsdom` and RTL (see `../rtl/SKILL.md`), then split
   the config into two `test.projects` with `extends: true`: `node` for
   `*.test.ts` and `jsdom` for `*.test.tsx`. `@vitejs/plugin-react` is needed

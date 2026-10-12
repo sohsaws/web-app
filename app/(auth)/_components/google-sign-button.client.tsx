@@ -21,7 +21,6 @@ export function GoogleAuthButton({
         callbackURL: callbackUrl,
       });
       if (error) {
-        // какая то обработка ошибки, в будущем пригодиться
         console.error(error);
       }
     } catch (error) {

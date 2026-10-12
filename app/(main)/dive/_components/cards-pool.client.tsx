@@ -24,7 +24,10 @@ import { useSaveFavorite } from "@/hooks/use-save-favorite";
 import { swipeAway } from "@/lib/animations/swipe-away";
 import { getSwipeDirection } from "@/lib/animations/swipe-direction";
 import type { IdeaSaveRequest } from "@/lib/types/ideas/types";
+import { RateLimitError } from "@/lib/utils/responseError";
+import { formatRetryAfter } from "@/lib/utils/retry-after";
 import { IdeaCardActions } from "./idea-card-actions.client";
+import { RegenerateDeckButton } from "./regenerate-deck-button.client";
 
 function SwipeableIdea({
   idea,
@@ -154,7 +157,8 @@ function DeckPlaceholder({ children }: { children: ReactNode }): ReactElement {
 }
 
 export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
-  const { generate, isPending, error } = useGeneratePackIdeas(userBio);
+  const { generate, regenerate, isPending, isRegenerating, error } =
+    useGeneratePackIdeas(userBio);
   const { save } = useSaveFavorite();
 
   const currentIdea = useIdeasStore((state) => state.ideas?.[0]);
@@ -168,7 +172,9 @@ export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
               <span className="block text-neutral-400">your deck.</span>
             </p>
             <p className="text-sm leading-relaxed text-neutral-400">
-              Something went wrong while generating ideas.
+              {error instanceof RateLimitError
+                ? `You've reached the hourly limit. Try again in ${formatRetryAfter(error.retryAfterSeconds)}.`
+                : "Something went wrong while generating ideas."}
             </p>
             <button
               type="button"
@@ -204,6 +210,14 @@ export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
         key={currentIdea.id}
         idea={currentIdea}
         onFavorite={save}
+      />
+      {/* Lives here, not in the page's side column: a second
+          useGeneratePackIdeas elsewhere would run its own top-up and
+          generate decks twice. */}
+      <RegenerateDeckButton
+        onRegenerate={regenerate}
+        isPending={isPending}
+        isRegenerating={isRegenerating}
       />
     </div>
   );

@@ -5,13 +5,28 @@ import { useCallback, useEffect, useRef } from "react";
 import { useIdeasStore } from "@/app/stores/ideas-store";
 import { ideasResponseSchema } from "@/lib/config/ideas";
 import type { IdeaGeneratedResponse } from "@/lib/types/ideas/types";
-import { getApiResponseError } from "@/lib/utils/responseError";
+import { showRateLimitToast } from "@/lib/utils/rate-limit-toast";
+import {
+  createApiResponseError,
+  RateLimitError,
+} from "@/lib/utils/responseError";
 
 const IDEAS_REFILL_THRESHOLD = 5;
 
+// "append" tops up the deck as the user swipes; "replace" swaps the whole
+// deck when the user asks for a new one.
+type DeckUpdateMode = "append" | "replace";
+
+interface GenerateDeckVariables {
+  bio: string;
+  mode: DeckUpdateMode;
+}
+
 interface UseGeneratePackIdeasResult {
   generate: () => void;
+  regenerate: () => void;
   isPending: boolean;
+  isRegenerating: boolean;
   error: Error | null;
 }
 
@@ -22,10 +37,10 @@ export function useGeneratePackIdeas(bio: string): UseGeneratePackIdeasResult {
   const isRequestInFlight = useRef(false);
   const isMounted = useRef(false);
 
-  const { mutate, isPending, isError, error } = useMutation({
-    mutationFn: async (
-      requestedBio: string,
-    ): Promise<IdeaGeneratedResponse[]> => {
+  const { mutate, isPending, isError, error, variables } = useMutation({
+    mutationFn: async ({
+      bio: requestedBio,
+    }: GenerateDeckVariables): Promise<IdeaGeneratedResponse[]> => {
       const res = await fetch("/api/ideas/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -33,9 +48,7 @@ export function useGeneratePackIdeas(bio: string): UseGeneratePackIdeasResult {
       });
 
       if (!res.ok) {
-        throw new Error(
-          await getApiResponseError(res, "Failed to generate ideas"),
-        );
+        throw await createApiResponseError(res, "Failed to generate ideas");
       }
 
       const data: unknown = await res.json();
@@ -48,15 +61,22 @@ export function useGeneratePackIdeas(bio: string): UseGeneratePackIdeasResult {
       return result.data.ideas;
     },
     retry: false,
-    onSuccess: (ideas): void => {
+    onSuccess: (ideas, { mode }): void => {
       if (!isMounted.current) {
         return;
       }
 
-      if (IdeasStore.ideas === null) {
+      // The current deck stays on screen until the new one arrives, so a
+      // failed or rate-limited regeneration never leaves the user empty.
+      if (mode === "replace" || IdeasStore.ideas === null) {
         IdeasStore.setIdeas(ideas);
       } else {
         IdeasStore.addIdeas(ideas);
+      }
+    },
+    onError: (mutationError): void => {
+      if (mutationError instanceof RateLimitError) {
+        showRateLimitToast(mutationError.retryAfterSeconds);
       }
     },
     onSettled: (): void => {
@@ -64,14 +84,26 @@ export function useGeneratePackIdeas(bio: string): UseGeneratePackIdeasResult {
     },
   });
 
-  const generate = useCallback((): void => {
-    if (!isMounted.current || isRequestInFlight.current) {
-      return;
-    }
+  const startGeneration = useCallback(
+    (mode: DeckUpdateMode): void => {
+      if (!isMounted.current || isRequestInFlight.current) {
+        return;
+      }
 
-    isRequestInFlight.current = true;
-    mutate(bio);
-  }, [bio, mutate]);
+      isRequestInFlight.current = true;
+      mutate({ bio, mode });
+    },
+    [bio, mutate],
+  );
+
+  const generate = useCallback(
+    (): void => startGeneration("append"),
+    [startGeneration],
+  );
+  const regenerate = useCallback(
+    (): void => startGeneration("replace"),
+    [startGeneration],
+  );
 
   useEffect(() => {
     isMounted.current = true;
@@ -87,5 +119,11 @@ export function useGeneratePackIdeas(bio: string): UseGeneratePackIdeasResult {
     }
   }, [ideaCount, isPending, isError, generate]);
 
-  return { generate, isPending, error };
+  return {
+    generate,
+    regenerate,
+    isPending,
+    isRegenerating: isPending && variables?.mode === "replace",
+    error,
+  };
 }

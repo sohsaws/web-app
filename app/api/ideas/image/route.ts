@@ -3,6 +3,7 @@ import { z } from "zod";
 import { generateImages } from "@/lib/ai/generate-ideas";
 import { auth } from "@/lib/auth";
 import { generatedIdeaSchema } from "@/lib/config/ideas";
+import { checkRateLimit, rateLimitExceededResponse } from "@/lib/rate-limit";
 
 const imageRequestSchema = generatedIdeaSchema.pick({ description: true });
 
@@ -11,6 +12,12 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Counted before the body is read, so malformed requests use the limit too.
+  const rateLimit = await checkRateLimit("image", session.user.id);
+  if (rateLimit.rateLimited) {
+    return rateLimitExceededResponse(rateLimit.retryAfterSeconds);
   }
 
   if (!request.headers.get("Content-Type")?.includes("application/json")) {

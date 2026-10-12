@@ -1,12 +1,17 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import {
   generatedImageSchema,
   IDEA_IMAGE_DATA_URL_PREFIX,
 } from "@/lib/config/ideas";
 import type { GeneratedImage } from "@/lib/types/ideas/types";
-import { getApiResponseError } from "@/lib/utils/responseError";
+import { showRateLimitToast } from "@/lib/utils/rate-limit-toast";
+import {
+  createApiResponseError,
+  RateLimitError,
+} from "@/lib/utils/responseError";
 
 interface UseIdeaImageResult {
   image: string | null;
@@ -28,8 +33,9 @@ export function useIdeaImage(
       });
 
       if (!response.ok) {
-        throw new Error(
-          await getApiResponseError(response, "Failed to generate an image"),
+        throw await createApiResponseError(
+          response,
+          "Failed to generate an image",
         );
       }
 
@@ -43,6 +49,12 @@ export function useIdeaImage(
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
+
+  useEffect(() => {
+    if (error instanceof RateLimitError) {
+      showRateLimitToast(error.retryAfterSeconds);
+    }
+  }, [error]);
 
   return {
     image: data ? `${IDEA_IMAGE_DATA_URL_PREFIX}${data.image}` : null,

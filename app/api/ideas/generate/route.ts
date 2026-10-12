@@ -5,6 +5,7 @@ import { z } from "zod";
 import { assignIdeaCategories, generateIdeas } from "@/lib/ai/generate-ideas";
 import { auth } from "@/lib/auth";
 import { profileBioSchema } from "@/lib/config/profile";
+import { checkRateLimit, rateLimitExceededResponse } from "@/lib/rate-limit";
 import type { IdeaGeneratedResponse } from "@/lib/types/ideas/types";
 
 const bioRequestSchema = z.object({
@@ -25,6 +26,12 @@ export async function POST(request: Request): Promise<NextResponse> {
         status: 401,
       },
     );
+  }
+
+  // Counted before the body is read, so malformed requests use the limit too.
+  const rateLimit = await checkRateLimit("generate", session.user.id);
+  if (rateLimit.rateLimited) {
+    return rateLimitExceededResponse(rateLimit.retryAfterSeconds);
   }
 
   const body: unknown = await request.json().catch(() => null);
