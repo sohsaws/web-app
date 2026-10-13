@@ -330,6 +330,10 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   diagnostics are always allowed.
 - The user prefers clean structure, focused patches, direct mentorship, and
   practical explanations over heavy-handed control.
+- **Reviewer subagent (2026-10-13).** `.claude/agents/reviewer.md` is a
+  read-only judge (no Edit/Write, opus, preloads the `typescript` and `tests`
+  skills). Every code change goes to it after the verification loop is green;
+  the procedure is in `.claude/skills/typescript/SKILL.md`.
 
 ## Stack and auth
 

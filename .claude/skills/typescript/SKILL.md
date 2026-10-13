@@ -135,6 +135,33 @@ write code → run checks → failure? → fix the cause → run checks again
 Changes only to Markdown, skills or memory files need no run. The final
 answer lists every command run and its result.
 
+## Review by the judge subagent (mandatory, decided 2026-10-13)
+
+After the verification loop is green twice, delegate a review to the
+`reviewer` subagent (`.claude/agents/reviewer.md`) before reporting the change
+as done. The reviewer sees the project rules but not this conversation, so the
+delegation message must contain:
+
+- the user's original request, quoted or restated exactly;
+- every changed, created and deleted file;
+- every command run in the loop and its result;
+- assumptions made and anything deliberately left out of scope.
+
+Then:
+
+1. **APPROVE** → report to the user. Include the verdict and any minor
+   findings.
+2. **REQUEST_CHANGES** → check each blocker and major against the code. If it
+   is real, fix it, rerun the verification loop, then request a new review.
+   If you think it is wrong, do not silently ignore it: tell the user the
+   finding and why you disagree.
+3. Stop after 3 review rounds without APPROVE and escalate to the user with
+   the open findings.
+4. Do not apply minor findings and nits on your own. List them for the user to
+   decide.
+
+Markdown, skill and memory changes need no review.
+
 ## Project preferences
 
 - Reuse the existing stack: Next.js App Router, Prisma, Better Auth, React Hook
