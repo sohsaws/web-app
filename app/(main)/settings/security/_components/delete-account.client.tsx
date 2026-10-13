@@ -4,7 +4,7 @@ import { type ReactElement, useId, useState } from "react";
 import {
   DELETE_ACCOUNT_CONFIRMATION,
   useDeleteAccount,
-} from "@/hooks/use-delete-account";
+} from "@/hooks/account/use-delete-account";
 
 interface DeleteAccountProps {
   requiresPassword: boolean;

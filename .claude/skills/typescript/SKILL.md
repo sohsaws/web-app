@@ -212,7 +212,8 @@ Markdown, skill and memory changes need no review.
 - A component used by one route stays in that route's `_components/`. Promote it
   to root `components/` only when truly reused.
 - React-hook logic that coordinates business data, requests, mutations, or
-  domain state goes in a named hook under root `hooks/`. Small presentational
+  domain state goes in a named hook under root `hooks/<domain>/` (`ideas/`,
+  `auth/`, `account/`; its test sits next to it). Small presentational
   state may stay local.
 - Static rendering is not the opposite of Server Components. A server-rendered
   page is static if it avoids request-time data.

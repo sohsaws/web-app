@@ -86,7 +86,8 @@ author agent, not to the user.
    - Server Components by default.
    - File names: `*.client.tsx` / `*.server.tsx`.
    - Location: `_components/` vs `components/{ideas,layout,ui,providers}`,
-     hooks in `hooks/`, data in `lib/data/`, mutations in `lib/actions/`.
+     hooks in `hooks/{ideas,auth,account}/`, data in `lib/data/`, mutations
+     in `lib/actions/`.
    - Marketing pages stay static (`dynamic = "error"`, no
      `headers()`/`cookies()`/session); the root layout never reads the session.
    - TypeScript: no `any`, `import type` for types, no unjustified `!`, no

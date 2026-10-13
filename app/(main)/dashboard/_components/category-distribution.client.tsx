@@ -3,7 +3,7 @@
 import type { ReactElement } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
 import { Widget } from "@/components/ui/widget.client";
-import { useCategoryDistribution } from "@/hooks/use-category-distribution";
+import { useCategoryDistribution } from "@/hooks/ideas/use-category-distribution";
 
 interface CategoryDistributionProps {
   userId: string;

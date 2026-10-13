@@ -362,7 +362,7 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   (`lib/data/delete-user-blobs.ts`) to remove the avatar and saved-card images
   from Vercel Blob before the DB cascade (Account, Session, Card all cascade on
   User). A Blob failure aborts the deletion on purpose. UI:
-  `settings/security/_components/delete-account.client.tsx` + `hooks/use-delete-account.ts`;
+  `settings/security/_components/delete-account.client.tsx` + `hooks/account/use-delete-account.ts`;
   type DELETE, plus password for credential users; Google users need a session
   younger than Better Auth's 1-day `freshAge`, otherwise `SESSION_EXPIRED`
   prompts a re-sign-in. No email confirmation step yet.
@@ -408,6 +408,12 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   page boundary.
 - React-hook logic that works with business data goes in named hooks under root
   `hooks/`. Small purely visual state stays local.
+- **Hooks by domain (decided 2026-10-14):** `hooks/ideas/` (deck, images,
+  favorites), `hooks/auth/` (sign-in/out, password, email, verification; all
+  via `authClient`), `hooks/account/` (profile, avatar, notifications, account
+  deletion). Grouped by domain, not by page, because idea hooks are shared by
+  several pages. Tests stay colocated (the user kept colocation over a
+  separate `tests/unit`, `tests/integration` tree on 2026-10-14).
 - Reused CSS rules and global style primitives go in `app/globals.css`. One-off
   styling stays local with Tailwind utilities.
 

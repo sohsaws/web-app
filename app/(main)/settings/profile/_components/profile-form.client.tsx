@@ -3,7 +3,7 @@
 import { Save } from "lucide-react";
 import Link from "next/link";
 import type { ReactElement } from "react";
-import { useProfileForm } from "@/hooks/use-profile-form";
+import { useProfileForm } from "@/hooks/account/use-profile-form";
 import {
   PROFILE_BIO_MAX_LENGTH,
   type ProfileFormValues,

@@ -8,7 +8,7 @@ import { Carousel } from "@/components/ideas/carousel.client";
 import { IdeasStack } from "@/components/ideas/ideas-stack.client";
 import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
 import { Widget } from "@/components/ui/widget.client";
-import { useFavoritesPreview } from "@/hooks/use-favorites-preview";
+import { useFavoritesPreview } from "@/hooks/ideas/use-favorites-preview";
 import { CategoryDistribution } from "./category-distribution.client";
 import { YouWouldLike } from "./you-would-like.client";
 
