@@ -49,8 +49,10 @@ upgrade. Check the docs for the installed major before writing config:
   `/api/ideas/generate` and `/api/ideas/image` (partial mock of
   `@/lib/rate-limit` via `importOriginal`), `lib/rate-limit.test.ts`,
   `lib/utils/retry-after.test.ts` and the `createApiResponseError` block of
-  `responseError.test.ts`. Ask the user before restoring them.
-  `lib/utils/retry-after.test.ts` was restored on 2026-10-13.
+  `responseError.test.ts`. `lib/utils/retry-after.test.ts` was restored on
+  2026-10-13; `lib/rate-limit.test.ts` and the `createApiResponseError` block
+  were restored the same day (unit batch 1). The two route tests return with
+  the integration batches.
 - Modules with a module-level cache (for example the limiter `Map` in
   `lib/rate-limit.ts`) are re-imported per test with `vi.resetModules()` and
   a dynamic `import()`, so tests do not depend on run order. Fake timers are
