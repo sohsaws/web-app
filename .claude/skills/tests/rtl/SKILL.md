@@ -25,14 +25,20 @@ states, conditional rendering. Do not use it for route handlers or server
 actions (no DOM needed), for `async` Server Components (Vitest cannot render
 them; use E2E), or to check styles and class names.
 
-## Planned setup (verify against current docs before writing)
+## Setup
 
-- Dev dependencies to propose: `@testing-library/react`,
-  `@testing-library/dom`, `@testing-library/user-event`,
-  `@testing-library/jest-dom`, `jsdom`.
-- Component tests (`*.test.tsx`) run in the `jsdom` Vitest project.
-- A setup file imports `@testing-library/jest-dom/vitest` for matchers such as
+- Installed 2026-10-13 (approved by the user): `@testing-library/react`,
+  `@testing-library/dom`, `jsdom@^29`. Hook and component tests
+  (`*.test.tsx`) run in the `jsdom` Vitest project; details in
+  `../vitest/SKILL.md`.
+- Not installed yet (approved, add with the first component test that needs
+  them): `@testing-library/user-event` for clicks and typing, and
+  `@testing-library/jest-dom` (setup file imports
+  `@testing-library/jest-dom/vitest`) for matchers such as
   `toBeInTheDocument`, `toBeDisabled`, `toHaveAccessibleName`.
+- Hooks: `renderHook` + `act` + `waitFor` from `@testing-library/react`.
+  Hold a request open with a deferred promise to observe pending states, and
+  give every `fetch` call its own `Response` (a body can be read once).
 
 ## Queries
 

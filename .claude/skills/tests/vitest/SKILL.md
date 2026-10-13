@@ -80,11 +80,18 @@ upgrade. Check the docs for the installed major before writing config:
 - First test: `lib/data/delete-user-blobs.integration.test.ts`. Not in CI
   yet: it needs `DATABASE_URL_TEST` as a GitHub secret and its own job.
 
-## Next additions (when the first test needs them)
-- **Component tests**: add `jsdom` and RTL (see `../rtl/SKILL.md`), then split
-  the config into two `test.projects` with `extends: true`: `node` for
-  `*.test.ts` and `jsdom` for `*.test.tsx`. `@vitejs/plugin-react` is needed
-  only if TSX transforms require it; check before adding.
+## Hook and component tests (since 2026-10-13)
+
+- `vitest.config.mts` has two `test.projects` with `extends: true`: `node`
+  for `*.test.ts` and `jsdom` for `*.test.tsx` (setup file
+  `test-utils/rtl-setup.ts` calls RTL `cleanup()` after each test, because
+  globals are off). `unstubGlobals: true` resets `vi.stubGlobal("fetch", …)`.
+  TSX works without `@vitejs/plugin-react` (tsconfig `jsx: react-jsx`).
+- Run one project: `npx vitest run --project jsdom`.
+- `jsdom` is pinned to `^29`: jsdom 30 requires Node `^22.22 || ^24.15 ||
+  >=26` and does not support the user's local Node 25.
+- TanStack Query hooks use `createQueryClientWrapper()` from
+  `test-utils/query-client-wrapper.tsx` (fresh client, no retries).
 
 ## Mocking rules
 

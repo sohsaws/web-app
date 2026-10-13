@@ -11,8 +11,24 @@ export default defineConfig({
     },
   },
   test: {
-    environment: "node",
-    include: ["**/*.test.ts"],
+    // Logic, routes and actions need no DOM; hooks and components (.tsx)
+    // run in jsdom. In Vitest 4 a project inherits these root options only
+    // with `extends: true`.
+    projects: [
+      {
+        extends: true,
+        test: { name: "node", environment: "node", include: ["**/*.test.ts"] },
+      },
+      {
+        extends: true,
+        test: {
+          name: "jsdom",
+          environment: "jsdom",
+          include: ["**/*.test.tsx"],
+          setupFiles: ["./test-utils/rtl-setup.ts"],
+        },
+      },
+    ],
     // Integration tests need a database and run with
     // vitest.integration.config.mts (`npm run test:integration`).
     exclude: [
@@ -25,5 +41,6 @@ export default defineConfig({
     clearMocks: true,
     restoreMocks: true,
     unstubEnvs: true,
+    unstubGlobals: true,
   },
 });

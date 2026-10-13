@@ -7,8 +7,9 @@ description: Test strategy for this project and the entry point to the Vitest an
 
 Strategy agreed with the user on 2026-10-09. **Stage 1 is done
 (2026-10-10):** Vitest 4 is installed with unit tests for pure logic and runs
-in CI. RTL, `jsdom` and Playwright are not installed yet. Ask before adding
-dev dependencies and state why each is needed.
+in CI. RTL (`@testing-library/react`, `@testing-library/dom`) and `jsdom`
+were installed on 2026-10-13 for hook tests; Playwright is not installed yet.
+Ask before adding dev dependencies and state why each is needed.
 
 ## Read the tool guide that matches the work
 
