@@ -14,6 +14,7 @@ const STORE = "https://test-store.public.blob.vercel-storage.com";
 const run = randomUUID();
 const ownerId = `test-owner-${run}`;
 const otherUserId = `test-other-${run}`;
+const noFilesUserId = `test-no-files-${run}`;
 
 function testCard(userId: string, image: string | null) {
   return {
@@ -31,6 +32,11 @@ beforeAll(async () => {
     data: [
       { id: ownerId, name: "Owner", email: `${ownerId}@example.test` },
       { id: otherUserId, name: "Other", email: `${otherUserId}@example.test` },
+      {
+        id: noFilesUserId,
+        name: "No files",
+        email: `${noFilesUserId}@example.test`,
+      },
     ],
   });
   await prisma.card.createMany({
@@ -47,7 +53,7 @@ beforeAll(async () => {
 afterAll(async () => {
   // Cards are removed by the cascade on their users.
   await prisma.user.deleteMany({
-    where: { id: { in: [ownerId, otherUserId] } },
+    where: { id: { in: [ownerId, otherUserId, noFilesUserId] } },
   });
   await prisma.$disconnect();
 });
@@ -64,5 +70,22 @@ describe("deleteUserBlobs with a real database", () => {
       expect.arrayContaining([avatarUrl, ownCardImage]),
     );
     expect(del.mock.calls[0]?.[0]).toHaveLength(2);
+  });
+
+  it("rejects when Blob deletion fails, so the account deletion is aborted", async () => {
+    del.mockRejectedValue(new Error("Blob unavailable"));
+
+    await expect(
+      deleteUserBlobs(ownerId, `${STORE}/avatars/${ownerId}/me.png`),
+    ).rejects.toThrow("Blob unavailable");
+  });
+
+  it("does not call Blob for a user without files of their own", async () => {
+    await deleteUserBlobs(
+      noFilesUserId,
+      "https://lh3.googleusercontent.com/a/photo",
+    );
+
+    expect(del).not.toHaveBeenCalled();
   });
 });
