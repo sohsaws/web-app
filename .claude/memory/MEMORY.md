@@ -311,6 +311,15 @@ Open decisions: counter storage; limits per hour (Claude's example:
 `/generate` 10/h, `/image` 60/h plus maybe a daily image cap, since images
 cost ~$0.01–0.015 each); button placement and whether to confirm.
 
+## Testing
+
+- **Testing pyramid (decided 2026-10-13): 60% unit, 30% integration, 10%
+  E2E.** Details and tooling in `.claude/skills/tests/SKILL.md`.
+- Unit tests: Vitest, colocated `*.test.ts`, `npm test` (also in CI).
+  Integration tests: `*.integration.test.ts` against a Neon branch made from
+  Production (`DATABASE_URL_TEST`), `npm run test:integration`, not in CI yet.
+  E2E (Playwright, `e2e/`) not started.
+
 ## Working relationship
 
 - Act as the user's pair-programming partner and technical mentor, not an

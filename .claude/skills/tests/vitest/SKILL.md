@@ -50,10 +50,33 @@ upgrade. Check the docs for the installed major before writing config:
   `@/lib/rate-limit` via `importOriginal`), `lib/rate-limit.test.ts`,
   `lib/utils/retry-after.test.ts` and the `createApiResponseError` block of
   `responseError.test.ts`. Ask the user before restoring them.
+  `lib/utils/retry-after.test.ts` was restored on 2026-10-13.
 - Modules with a module-level cache (for example the limiter `Map` in
   `lib/rate-limit.ts`) are re-imported per test with `vi.resetModules()` and
   a dynamic `import()`, so tests do not depend on run order. Fake timers are
   restored in `afterEach` (`restoreMocks` does not reset timers).
+
+## Integration tests with a real database (since 2026-10-13)
+
+- Files `*.integration.test.ts`, run with `npm run test:integration`
+  (`vitest.integration.config.mts`); the unit config excludes them, so
+  `npm test` never needs a database.
+- Database: a **Neon branch created from Production**, URL in
+  `DATABASE_URL_TEST` (`.env.local`). The config loads it with dotenv, refuses
+  to run if it is missing or equal to `DATABASE_URL`, and passes it to the
+  code under test as `DATABASE_URL` (`lib/prisma.ts` reads that name).
+- `test-utils/integration-global-setup.ts` runs `prisma migrate deploy` on the
+  test branch first (applies pending migrations only, never resets).
+- **The branch holds a copy of production data: never truncate tables.**
+  Each test file creates rows with unique ids (`randomUUID()`) and deletes
+  only those in `afterAll` (cascades remove child rows), then
+  `prisma.$disconnect()`.
+- Files run sequentially (`fileParallelism: false`); timeouts are raised for
+  remote round trips and cold starts.
+- External paid services stay mocked even here (for example `del` from
+  `@vercel/blob`); only the database is real.
+- First test: `lib/data/delete-user-blobs.integration.test.ts`. Not in CI
+  yet: it needs `DATABASE_URL_TEST` as a GitHub secret and its own job.
 
 ## Next additions (when the first test needs them)
 - **Component tests**: add `jsdom` and RTL (see `../rtl/SKILL.md`), then split

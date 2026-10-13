@@ -20,6 +20,25 @@ code; read both for component tests.
 - **`rtl/SKILL.md`**: React Testing Library for client components and hooks:
   queries, `user-event`, async UI, TanStack Query wrapper.
 
+## Testing pyramid (decided by the user 2026-10-13)
+
+Target share of the test suite:
+
+- **60% unit** (Vitest, mocked boundaries, `npm test`);
+- **30% integration** (Vitest with a real database, `npm run test:integration`;
+  route and server-action tests with mocked services also count here);
+- **10% E2E** (Playwright, `e2e/`).
+
+When choosing the next tests, keep the suite close to these proportions.
+
+How RTL tests count (decided 2026-10-13):
+
+- An RTL test of **one component without data hooks** (for example a button's
+  disabled state or label) counts as **unit**.
+- An RTL test of **a component with its hook and children**, where only the
+  network or a server action is mocked (for example the notification switch
+  rolling back after a failed action), counts as **integration**.
+
 ## Which tool for which test
 
 | Level | Tool | What |

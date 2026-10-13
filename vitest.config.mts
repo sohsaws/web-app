@@ -13,7 +13,14 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["**/*.test.ts"],
-    exclude: [...configDefaults.exclude, ".next/**", "e2e/**"],
+    // Integration tests need a database and run with
+    // vitest.integration.config.mts (`npm run test:integration`).
+    exclude: [
+      ...configDefaults.exclude,
+      ".next/**",
+      "e2e/**",
+      "**/*.integration.test.ts",
+    ],
     // Every test starts from a clean slate without manual cleanup.
     clearMocks: true,
     restoreMocks: true,
