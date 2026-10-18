@@ -4,7 +4,7 @@ import { AtSign, Lock } from "lucide-react";
 import Link from "next/link";
 import type { ReactElement } from "react";
 import { GoogleAuthButton } from "@/app/(auth)/_components/google-sign-button.client";
-import { useLoginForm } from "@/hooks/use-login-form";
+import { useLoginForm } from "@/hooks/auth/use-login-form";
 
 interface LoginFormProps {
   callbackUrl: string;

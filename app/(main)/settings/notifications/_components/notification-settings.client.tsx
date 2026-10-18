@@ -3,7 +3,7 @@
 import type { LucideIcon } from "lucide-react";
 import { Mail, Megaphone, ShieldCheck } from "lucide-react";
 import type { ReactElement } from "react";
-import { useNotificationPreferences } from "@/hooks/use-notification-preferences";
+import { useNotificationPreferences } from "@/hooks/account/use-notification-preferences";
 import type {
   NotificationPreferenceKey,
   NotificationPreferences,

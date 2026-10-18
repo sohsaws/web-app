@@ -2,7 +2,7 @@
 
 import { KeyRound } from "lucide-react";
 import type { ReactElement } from "react";
-import { useResetPassword } from "@/hooks/use-reset-password";
+import { useResetPassword } from "@/hooks/auth/use-reset-password";
 
 interface ResetPasswordFormProps {
   token: string;

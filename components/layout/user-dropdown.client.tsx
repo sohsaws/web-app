@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { ReactElement } from "react";
 import { DropdownMenu } from "@/components/layout/dropdown-menu.client";
 import { Avatar } from "@/components/ui/avatar.client";
-import { useSignOut } from "@/hooks/use-sign-out";
+import { useSignOut } from "@/hooks/auth/use-sign-out";
 
 interface UserDropdownProps {
   user: {

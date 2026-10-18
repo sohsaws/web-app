@@ -317,7 +317,9 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   E2E.** Details and tooling in `.claude/skills/tests/SKILL.md`.
 - Unit tests: Vitest, colocated `*.test.ts`, `npm test` (also in CI).
   Integration tests: `*.integration.test.ts` against a Neon branch made from
-  Production (`DATABASE_URL_TEST`), `npm run test:integration`, not in CI yet.
+  Production (`DATABASE_URL_TEST`), `npm run test:integration`; in CI since
+  2026-10-17 as the `integration` job (repository secret `DATABASE_URL_TEST`).
+  Hook and component tests (`*.test.tsx`, RTL + jsdom) run in `npm test`.
   E2E (Playwright, `e2e/`) not started.
 
 ## Working relationship
@@ -330,6 +332,10 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   diagnostics are always allowed.
 - The user prefers clean structure, focused patches, direct mentorship, and
   practical explanations over heavy-handed control.
+- **Reviewer subagent (2026-10-13).** `.claude/agents/reviewer.md` is a
+  read-only judge (no Edit/Write, opus, preloads the `typescript` and `tests`
+  skills). Every code change goes to it after the verification loop is green;
+  the procedure is in `.claude/skills/typescript/SKILL.md`.
 
 ## Stack and auth
 
@@ -358,7 +364,7 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   (`lib/data/delete-user-blobs.ts`) to remove the avatar and saved-card images
   from Vercel Blob before the DB cascade (Account, Session, Card all cascade on
   User). A Blob failure aborts the deletion on purpose. UI:
-  `settings/security/_components/delete-account.client.tsx` + `hooks/use-delete-account.ts`;
+  `settings/security/_components/delete-account.client.tsx` + `hooks/account/use-delete-account.ts`;
   type DELETE, plus password for credential users; Google users need a session
   younger than Better Auth's 1-day `freshAge`, otherwise `SESSION_EXPIRED`
   prompts a re-sign-in. No email confirmation step yet.
@@ -404,6 +410,12 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   page boundary.
 - React-hook logic that works with business data goes in named hooks under root
   `hooks/`. Small purely visual state stays local.
+- **Hooks by domain (decided 2026-10-14):** `hooks/ideas/` (deck, images,
+  favorites), `hooks/auth/` (sign-in/out, password, email, verification; all
+  via `authClient`), `hooks/account/` (profile, avatar, notifications, account
+  deletion). Grouped by domain, not by page, because idea hooks are shared by
+  several pages. Tests stay colocated (the user kept colocation over a
+  separate `tests/unit`, `tests/integration` tree on 2026-10-14).
 - Reused CSS rules and global style primitives go in `app/globals.css`. One-off
   styling stays local with Tailwind utilities.
 

@@ -19,8 +19,8 @@ import {
 import { useIdeasStore } from "@/app/stores/ideas-store";
 import { IdeaCard } from "@/components/ideas/idea-card.client";
 import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
-import { useGeneratePackIdeas } from "@/hooks/use-generate-pack-ideas";
-import { useSaveFavorite } from "@/hooks/use-save-favorite";
+import { useGeneratePackIdeas } from "@/hooks/ideas/use-generate-pack-ideas";
+import { useSaveFavorite } from "@/hooks/ideas/use-save-favorite";
 import { swipeAway } from "@/lib/animations/swipe-away";
 import { getSwipeDirection } from "@/lib/animations/swipe-direction";
 import type { IdeaSaveRequest } from "@/lib/types/ideas/types";

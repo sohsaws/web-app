@@ -2,7 +2,7 @@
 
 import { KeyRound } from "lucide-react";
 import type { ReactElement } from "react";
-import { useChangePassword } from "@/hooks/use-change-password";
+import { useChangePassword } from "@/hooks/auth/use-change-password";
 
 export function ChangePasswordForm(): ReactElement {
   const { form, onSubmit } = useChangePassword();

@@ -2,7 +2,7 @@
 
 import { AtSign, CheckCircle } from "lucide-react";
 import type { ReactElement } from "react";
-import { useChangeEmail } from "@/hooks/use-change-email";
+import { useChangeEmail } from "@/hooks/auth/use-change-email";
 
 interface ChangeEmailFormProps {
   currentEmail: string;

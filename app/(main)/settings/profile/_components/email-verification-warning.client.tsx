@@ -2,7 +2,7 @@
 
 import { CircleAlert } from "lucide-react";
 import type { ReactElement } from "react";
-import { useEmailVerification } from "@/hooks/use-email-verification";
+import { useEmailVerification } from "@/hooks/auth/use-email-verification";
 
 interface EmailVerificationWarningProps {
   email: string;

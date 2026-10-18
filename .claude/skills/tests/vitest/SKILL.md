@@ -49,8 +49,10 @@ upgrade. Check the docs for the installed major before writing config:
   `/api/ideas/generate` and `/api/ideas/image` (partial mock of
   `@/lib/rate-limit` via `importOriginal`), `lib/rate-limit.test.ts`,
   `lib/utils/retry-after.test.ts` and the `createApiResponseError` block of
-  `responseError.test.ts`. Ask the user before restoring them.
-  `lib/utils/retry-after.test.ts` was restored on 2026-10-13.
+  `responseError.test.ts`. `lib/utils/retry-after.test.ts` was restored on
+  2026-10-13; `lib/rate-limit.test.ts` and the `createApiResponseError` block
+  were restored the same day (unit batch 1), and the two route tests in
+  integration batch 1.
 - Modules with a module-level cache (for example the limiter `Map` in
   `lib/rate-limit.ts`) are re-imported per test with `vi.resetModules()` and
   a dynamic `import()`, so tests do not depend on run order. Fake timers are
@@ -75,14 +77,26 @@ upgrade. Check the docs for the installed major before writing config:
   remote round trips and cold starts.
 - External paid services stay mocked even here (for example `del` from
   `@vercel/blob`); only the database is real.
-- First test: `lib/data/delete-user-blobs.integration.test.ts`. Not in CI
-  yet: it needs `DATABASE_URL_TEST` as a GitHub secret and its own job.
+- First test: `lib/data/delete-user-blobs.integration.test.ts`. CI (since
+  2026-10-17): the `integration` job in `.github/workflows/ci.yml` runs
+  `npm run test:integration` after `checks`, with the repository secret
+  `DATABASE_URL_TEST`; it is skipped for pull requests from forks (no
+  secrets there) and runs one at a time (shared test branch).
 
-## Next additions (when the first test needs them)
-- **Component tests**: add `jsdom` and RTL (see `../rtl/SKILL.md`), then split
-  the config into two `test.projects` with `extends: true`: `node` for
-  `*.test.ts` and `jsdom` for `*.test.tsx`. `@vitejs/plugin-react` is needed
-  only if TSX transforms require it; check before adding.
+## Hook and component tests (since 2026-10-13)
+
+- `vitest.config.mts` has two `test.projects` with `extends: true`: `node`
+  for `*.test.ts` and `jsdom` for `*.test.tsx` (setup file
+  `test-utils/rtl-setup.ts` calls RTL `cleanup()` after each test, because
+  globals are off). `unstubGlobals: true` resets `vi.stubGlobal("fetch", …)`.
+  TSX works without `@vitejs/plugin-react` (tsconfig `jsx: react-jsx`).
+- Run only the RTL tests: `npm run test:rtl` (`vitest run --project jsdom`);
+  narrow it with a path to a `.test.tsx` file or folder, or `-t "<name>"`,
+  after `--` (paths with only `.test.ts` files find nothing here).
+- `jsdom` is pinned to `^29`: jsdom 30 requires Node `^22.22 || ^24.15 ||
+  >=26` and does not support the user's local Node 25.
+- TanStack Query hooks use `createQueryClientWrapper()` from
+  `test-utils/query-client-wrapper.tsx` (fresh client, no retries).
 
 ## Mocking rules
 

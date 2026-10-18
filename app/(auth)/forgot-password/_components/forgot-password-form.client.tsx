@@ -2,7 +2,7 @@
 
 import { AtSign, CheckCircle } from "lucide-react";
 import type { ReactElement } from "react";
-import { useForgotPassword } from "@/hooks/use-forgot-password";
+import { useForgotPassword } from "@/hooks/auth/use-forgot-password";
 
 export function ForgotPasswordForm(): ReactElement {
   const { form, onSubmit, requestedEmail } = useForgotPassword();

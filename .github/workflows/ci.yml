@@ -56,8 +56,9 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit
 
-      # Unit and integration tests (Vitest). They mock every external
-      # service, so the placeholder env above is enough.
+      # Unit, route/action and RTL component tests (Vitest). They mock every
+      # external service, so the placeholder env above is enough. Tests that
+      # need the real test database run in the `integration` job.
       - name: Tests
         run: npm test
 
@@ -71,3 +72,41 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  integration:
+    name: Integration tests (test database)
+    needs: checks
+    # GitHub does not pass secrets to pull requests from forks; skip those runs
+    # instead of failing on a missing database URL.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # All runs share one Neon test branch, and every run first applies
+    # migrations to it, so runs wait for each other instead of overlapping.
+    concurrency:
+      group: integration-test-database
+      cancel-in-progress: false
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      # Repository secret: the Neon test branch, never the production
+      # database. vitest.integration.config.mts refuses to run without it.
+      DATABASE_URL_TEST: ${{ secrets.DATABASE_URL_TEST }}
+      # Placeholder for `prisma generate` during `npm ci`; the tests replace it
+      # with DATABASE_URL_TEST.
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Real database, mocked paid services (Vercel Blob stays mocked).
+      - name: Integration tests
+        run: npm run test:integration

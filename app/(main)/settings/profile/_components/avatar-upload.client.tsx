@@ -3,7 +3,7 @@
 import type { ReactElement } from "react";
 import { Avatar } from "@/components/ui/avatar.client";
 import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
-import { useAvatarUpload } from "@/hooks/use-avatar-upload";
+import { useAvatarUpload } from "@/hooks/account/use-avatar-upload";
 import { AVATAR_ACCEPT } from "@/lib/config/avatar";
 
 interface AvatarUploadProps {
