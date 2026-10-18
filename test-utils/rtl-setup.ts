@@ -1,3 +1,5 @@
+// DOM matchers such as toBeDisabled and toHaveAttribute, with their types.
+import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
 import { afterEach } from "vitest";
 

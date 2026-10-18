@@ -77,8 +77,11 @@ upgrade. Check the docs for the installed major before writing config:
   remote round trips and cold starts.
 - External paid services stay mocked even here (for example `del` from
   `@vercel/blob`); only the database is real.
-- First test: `lib/data/delete-user-blobs.integration.test.ts`. Not in CI
-  yet: it needs `DATABASE_URL_TEST` as a GitHub secret and its own job.
+- First test: `lib/data/delete-user-blobs.integration.test.ts`. CI (since
+  2026-10-17): the `integration` job in `.github/workflows/ci.yml` runs
+  `npm run test:integration` after `checks`, with the repository secret
+  `DATABASE_URL_TEST`; it is skipped for pull requests from forks (no
+  secrets there) and runs one at a time (shared test branch).
 
 ## Hook and component tests (since 2026-10-13)
 
@@ -87,7 +90,9 @@ upgrade. Check the docs for the installed major before writing config:
   `test-utils/rtl-setup.ts` calls RTL `cleanup()` after each test, because
   globals are off). `unstubGlobals: true` resets `vi.stubGlobal("fetch", …)`.
   TSX works without `@vitejs/plugin-react` (tsconfig `jsx: react-jsx`).
-- Run one project: `npx vitest run --project jsdom`.
+- Run only the RTL tests: `npm run test:rtl` (`vitest run --project jsdom`);
+  narrow it with a path to a `.test.tsx` file or folder, or `-t "<name>"`,
+  after `--` (paths with only `.test.ts` files find nothing here).
 - `jsdom` is pinned to `^29`: jsdom 30 requires Node `^22.22 || ^24.15 ||
   >=26` and does not support the user's local Node 25.
 - TanStack Query hooks use `createQueryClientWrapper()` from

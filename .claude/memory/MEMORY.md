@@ -317,7 +317,9 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   E2E.** Details and tooling in `.claude/skills/tests/SKILL.md`.
 - Unit tests: Vitest, colocated `*.test.ts`, `npm test` (also in CI).
   Integration tests: `*.integration.test.ts` against a Neon branch made from
-  Production (`DATABASE_URL_TEST`), `npm run test:integration`, not in CI yet.
+  Production (`DATABASE_URL_TEST`), `npm run test:integration`; in CI since
+  2026-10-17 as the `integration` job (repository secret `DATABASE_URL_TEST`).
+  Hook and component tests (`*.test.tsx`, RTL + jsdom) run in `npm test`.
   E2E (Playwright, `e2e/`) not started.
 
 ## Working relationship

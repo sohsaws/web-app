@@ -12,6 +12,7 @@
     "dev:inspect": "next dev --inspect",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:rtl": "vitest run --project jsdom",
     "test:integration": "vitest run --config vitest.integration.config.mts",
     "postinstall": "prisma generate"
   },
@@ -45,7 +46,9 @@
     "@prisma/client": "^7.9.1",
     "@tailwindcss/postcss": "^4.3.0",
     "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/node": "^20.19.33",
     "@types/react": "^19",
     "@types/react-dom": "^19",

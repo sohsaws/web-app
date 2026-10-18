@@ -31,11 +31,15 @@ them; use E2E), or to check styles and class names.
   `@testing-library/dom`, `jsdom@^29`. Hook and component tests
   (`*.test.tsx`) run in the `jsdom` Vitest project; details in
   `../vitest/SKILL.md`.
-- Not installed yet (approved, add with the first component test that needs
-  them): `@testing-library/user-event` for clicks and typing, and
-  `@testing-library/jest-dom` (setup file imports
+- Added 2026-10-17 with the first component tests:
+  `@testing-library/user-event` for clicks and typing, and
+  `@testing-library/jest-dom` (`test-utils/rtl-setup.ts` imports
   `@testing-library/jest-dom/vitest`) for matchers such as
-  `toBeInTheDocument`, `toBeDisabled`, `toHaveAccessibleName`.
+  `toBeInTheDocument`, `toBeDisabled`, `toHaveAccessibleDescription`.
+- Component tests live next to the component (`delete-account.test.tsx` in
+  `settings/security/_components/`). jsdom cannot navigate: stub
+  `window.location` with `vi.stubGlobal("location", { ...window.location,
+  assign })` when a component reloads the page.
 - Hooks: `renderHook` + `act` + `waitFor` from `@testing-library/react`.
   Hold a request open with a deferred promise to observe pending states, and
   give every `fetch` call its own `Response` (a body can be read once).
