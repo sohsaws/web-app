@@ -198,13 +198,25 @@ on every recommendation.
   - English also has a prefix: `/en/about` (`localePrefix: "always"`).
   - Signed-in users see **no** language picker on the landing pages; they
     change the language only in Settings → Profile.
-  - Picker placement: marketing header, before (to the left of) the header
-    actions; in Settings → Profile next to the name field.
-  - Still open: what wins when a signed-in user opens a URL in another
-    locale; whether the picker reuses `DropdownMenu` or is its own `<select>`.
-- **Database rule (user, 2026-10-21):** Claude never runs database
-  operations (migrations, SQL, DB scripts); the user runs them. Claude writes
-  the migration and hands over the command.
+  - Picker placement: marketing header, to the left of Sign In / Sign Up
+    (hidden for signed-in users); in Settings → Profile next to the name
+    field.
+  - **Profile wins inside the app (variant A):** `User.locale` (DB) is the
+    source of truth and is exposed in the session (Better Auth
+    `additionalFields`). On protected routes `proxy.ts` redirects
+    `/{urlLocale}/...` to `/{session.user.locale}/...` when they differ and
+    keeps the `NEXT_LOCALE` cookie in sync. The cookie also makes `/` open
+    the profile language on the landing; an explicit locale in a marketing
+    URL is shown as is. Sign-in lands on `/{user.locale}/dashboard`; sign-up
+    stores the guest's cookie locale on the new user.
+  - **Picker component:** its own reusable
+    `components/ui/language-select.client.tsx`: native `<select>` in the app
+    style, `appearance: base-select` as progressive enhancement. The user
+    `DropdownMenu` (an action menu) stays unchanged.
+- **Database rule (user, 2026-10-21):** never touch the production database
+  (migrations, SQL, scripts); the user applies production migrations. The
+  Neon test branch (`DATABASE_URL_TEST`, `npm run test:integration`) is
+  allowed.
 
 ### Architecture (decided)
 
