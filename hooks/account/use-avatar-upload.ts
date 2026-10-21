@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import {
   type ChangeEvent,
   type RefObject,
@@ -9,6 +8,7 @@ import {
   useTransition,
 } from "react";
 import { toast } from "sonner";
+import { useRouter } from "@/i18n/navigation";
 import {
   AVATAR_MAX_SIZE_BYTES,
   isAvatarContentType,

@@ -11,6 +11,13 @@ export default defineConfig({
     },
   },
   test: {
+    server: {
+      deps: {
+        // next-intl ships ESM that imports "next/server" without an
+        // extension; bundling it through Vite lets those imports resolve.
+        inline: ["next-intl"],
+      },
+    },
     // Logic, routes and actions need no DOM; hooks and components (.tsx)
     // run in jsdom. In Vitest 4 a project inherits these root options only
     // with `extends: true`.

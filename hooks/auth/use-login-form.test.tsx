@@ -8,7 +8,7 @@ const { authClient, router } = vi.hoisted(() => ({
 }));
 
 vi.mock("@/lib/auth/auth-client", () => ({ authClient }));
-vi.mock("next/navigation", () => ({ useRouter: () => router }));
+vi.mock("@/i18n/navigation", () => ({ useRouter: () => router }));
 
 const CALLBACK_URL = "/settings/security";
 

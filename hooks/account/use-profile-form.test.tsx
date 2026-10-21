@@ -10,7 +10,7 @@ const { updateProfile, router, toast } = vi.hoisted(() => ({
 }));
 
 vi.mock("@/lib/actions/profile.action", () => ({ updateProfile }));
-vi.mock("next/navigation", () => ({ useRouter: () => router }));
+vi.mock("@/i18n/navigation", () => ({ useRouter: () => router }));
 vi.mock("sonner", () => ({ toast }));
 
 const savedProfile: ProfileFormValues = { name: "Ann", bio: "Likes hiking." };

@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   type SubmitHandler,
@@ -9,6 +8,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { z } from "zod";
+import { useRouter } from "@/i18n/navigation";
 import { authClient } from "@/lib/auth/auth-client";
 
 const loginFormSchema = z.object({

@@ -173,9 +173,17 @@ on every recommendation.
 - Which paid model and which search provider.
 - The safety policy above.
 
-## 🌐 INTERNATIONALIZATION: EN / RU / ES / FR / DE — PLAN (agreed 2026-10-08, languages changed 2026-10-21, NOT STARTED)
+## 🌐 INTERNATIONALIZATION: EN / RU / ES / FR / DE — PLAN (agreed 2026-10-08, languages changed 2026-10-21, STAGE 1 DONE)
 
-**Nothing is built. Read this before any i18n work.**
+**Read this before any i18n work.** Branch `feature/i18n-language-switching`.
+**Stage 1 (scaffold) done 2026-10-21:** `next-intl` 4.14, routes under
+`app/[locale]`, `i18n/` (routing, navigation, request with `next/root-params`,
+namespaces, merge with English fallback), 60 empty message files
+(12 namespaces × 5 locales), `proxy.ts` = next-intl + session check for
+`/dashboard`, `/dive`, `/for-you`, `/settings`, locale-aware
+`Link`/`redirect`/`useRouter`/`usePathname`, Inter with `cyrillic` and
+`latin-ext`, CI runs `next typegen` before tsc. All UI text is still
+English; profile locale (stage 2) not built yet.
 
 - **Languages (changed by the user 2026-10-21):** English (default and the
   source of every translation), Russian, Spanish, French, German. Locale codes
@@ -213,6 +221,17 @@ on every recommendation.
     `components/ui/language-select.client.tsx`: native `<select>` in the app
     style, `appearance: base-select` as progressive enhancement. The user
     `DropdownMenu` (an action menu) stays unchanged.
+- **AI content in the user's language (user decisions 2026-10-21):**
+  - Idea text: instructions stay in English with an explicit output-language
+    line ("Write every title and description in <language>"); no translated
+    system prompts (variant a). The image prompt stays English.
+  - Categories: the model chooses from category labels in the user's
+    language; code maps the label back to the English key; the DB stores the
+    English key; the UI shows `t("categories.<Key>")`. Distribution SQL,
+    `isIdeaCategory` and `z.enum(IDEA_CATEGORIES)` keep working.
+- **Postponed until release (2026-10-21):** `hreflang`/`alternates` metadata
+  and `sitemap.xml`. The overflow check for long German/French strings stays
+  in the plan (manual browser check by the user).
 - **Database rule (user, 2026-10-21):** never touch the production database
   (migrations, SQL, scripts); the user applies production migrations. The
   Neon test branch (`DATABASE_URL_TEST`, `npm run test:integration`) is
@@ -254,9 +273,15 @@ on every recommendation.
 - **Flags, if ever shown:** SVG files, never emoji (Windows renders flag emoji
   as two letters). A flag means a country, not a language. The current spec
   uses language names only, no flags.
-- **Fonts:** Inter is loaded with `subsets: ["latin"]` only. Russian needs
-  `cyrillic`; French `œ` lives in `latin-ext`. Any serif font (Instrument
-  Serif in the hero) must support Cyrillic or have a fallback; verify.
+- **Fonts (checked 2026-10-21):** Inter is loaded with `subsets: ["latin",
+  "latin-ext", "cyrillic"]` since stage 1 (`latin-ext` only for ẞ/Ÿ; é, ü,
+  ß, œ, « » are already in `latin`). `font-serif` is Tailwind's system
+  stack (Georgia, Cambria, Times…), which has Cyrillic; no webfont serif is
+  loaded. A future serif webfont must have Cyrillic (Instrument Serif does
+  not; PT Serif, Lora, Source Serif 4, Noto Serif do).
+- **Uppercase labels:** many eyebrows use `uppercase` + wide tracking; with
+  `lang="de"` CSS turns ß into "SS" and German/Russian labels get longer.
+  `<html lang>` must come from the locale.
 - **Text length:** German and French run ~20–35% longer than English; check
   buttons, nav pills and cards for overflow.
 - **AI content:** pass the locale into the generation prompt. Saved cards

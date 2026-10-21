@@ -9,7 +9,7 @@ const { authClient, router, toast } = vi.hoisted(() => ({
 }));
 
 vi.mock("@/lib/auth/auth-client", () => ({ authClient }));
-vi.mock("next/navigation", () => ({ useRouter: () => router }));
+vi.mock("@/i18n/navigation", () => ({ useRouter: () => router }));
 vi.mock("sonner", () => ({ toast }));
 
 interface PasswordInput {
