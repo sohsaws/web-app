@@ -173,10 +173,38 @@ on every recommendation.
 - Which paid model and which search provider.
 - The safety policy above.
 
-## 🌐 INTERNATIONALIZATION: EN / RU / KK — PLAN (agreed 2026-10-08, NOT STARTED)
+## 🌐 INTERNATIONALIZATION: EN / RU / ES / FR / DE — PLAN (agreed 2026-10-08, languages changed 2026-10-21, NOT STARTED)
 
-**Postponed until after the MVP deploy, like For you. Nothing is built. Read
-this before any i18n work.** Languages: English (default), Russian, Kazakh.
+**Nothing is built. Read this before any i18n work.**
+
+- **Languages (changed by the user 2026-10-21):** English (default and the
+  source of every translation), Russian, Spanish, French, German. Locale codes
+  `en`, `ru`, `es`, `fr`, `de`. **Kazakh is dropped**; ignore older Kazakh
+  notes.
+- **Library confirmed by the user 2026-10-21: `next-intl`** (react-i18next was
+  considered and not chosen).
+- **Translation workflow (2026-10-21):** UI messages are written in English
+  (`messages/en.json`); drafts for the other four come from the **DeepL API
+  Free** plan (500k chars/month) at development time only, never at runtime,
+  then get reviewed and committed. Protect ICU placeholders/plurals from
+  DeepL (write plural strings by hand). Idea cards are not translated by
+  DeepL: the AI generates them directly in the user's language.
+- **Language picker (user's spec 2026-10-21):** a reusable dropdown in the
+  app's minimal style, each language written in itself: English, Русский,
+  Español, Français, Deutsch. Used in Settings → Profile (signed-in users; the
+  choice is stored in the DB and drives the app language) and on the landing
+  pages. Architecture for applying the choice is under discussion.
+- **User decisions 2026-10-21:**
+  - English also has a prefix: `/en/about` (`localePrefix: "always"`).
+  - Signed-in users see **no** language picker on the landing pages; they
+    change the language only in Settings → Profile.
+  - Picker placement: marketing header, before (to the left of) the header
+    actions; in Settings → Profile next to the name field.
+  - Still open: what wins when a signed-in user opens a URL in another
+    locale; whether the picker reuses `DropdownMenu` or is its own `<select>`.
+- **Database rule (user, 2026-10-21):** Claude never runs database
+  operations (migrations, SQL, DB scripts); the user runs them. Claude writes
+  the migration and hands over the command.
 
 ### Architecture (decided)
 
@@ -185,7 +213,7 @@ this before any i18n work.** Languages: English (default), Russian, Kazakh.
   works with `generateStaticParams` (docs: next-intl.dev/docs/routing/setup).
 - **Locale in the URL ("variant B"):** all routes move under
   `app/[locale]/...` (`api/` stays outside); files `i18n/routing.ts`
-  (`locales: ["en", "ru", "kk"]`, `defaultLocale: "en"`), `i18n/request.ts`,
+  (`locales: ["en", "ru", "es", "fr", "de"]`, `defaultLocale: "en"`), `i18n/request.ts`,
   `i18n/navigation.ts` (next-intl `Link`/`redirect`/`useRouter`), plugin in
   `next.config.ts`. `proxy.ts` must combine the existing auth check with
   next-intl locale handling.
@@ -194,7 +222,7 @@ this before any i18n work.** Languages: English (default), Russian, Kazakh.
   dynamic and breaks the static marketing pages (`dynamic = "error"`).
 - **The user's language is a profile setting, not a header switcher.** New
   `locale` field on `User` (Better Auth `additionalFields`, like `bio`, plus a
-  migration), validated server-side against `en | ru | kk`. The URL prefix is
+  migration), validated server-side against the five locales. The URL prefix is
   only the mechanism; the profile is the source of the choice:
   - after sign-in, redirect to `/{user.locale}/dashboard`;
   - Settings → Profile has a language select; saving updates the DB and
@@ -211,39 +239,35 @@ this before any i18n work.** Languages: English (default), Russian, Kazakh.
 
 ### Discussed details to respect
 
-- **Locale codes:** Kazakh is `kk` (ISO 639-1). `kz` is the country code and
-  may only appear as a visible label.
 - **Flags, if ever shown:** SVG files, never emoji (Windows renders flag emoji
-  as two letters). A flag means a country, not a language, so pair it with a
-  language label. The user first wanted a 3-cell KZ/RU/EN flag switcher in the
-  top nav (client component, links via next-intl `Link`, `aria-current`,
-  `hrefLang`, names "English" / "Русский" / "Қазақша"); this was replaced by
-  the profile setting.
+  as two letters). A flag means a country, not a language. The current spec
+  uses language names only, no flags.
 - **Fonts:** Inter is loaded with `subsets: ["latin"]` only. Russian needs
-  `cyrillic`; Kazakh letters (ә ғ қ ң ө ұ ү һ) need `cyrillic-ext`. Any future
-  serif font must support Cyrillic (Instrument Serif likely does not; verify).
-- **AI content:** pass the locale into the generation prompt. Check Kazakh
-  output quality on real samples. Saved cards keep the language they were
-  generated in; switching language does not translate an existing deck.
+  `cyrillic`; French `œ` lives in `latin-ext`. Any serif font (Instrument
+  Serif in the hero) must support Cyrillic or have a fallback; verify.
+- **Text length:** German and French run ~20–35% longer than English; check
+  buttons, nav pills and cards for overflow.
+- **AI content:** pass the locale into the generation prompt. Saved cards
+  keep the language they were generated in; switching language does not
+  translate an existing deck.
 - **Categories:** keep English enum keys in the DB and AI schema; translate
   only display labels via messages, so the category distribution keeps working.
 - **Strings outside components:** Zod messages (`lib/config/*`), Better Auth
   error messages (map by error code), toasts, metadata, React Email templates.
-- **Kazakh translations need a native speaker's review.**
-- **Estimate:** setup + `[locale]` move + proxy ≈ 1 day; extracting strings and
-  RU/KK translations ≈ 2–3 days; AI language, categories, emails ≈ 1 day.
+- **Estimate (for 3 languages, scale up):** setup + `[locale]` move + proxy ≈
+  1 day; extracting strings and translations ≈ 2–3 days; AI language,
+  categories, emails ≈ 1 day.
 
 ### Open decisions (ask the user)
 
 - Onboarding as a separate page (e.g. `/welcome`, enforceable in `proxy.ts`
   until `locale`/`bio` are set) or as a modal over the dashboard. Claude
   recommended the page.
-- Marketing for anonymous visitors: browser detection only, or also a small
-  EN · RU · ҚАЗ switcher in the landing footer (Claude recommended the footer
-  switcher).
+- Marketing for anonymous visitors: the user wants the same language picker
+  on the landing pages (2026-10-21); placement and cookie handling are under
+  discussion.
 - A signed-in user opens a link in another language: redirect to the profile
   language or show it as is.
-- English flag (UK or US), if flags are used at all.
 
 ## ⏭ RATE LIMITING + REGENERATE DECK (planned 2026-10-10)
 
