@@ -1,6 +1,7 @@
 import { defineRouting } from "next-intl/routing";
 import {
   DEFAULT_LOCALE,
+  LOCALE_COOKIE_MAX_AGE_SECONDS,
   LOCALE_COOKIE_NAME,
   LOCALES,
 } from "@/lib/config/locales";
@@ -11,10 +12,8 @@ export const routing = defineRouting({
   locales: LOCALES,
   defaultLocale: DEFAULT_LOCALE,
   localePrefix: "always",
-  // A year instead of next-intl's session cookie, so a guest's chosen
-  // language survives closing the browser.
   localeCookie: {
     name: LOCALE_COOKIE_NAME,
-    maxAge: 60 * 60 * 24 * 365,
+    maxAge: LOCALE_COOKIE_MAX_AGE_SECONDS,
   },
 });

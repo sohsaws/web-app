@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_LOCALE, isLocale, LOCALE_NAMES, LOCALES } from "./locales";
+import {
+  DEFAULT_LOCALE,
+  isLocale,
+  LOCALE_NAMES,
+  LOCALES,
+  resolveLocale,
+} from "./locales";
 
 describe("locales", () => {
   it("has English as the default locale", () => {
@@ -33,5 +39,22 @@ describe("isLocale", () => {
     ["an inherited key", "toString"],
   ])("rejects %s", (_case, value) => {
     expect(isLocale(value)).toBe(false);
+  });
+});
+
+describe("resolveLocale", () => {
+  it("returns the first supported candidate", () => {
+    expect(resolveLocale("kk", undefined, "de", "fr")).toBe("de");
+  });
+
+  it("keeps a valid first choice over later ones", () => {
+    expect(resolveLocale("ru", "en")).toBe("ru");
+  });
+
+  it.each([
+    ["no candidates", []],
+    ["only unsupported values", ["kk", "EN", null, 42]],
+  ])("falls back to English with %s", (_case, candidates) => {
+    expect(resolveLocale(...candidates)).toBe("en");
   });
 });

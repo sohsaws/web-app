@@ -63,8 +63,10 @@ model User {
   email           String    @unique
   emailVerified   Boolean   @default(false)
   image           String?
-  bio             String?   
-  createdAt       DateTime  @default(now()) 
+  bio             String?
+  // UI language: one of lib/config/locales.ts LOCALES; validated by Better Auth.
+  locale          String    @default("en")
+  createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt 
 
   sessions Session[]

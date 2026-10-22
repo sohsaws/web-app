@@ -183,7 +183,20 @@ namespaces, merge with English fallback), 60 empty message files
 `/dashboard`, `/dive`, `/for-you`, `/settings`, locale-aware
 `Link`/`redirect`/`useRouter`/`usePathname`, Inter with `cyrillic` and
 `latin-ext`, CI runs `next typegen` before tsc. All UI text is still
-English; profile locale (stage 2) not built yet.
+English.
+**Stage 2 (profile locale) done 2026-10-22:** `User.locale String
+@default("en")` (migration `20261022120000_add_user_locale`, applied to the
+TEST branch only; **the user applies it to production**). Better Auth
+`additionalFields.locale` with `validator: { input: localeSchema }` and the
+default `input: true` — the user's decision 2026-10-22: language is a user
+setting like `bio`, so it goes through Better Auth `updateUser`, not around
+it (`input: false` is for server-owned fields like roles).
+`databaseHooks.user.create.before` sets the guest's `NEXT_LOCALE` cookie
+locale on sign-up (email and Google). `lib/actions/locale.action.ts`
+`updateLocale` = Zod → session → `auth.api.updateUser` → cookie. `proxy.ts`
+redirects protected pages to `/{session.user.locale}/...` (query kept) and
+syncs the cookie. `resolveLocale(...candidates)` in `lib/config/locales.ts`
+picks the first supported value or English.
 
 - **Languages (changed by the user 2026-10-21):** English (default and the
   source of every translation), Russian, Spanish, French, German. Locale codes
@@ -201,7 +214,7 @@ English; profile locale (stage 2) not built yet.
   app's minimal style, each language written in itself: English, Русский,
   Español, Français, Deutsch. Used in Settings → Profile (signed-in users; the
   choice is stored in the DB and drives the app language) and on the landing
-  pages. Architecture for applying the choice is under discussion.
+  pages. How the choice is applied: see "User decisions" below.
 - **User decisions 2026-10-21:**
   - English also has a prefix: `/en/about` (`localePrefix: "always"`).
   - Signed-in users see **no** language picker on the landing pages; they
@@ -239,7 +252,7 @@ English; profile locale (stage 2) not built yet.
 
 ### Architecture (decided)
 
-- **Library: `next-intl`** (not installed yet). Supports Next 16 and
+- **Library: `next-intl`** (installed in stage 1, 4.14). Supports Next 16 and
   `proxy.ts`; in Next 16.3 it uses `next/root-params`, so static rendering
   works with `generateStaticParams` (docs: next-intl.dev/docs/routing/setup).
 - **Locale in the URL ("variant B"):** all routes move under
@@ -300,11 +313,9 @@ English; profile locale (stage 2) not built yet.
 - Onboarding as a separate page (e.g. `/welcome`, enforceable in `proxy.ts`
   until `locale`/`bio` are set) or as a modal over the dashboard. Claude
   recommended the page.
-- Marketing for anonymous visitors: the user wants the same language picker
-  on the landing pages (2026-10-21); placement and cookie handling are under
-  discussion.
-- A signed-in user opens a link in another language: redirect to the profile
-  language or show it as is.
+- (Decided 2026-10-21, see "User decisions" above: the landing picker sits
+  left of Sign In / Sign Up for guests; inside the app the profile locale
+  wins and `proxy.ts` redirects.)
 
 ## ⏭ RATE LIMITING + REGENERATE DECK (planned 2026-10-10)
 
@@ -393,6 +404,14 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   diagnostics are always allowed.
 - The user prefers clean structure, focused patches, direct mentorship, and
   practical explanations over heavy-handed control.
+- **Explain the architecture, always (user rule, 2026-10-21).** For every
+  complex task (a stage, a feature, a refactor across files):
+  - **Before starting:** describe the solution scheme first: which
+    components take part, who calls whom, the data flow, and the order of
+    work, with an ASCII diagram. Wait for the user's OK on the scheme.
+  - **After finishing:** show the resulting architecture and the logic of the
+    solution: how it works, which component interacts with which, the
+    request/data flow as a diagram, and why it was built this way.
 - **Reviewer subagent (2026-10-13).** `.claude/agents/reviewer.md` is a
   read-only judge (no Edit/Write, opus, preloads the `typescript` and `tests`
   skills). Every code change goes to it after the verification loop is green;

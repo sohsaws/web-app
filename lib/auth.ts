@@ -6,6 +6,12 @@ import { username } from "better-auth/plugins";
 import { renderChangeEmailConfirmation } from "@/emails/change-email-confirmation-template";
 import { renderResetPasswordEmail } from "@/emails/reset-password-template";
 import { renderVerificationEmail } from "@/emails/verification-template";
+import {
+  DEFAULT_LOCALE,
+  LOCALE_COOKIE_NAME,
+  localeSchema,
+  resolveLocale,
+} from "@/lib/config/locales";
 import { profileBioSchema } from "@/lib/config/profile";
 import { deleteUserBlobs } from "@/lib/data/delete-user-blobs";
 import { sendAuthEmail } from "@/lib/email/send-auth-email";
@@ -91,6 +97,32 @@ export const auth = betterAuth({
         required: false,
         validator: {
           input: profileBioSchema,
+        },
+      },
+      // A user setting like bio, so users may change it through updateUser;
+      // the validator rejects anything that is not a supported locale.
+      locale: {
+        type: "string",
+        required: false,
+        defaultValue: DEFAULT_LOCALE,
+        validator: {
+          input: localeSchema,
+        },
+      },
+    },
+  },
+
+  databaseHooks: {
+    user: {
+      create: {
+        // Email and Google sign-up both create the user here. The language a
+        // guest picked on the landing page (cookie) wins over the default.
+        before: async (user, context) => {
+          const cookieLocale = context?.getCookie(LOCALE_COOKIE_NAME);
+
+          return {
+            data: { ...user, locale: resolveLocale(cookieLocale, user.locale) },
+          };
         },
       },
     },

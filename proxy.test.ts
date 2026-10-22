@@ -79,6 +79,52 @@ describe("proxy: locale prefix", () => {
   });
 });
 
+describe("proxy: the guest's language cookie", () => {
+  it("remembers a language that matches the browser, which next-intl skips", async () => {
+    const response = await proxy(
+      request("/es/register", { "accept-language": "es-ES,es;q=0.9" }),
+    );
+
+    expect(getRedirectUrl(response)).toBeNull();
+    // Sign-up reads this cookie to store the guest's language.
+    expect(response.cookies.get("NEXT_LOCALE")?.value).toBe("es");
+  });
+
+  it("keeps a just-chosen language when the router refetches the old page in the background", async () => {
+    const response = await proxy(
+      request("/en/about", {
+        cookie: "NEXT_LOCALE=ru",
+        "sec-fetch-dest": "empty",
+      }),
+    );
+
+    expect(response.headers.get("set-cookie") ?? "").not.toContain(
+      "NEXT_LOCALE",
+    );
+  });
+
+  it("updates the cookie when the user actually opens a page in another language", async () => {
+    const response = await proxy(
+      request("/en/about", {
+        cookie: "NEXT_LOCALE=ru",
+        "sec-fetch-dest": "document",
+      }),
+    );
+
+    expect(response.cookies.get("NEXT_LOCALE")?.value).toBe("en");
+  });
+
+  it("does not rewrite a cookie that already matches the page", async () => {
+    const response = await proxy(
+      request("/es/about", { cookie: "NEXT_LOCALE=es" }),
+    );
+
+    expect(response.headers.get("set-cookie") ?? "").not.toContain(
+      "NEXT_LOCALE",
+    );
+  });
+});
+
 describe("proxy: signed-in pages", () => {
   it.each([
     "/ru/dashboard",
@@ -129,4 +175,74 @@ describe("proxy: signed-in pages", () => {
       expect(getSession).not.toHaveBeenCalled();
     },
   );
+});
+
+describe("proxy: the profile language wins inside the app", () => {
+  function signedInAs(locale: unknown): void {
+    getSession.mockResolvedValue({ user: { id: "u1", locale } });
+  }
+
+  it("moves a page in another language to the profile language", async () => {
+    signedInAs("ru");
+
+    const response = await proxy(request("/en/settings/profile?tab=avatar"));
+
+    expect(getRedirectUrl(response)).toBe(
+      `${ORIGIN}/ru/settings/profile?tab=avatar`,
+    );
+    expect(response.cookies.get("NEXT_LOCALE")?.value).toBe("ru");
+  });
+
+  it("serves the page when the URL already has the profile language", async () => {
+    signedInAs("de");
+
+    const response = await proxy(request("/de/dashboard"));
+
+    expect(getRedirectUrl(response)).toBeNull();
+    expect(response.cookies.get("NEXT_LOCALE")?.value).toBe("de");
+  });
+
+  it("does not rewrite a cookie that already matches the profile", async () => {
+    signedInAs("de");
+
+    const response = await proxy(
+      request("/de/dashboard", { cookie: "NEXT_LOCALE=de" }),
+    );
+
+    expect(getRedirectUrl(response)).toBeNull();
+    expect(response.headers.get("set-cookie") ?? "").not.toContain(
+      "NEXT_LOCALE",
+    );
+  });
+
+  it("repairs a cookie that disagrees with the profile", async () => {
+    signedInAs("fr");
+
+    const response = await proxy(
+      request("/fr/dive", { cookie: "NEXT_LOCALE=es" }),
+    );
+
+    expect(getRedirectUrl(response)).toBeNull();
+    expect(response.cookies.get("NEXT_LOCALE")?.value).toBe("fr");
+  });
+
+  it.each([
+    ["an unsupported value", "kk"],
+    ["a missing value", undefined],
+  ])("treats %s in the profile as English", async (_case, locale) => {
+    signedInAs(locale);
+
+    const response = await proxy(request("/ru/dashboard"));
+
+    expect(getRedirectUrl(response)).toBe(`${ORIGIN}/en/dashboard`);
+  });
+
+  it("leaves public pages in the language of the URL", async () => {
+    signedInAs("ru");
+
+    const response = await proxy(request("/en/about"));
+
+    expect(getRedirectUrl(response)).toBeNull();
+    expect(getSession).not.toHaveBeenCalled();
+  });
 });
