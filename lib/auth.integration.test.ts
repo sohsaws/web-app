@@ -82,9 +82,11 @@ describe("user locale with Better Auth and a real database", () => {
     const { headers } = await signUp("rejected", "NEXT_LOCALE=fr");
     const requestHeaders = sessionCookie(headers);
 
+    // BAD_REQUEST comes from the validator; a broken session would be
+    // UNAUTHORIZED and must fail this test.
     await expect(
       auth.api.updateUser({ body: { locale: "kk" }, headers: requestHeaders }),
-    ).rejects.toThrow();
+    ).rejects.toMatchObject({ status: "BAD_REQUEST" });
 
     await expect(storedLocale("rejected")).resolves.toBe("fr");
   });

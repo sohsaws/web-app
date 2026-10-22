@@ -215,6 +215,19 @@ describe("proxy: the profile language wins inside the app", () => {
     );
   });
 
+  it("sets the profile cookie even when the browser already speaks that language", async () => {
+    signedInAs("de");
+
+    // next-intl writes no cookie here (URL and browser are both German),
+    // so only the proxy keeps the cookie equal to the profile.
+    const response = await proxy(
+      request("/de/dashboard", { "accept-language": "de-DE,de;q=0.9" }),
+    );
+
+    expect(getRedirectUrl(response)).toBeNull();
+    expect(response.cookies.get("NEXT_LOCALE")?.value).toBe("de");
+  });
+
   it("repairs a cookie that disagrees with the profile", async () => {
     signedInAs("fr");
 

@@ -115,8 +115,11 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
-        // Email and Google sign-up both create the user here. The language a
-        // guest picked on the landing page (cookie) wins over the default.
+        // Email and Google sign-up both create the user here. The guest's
+        // language cookie comes first: Better Auth has already filled
+        // user.locale (a sign-up body value or the "en" default), so the
+        // cookie also beats a locale sent in the body. To let the body win,
+        // read context.body.locale before the cookie.
         before: async (user, context) => {
           const cookieLocale = context?.getCookie(LOCALE_COOKIE_NAME);
 
