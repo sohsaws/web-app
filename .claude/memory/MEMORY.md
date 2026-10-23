@@ -231,9 +231,27 @@ picks the first supported value or English.
     URL is shown as is. Sign-in lands on `/{user.locale}/dashboard`; sign-up
     stores the guest's cookie locale on the new user.
   - **Picker component:** its own reusable
-    `components/ui/language-select.client.tsx`: native `<select>` in the app
-    style, `appearance: base-select` as progressive enhancement. The user
-    `DropdownMenu` (an action menu) stays unchanged.
+    `components/ui/language-select.client.tsx` (variants `pill` for the
+    header, `field` for the profile): an invisible real `<select>` laid over
+    an `aria-hidden` styled display, so the closed control can show `EN` on
+    narrow screens. The open list is the browser's native list, dark via
+    `scheme-dark`. **`appearance: base-select` is NOT used** (accepted by the
+    user 2026-10-23: Chromium-only, and it cannot show the short code in
+    Firefox/Safari). The user `DropdownMenu` (an action menu) is unchanged.
+  - **Stage 3 follow-ups (user, 2026-10-23):** the profile language select
+    is disabled with a hint while the profile form has unsaved edits (a
+    locale switch remounts the page and would drop them); below `sm` the
+    marketing header hides Sign In (Sign Up and the register page's
+    sign-in link remain); the pill's invisible select is 40px tall.
+- **Stage 3 picker decisions (user, 2026-10-23):**
+  - Profile: the language applies **immediately on select** (no Save
+    button); the success toast is in the language the user switched
+    **from** (shown before navigating to the new locale).
+  - Profile placement: below Name in the same column (row 2, left);
+    Name and Email stay where they are.
+  - Landing header on narrow screens: the closed control shows the code
+    (`EN ▾`), wider screens show the name (`English ▾`); the open list
+    always shows full names.
 - **AI content in the user's language (user decisions 2026-10-21):**
   - Idea text: instructions stay in English with an explicit output-language
     line ("Write every title and description in <language>"); no translated

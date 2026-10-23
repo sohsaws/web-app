@@ -18,3 +18,9 @@ export const MESSAGE_NAMESPACES = [
 ] as const;
 
 export type MessageNamespace = (typeof MESSAGE_NAMESPACES)[number];
+
+// The single top-level key of a namespace file, which is also what code
+// passes to useTranslations: "apiErrors.json" holds { "ApiErrors": { ... } }.
+export function namespaceMessageKey(namespace: MessageNamespace): string {
+  return namespace.charAt(0).toUpperCase() + namespace.slice(1);
+}

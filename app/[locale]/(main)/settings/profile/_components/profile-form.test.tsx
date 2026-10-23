@@ -11,10 +11,13 @@ const { updateProfile, router, toast } = vi.hoisted(() => ({
 }));
 
 vi.mock("@/lib/actions/profile.action", () => ({ updateProfile }));
-// Only the router is replaced; the real locale-aware Link stays.
+// The language field saves through its own server action.
+vi.mock("@/lib/actions/locale.action", () => ({ updateLocale: vi.fn() }));
+// Only the router and pathname are replaced; the real locale-aware Link stays.
 vi.mock("@/i18n/navigation", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/i18n/navigation")>()),
   useRouter: () => router,
+  usePathname: () => "/settings/profile",
 }));
 vi.mock("sonner", () => ({ toast }));
 // The unverified-email warning sends mail through the auth client.
@@ -54,6 +57,12 @@ describe("ProfileForm", () => {
     expect(bioField()).toHaveValue("Likes hiking.");
     expect(screen.getByLabelText("Email")).toHaveAttribute("readonly");
     expect(cancelButton()).toBeDisabled();
+  });
+
+  it("shows the current language in the Language field", () => {
+    renderForm();
+
+    expect(screen.getByLabelText("Language")).toHaveValue("en");
   });
 
   it("counts bio characters against the limit as the user types", async () => {
@@ -135,5 +144,22 @@ describe("ProfileForm", () => {
     expect(
       screen.queryByRole("button", { name: "Verify your email address" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("locks the language while there are unsaved edits and unlocks after Cancel", async () => {
+    const user = renderForm();
+    const languageField = () =>
+      screen.getByRole("combobox", { name: "Language" });
+
+    await user.type(bioField(), " And climbing.");
+
+    expect(languageField()).toBeDisabled();
+    expect(
+      screen.getByText("Save or cancel your changes to switch the language."),
+    ).toBeInTheDocument();
+
+    await user.click(cancelButton());
+
+    expect(languageField()).toBeEnabled();
   });
 });

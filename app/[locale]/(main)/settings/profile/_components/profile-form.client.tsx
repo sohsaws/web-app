@@ -10,6 +10,7 @@ import {
 } from "@/lib/config/profile";
 import { BioHint } from "./bio-hint.client";
 import EmailVerificationWarning from "./email-verification-warning.client";
+import { ProfileLanguageSelect } from "./profile-language-select.client";
 
 interface ProfileFormProps {
   defaultValues: ProfileFormValues;
@@ -82,6 +83,8 @@ export default function ProfileForm({
             </Link>
           </div>
         </div>
+
+        <ProfileLanguageSelect hasUnsavedChanges={isDirty} />
       </div>
 
       <div className="space-y-2">

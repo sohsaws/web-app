@@ -1,1 +1,10 @@
-{}
+{
+  "Settings": {
+    "language": {
+      "label": "Idioma",
+      "updated": "Idioma cambiado a {language}",
+      "error": "No se pudo cambiar el idioma. Inténtalo de nuevo.",
+      "unsavedHint": "Guarda o cancela tus cambios para cambiar el idioma."
+    }
+  }
+}

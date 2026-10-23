@@ -1,1 +1,10 @@
-{}
+{
+  "Settings": {
+    "language": {
+      "label": "Sprache",
+      "updated": "Sprache geändert: {language}",
+      "error": "Die Sprache konnte nicht geändert werden. Bitte versuche es erneut.",
+      "unsavedHint": "Speichere oder verwirf deine Änderungen, um die Sprache zu wechseln."
+    }
+  }
+}
