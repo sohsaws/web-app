@@ -62,7 +62,7 @@ describe("ProfileForm", () => {
   it("shows the current language in the Language field", () => {
     renderForm();
 
-    expect(screen.getByLabelText("Language")).toHaveValue("en");
+    expect(screen.getByLabelText("Language")).toHaveTextContent("English");
   });
 
   it("counts bio characters against the limit as the user types", async () => {

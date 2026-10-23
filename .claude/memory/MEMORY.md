@@ -232,12 +232,19 @@ picks the first supported value or English.
     stores the guest's cookie locale on the new user.
   - **Picker component:** its own reusable
     `components/ui/language-select.client.tsx` (variants `pill` for the
-    header, `field` for the profile): an invisible real `<select>` laid over
-    an `aria-hidden` styled display, so the closed control can show `EN` on
-    narrow screens. The open list is the browser's native list, dark via
-    `scheme-dark`. **`appearance: base-select` is NOT used** (accepted by the
-    user 2026-10-23: Chromium-only, and it cannot show the short code in
-    Firefox/Safari). The user `DropdownMenu` (an action menu) is unchanged.
+    header, `field` for the profile). **Changed by the user 2026-10-23: no
+    native `<select>`.** It is a custom select-only combobox (WAI-ARIA APG):
+    a `<button role="combobox">` (`aria-expanded`, `aria-controls`,
+    `aria-activedescendant`, focus stays on the button) and a
+    `<ul role="listbox">` styled exactly like the user menu (`DropdownMenu`
+    panel, `UserDropdown` items: dark panel, `hover:bg-app-glow/70` + text
+    glow). The selected language keeps the glow plus a light grey background
+    (`aria-selected:bg-white/10`). Keyboard: ↓/↑ open or move, Home/End,
+    Enter/Space choose, Escape closes, Tab closes, outside click closes. Used
+    in both the header and the profile. The pill uses the same padding and
+    type as Sign In / Sign Up; its `before:` layer makes a 40px tap area.
+    `appearance: base-select` is not used (Chromium-only). `DropdownMenu`
+    (an action menu) is unchanged.
   - **Stage 3 follow-ups (user, 2026-10-23):** the profile language select
     is disabled with a hint while the profile form has unsaved edits (a
     locale switch remounts the page and would drop them); below `sm` the

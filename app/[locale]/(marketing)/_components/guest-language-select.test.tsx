@@ -27,13 +27,14 @@ describe("GuestLanguageSelect", () => {
   it("shows the language of the current page", () => {
     const { select } = renderSelect();
 
-    expect(select).toHaveValue("en");
+    expect(select).toHaveTextContent("English");
   });
 
   it("opens the same page in the chosen language", async () => {
     const { user, select } = renderSelect();
 
-    await user.selectOptions(select, "Deutsch");
+    await user.click(select);
+    await user.click(screen.getByRole("option", { name: "Deutsch" }));
 
     expect(router.replace).toHaveBeenCalledTimes(1);
     expect(router.replace).toHaveBeenCalledWith("/about", { locale: "de" });
@@ -42,7 +43,8 @@ describe("GuestLanguageSelect", () => {
   it("stays on the page when the current language is chosen", async () => {
     const { user, select } = renderSelect();
 
-    await user.selectOptions(select, "English");
+    await user.click(select);
+    await user.click(screen.getByRole("option", { name: "English" }));
 
     expect(router.replace).not.toHaveBeenCalled();
   });

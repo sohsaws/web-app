@@ -32,14 +32,15 @@ describe("ProfileLanguageSelect", () => {
     renderSelect();
 
     expect(screen.getByLabelText("Language")).toBe(languageField());
-    expect(languageField()).toHaveValue("en");
+    expect(languageField()).toHaveTextContent("English");
     expect(languageField()).toBeEnabled();
   });
 
   it("applies the chosen language right away", async () => {
     const user = renderSelect();
 
-    await user.selectOptions(languageField(), "Deutsch");
+    await user.click(languageField());
+    await user.click(screen.getByRole("option", { name: "Deutsch" }));
 
     expect(changeLocale).toHaveBeenCalledWith("de");
   });
