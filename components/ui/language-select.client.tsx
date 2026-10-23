@@ -47,7 +47,7 @@ const listboxPlacementClassNames: Record<LanguageSelectVariant, string> = {
 const listboxClassName =
   "absolute top-[calc(100%+0.5rem)] z-50 rounded-lg border border-white/50 bg-app-bg p-1 shadow-[0_0_18px_var(--color-app-glow)]";
 const optionClassName =
-  "block w-full cursor-pointer rounded-md px-3 py-2 text-center text-sm text-white transition-[background-color,text-shadow] data-[active=true]:bg-app-glow/70 data-[active=true]:[text-shadow:0_0_10px_var(--color-app-fg)] aria-selected:bg-white/10 aria-selected:[text-shadow:0_0_10px_var(--color-app-fg)] motion-reduce:transition-none";
+  "block w-full cursor-pointer rounded px-3 py-2 text-center text-sm text-white transition-[background-color,text-shadow] data-[active=true]:bg-app-glow/70 data-[active=true]:[text-shadow:0_0_10px_var(--color-app-fg)] aria-selected:bg-white/10 aria-selected:[text-shadow:0_0_10px_var(--color-app-fg)] motion-reduce:transition-none";
 
 const LAST_INDEX = LOCALES.length - 1;
 
@@ -70,18 +70,33 @@ export function LanguageSelect({
   // click does not reopen the list. A Space on the closed button still
   // opens it through that click.
   const spaceChoseOptionRef = useRef(false);
+  // Set once an option is chosen. While the list animates out, AnimatePresence
+  // keeps rendering the old options with their old click handlers, so only a
+  // ref (not state) tells those handlers the choice is already made.
+  const hasChosenRef = useRef(false);
   const listboxId = useId();
   const reducedMotion = useReducedMotion();
 
+  // Disabling closes the list in the same render; the effect below also
+  // resets isOpen so the list does not reappear when re-enabled.
+  const isListOpen = isOpen && !disabled;
   const optionId = (locale: Locale): string => `${listboxId}-${locale}`;
   const activeLocale = LOCALES[activeIndex] ?? value;
 
   function open(): void {
+    hasChosenRef.current = false;
     setActiveIndex(LOCALES.indexOf(value));
     setIsOpen(true);
   }
 
   function choose(locale: Locale): void {
+    // A second click on an option that is animating out (a double click)
+    // must not report the language again.
+    if (hasChosenRef.current || !isListOpen) {
+      return;
+    }
+
+    hasChosenRef.current = true;
     setIsOpen(false);
     if (locale !== value) {
       onChange(locale);
@@ -89,7 +104,7 @@ export function LanguageSelect({
   }
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!isListOpen) {
       return;
     }
 
@@ -104,7 +119,7 @@ export function LanguageSelect({
 
     document.addEventListener("pointerdown", handlePointerDown);
     return () => document.removeEventListener("pointerdown", handlePointerDown);
-  }, [isOpen]);
+  }, [isListOpen]);
 
   useEffect(() => {
     if (disabled) {
@@ -113,7 +128,13 @@ export function LanguageSelect({
   }, [disabled]);
 
   function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>): void {
-    if (!isOpen) {
+    if (!isListOpen) {
+      if (event.key === " " && !event.repeat) {
+        // A new press on the closed button: forget a Space whose key-up
+        // never arrived (the button was disabled in between). Auto-repeat
+        // of the press that just chose must not count as a new one.
+        spaceChoseOptionRef.current = false;
+      }
       if (event.key === "ArrowDown" || event.key === "ArrowUp") {
         event.preventDefault();
         open();
@@ -171,11 +192,11 @@ export function LanguageSelect({
         aria-label={label}
         aria-describedby={describedBy}
         aria-haspopup="listbox"
-        aria-expanded={isOpen}
+        aria-expanded={isListOpen}
         aria-controls={listboxId}
-        aria-activedescendant={isOpen ? optionId(activeLocale) : undefined}
+        aria-activedescendant={isListOpen ? optionId(activeLocale) : undefined}
         disabled={disabled}
-        onClick={() => (isOpen ? setIsOpen(false) : open())}
+        onClick={() => (isListOpen ? setIsOpen(false) : open())}
         onKeyDown={handleKeyDown}
         // Space activates a button on key up.
         onKeyUp={(event) => {
@@ -196,12 +217,12 @@ export function LanguageSelect({
         )}
         <ChevronDown
           aria-hidden="true"
-          className={`size-3.5 shrink-0 text-neutral-400 transition-transform motion-reduce:transition-none ${isOpen ? "rotate-180" : ""}`}
+          className={`size-3.5 shrink-0 text-neutral-400 transition-transform motion-reduce:transition-none ${isListOpen ? "rotate-180" : ""}`}
         />
       </button>
 
       <AnimatePresence>
-        {isOpen ? (
+        {isListOpen ? (
           <motion.ul
             id={listboxId}
             role="listbox"

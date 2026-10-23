@@ -1,4 +1,10 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { LanguageSelect } from "./language-select.client";
@@ -72,7 +78,8 @@ describe("LanguageSelect: closed", () => {
   it("can be labelled by a visible label through its id", () => {
     render(
       <>
-        <label htmlFor="profile-language">Language</label>
+        {/* Different text from `label`, so only htmlFor can match it. */}
+        <label htmlFor="profile-language">Interface language</label>
         <LanguageSelect
           id="profile-language"
           value="en"
@@ -82,9 +89,8 @@ describe("LanguageSelect: closed", () => {
       </>,
     );
 
-    expect(screen.getByLabelText("Language")).toHaveAttribute(
-      "id",
-      "profile-language",
+    expect(screen.getByLabelText("Interface language")).toBe(
+      screen.getByRole("combobox", { name: "Language" }),
     );
   });
 
@@ -241,5 +247,73 @@ describe("LanguageSelect: with the keyboard", () => {
 
     await expectClosed(trigger);
     expect(onChange).not.toHaveBeenCalled();
+  });
+});
+
+describe("LanguageSelect: edge cases", () => {
+  it("reports a double-clicked language only once", async () => {
+    const { onChange, trigger, user } = renderSelect();
+
+    await user.click(trigger);
+    // The second click lands on the option while the list is animating out.
+    await user.dblClick(option("Deutsch"));
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith("de");
+  });
+
+  it("closes at once when it becomes disabled and stays closed when enabled again", async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    const { rerender } = render(
+      <LanguageSelect value="en" onChange={onChange} label="Language" />,
+    );
+    const trigger = screen.getByRole("combobox", { name: "Language" });
+
+    await user.click(trigger);
+    rerender(
+      <LanguageSelect
+        value="en"
+        onChange={onChange}
+        label="Language"
+        disabled
+      />,
+    );
+
+    await expectClosed(trigger);
+
+    rerender(
+      <LanguageSelect value="en" onChange={onChange} label="Language" />,
+    );
+
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(listbox()).not.toBeInTheDocument();
+  });
+
+  it("opens with Space after a Space whose key-up never arrived", async () => {
+    const { trigger, user } = renderSelect();
+
+    trigger.focus();
+    await user.keyboard("{ArrowDown}");
+    // Space chooses on key down; its key-up is lost, as when the button is
+    // disabled before the key is released.
+    fireEvent.keyDown(trigger, { key: " " });
+    await expectClosed(trigger);
+
+    await user.keyboard(" ");
+
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("stays closed while a choosing Space is held down", async () => {
+    const { onChange, trigger, user } = renderSelect();
+
+    trigger.focus();
+    await user.keyboard("{ArrowDown}{ArrowDown}");
+    // Press Space, let it auto-repeat three times, then release it.
+    await user.keyboard("[Space>3/]");
+
+    expect(onChange).toHaveBeenCalledWith("ru");
+    await expectClosed(trigger);
   });
 });
