@@ -1,9 +1,17 @@
 "use client";
 
 import { AtSign, Lock } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { GoogleAuthButton } from "@/app/[locale]/(auth)/_components/google-sign-button.client";
-import { useLoginForm } from "@/hooks/auth/use-login-form";
+import {
+  LOGIN_IDENTIFIER_MAX_LENGTH,
+  LOGIN_IDENTIFIER_MIN_LENGTH,
+  LOGIN_PASSWORD_MAX_LENGTH,
+  LOGIN_PASSWORD_MIN_LENGTH,
+  useLoginForm,
+} from "@/hooks/auth/use-login-form";
+import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
 import { Link } from "@/i18n/navigation";
 
 interface LoginFormProps {
@@ -11,6 +19,9 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ callbackUrl }: LoginFormProps): ReactElement {
+  const t = useTranslations("Auth");
+  const tCommon = useTranslations("Common");
+  const validationMessage = useValidationMessage();
   const { error, form, onSubmit } = useLoginForm(callbackUrl);
   const {
     register,
@@ -30,7 +41,7 @@ export function LoginForm({ callbackUrl }: LoginFormProps): ReactElement {
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-black px-2 text-neutral-600">
-            Or continue with
+            {t("google.continueWith")}
           </span>
         </div>
       </div>
@@ -41,7 +52,7 @@ export function LoginForm({ callbackUrl }: LoginFormProps): ReactElement {
             htmlFor="identifier"
             className="block text-xs font-medium text-neutral-400"
           >
-            Email address or Username
+            {t("login.identifierLabel")}
           </label>
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -57,12 +68,15 @@ export function LoginForm({ callbackUrl }: LoginFormProps): ReactElement {
               {...register("identifier")}
               autoComplete="username"
               className="block h-10 w-full rounded-md border border-neutral-700 bg-neutral-900 py-2 pr-3 pl-10 text-sm text-white placeholder-neutral-600 shadow-sm transition-colors focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 focus:outline-none"
-              placeholder="Email or username"
+              placeholder={t("login.identifierPlaceholder")}
             />
           </div>
           {errors.identifier ? (
             <p className="mt-2 text-xs text-red-500">
-              {errors.identifier.message}
+              {validationMessage(errors.identifier.message, {
+                min: LOGIN_IDENTIFIER_MIN_LENGTH,
+                max: LOGIN_IDENTIFIER_MAX_LENGTH,
+              })}
             </p>
           ) : null}
         </div>
@@ -72,7 +86,7 @@ export function LoginForm({ callbackUrl }: LoginFormProps): ReactElement {
             htmlFor="password"
             className="block text-xs font-medium text-neutral-400"
           >
-            Password
+            {t("login.passwordLabel")}
           </label>
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -89,7 +103,10 @@ export function LoginForm({ callbackUrl }: LoginFormProps): ReactElement {
           </div>
           {errors.password ? (
             <p className="mt-2 text-xs text-red-500">
-              {errors.password.message}
+              {validationMessage(errors.password.message, {
+                min: LOGIN_PASSWORD_MIN_LENGTH,
+                max: LOGIN_PASSWORD_MAX_LENGTH,
+              })}
             </p>
           ) : null}
         </div>
@@ -100,7 +117,7 @@ export function LoginForm({ callbackUrl }: LoginFormProps): ReactElement {
               href="/forgot-password"
               className="font-medium text-neutral-500 transition-colors hover:text-white"
             >
-              Forgot password?
+              {t("login.forgotPassword")}
             </Link>
           </div>
         </div>
@@ -110,7 +127,7 @@ export function LoginForm({ callbackUrl }: LoginFormProps): ReactElement {
           disabled={isSubmitting}
           className="flex w-full cursor-pointer justify-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-black shadow-sm transition-all hover:bg-neutral-200 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black focus:outline-none disabled:cursor-not-allowed disabled:bg-neutral-900"
         >
-          {isSubmitting ? "Loading..." : "Log in"}
+          {isSubmitting ? tCommon("status.loading") : tCommon("actions.logIn")}
         </button>
 
         {error ? (

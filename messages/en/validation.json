@@ -1,8 +1,29 @@
 {
   "Validation": {
     "invalid": "Please check this field.",
+    "required": "This field is required.",
     "nameRequired": "Name cannot be empty.",
     "nameTooLong": "Name cannot be longer than {max} characters.",
-    "bioTooLong": "Bio cannot be longer than {max} characters."
+    "bioTooLong": "Bio cannot be longer than {max} characters.",
+    "usernameRequired": "Username is required.",
+    "usernameTooShort": "Username must be at least {min} characters long.",
+    "usernameTooLong": "Username must be at most {max} characters long.",
+    "usernameInvalidCharacters": "Only letters, numbers, and underscores are allowed.",
+    "emailRequired": "Email is required.",
+    "emailInvalid": "Please enter a valid email address.",
+    "emailTooLong": "Email must be at most {max} characters long.",
+    "emailSameAsCurrent": "This is already your current email address.",
+    "identifierRequired": "Email or username is required.",
+    "identifierTooLong": "Email or username must be at most {max} characters long.",
+    "identifierInvalid": "Invalid email or username.",
+    "passwordRequired": "Password is required.",
+    "passwordTooShort": "Password must be at least {min} characters long.",
+    "passwordTooLong": "Password must be at most {max} characters long.",
+    "passwordConfirmRequired": "Please confirm your password.",
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "passwordIncorrect": "Password is incorrect.",
+    "currentPasswordRequired": "Current password is required.",
+    "currentPasswordIncorrect": "Current password is incorrect.",
+    "deleteConfirmation": "Type {word} to confirm."
   }
 }

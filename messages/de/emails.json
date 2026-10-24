@@ -1,1 +1,34 @@
-{}
+{
+  "Emails": {
+    "common": {
+      "ignoreNotice": "Falls du das nicht angefordert hast,<br></br>ignoriere diese E-Mail bitte."
+    },
+    "resetPassword": {
+      "subject": "Swiipy-Passwort zurücksetzen",
+      "preview": "Swiipy-Passwort zurücksetzen",
+      "label": "Passwort zurücksetzen",
+      "heading": "Passwort zurücksetzen",
+      "body": "Klicke auf die Schaltfläche unten, um ein neues Passwort für dein Swiipy-Konto festzulegen.",
+      "button": "Passwort zurücksetzen",
+      "expiry": "Dieser Link zum Zurücksetzen des Passworts läuft in {minutes, plural, =60 {einer Stunde} one {# Minute} other {# Minuten}} ab."
+    },
+    "verification": {
+      "subject": "Bestätige deine Swiipy-E-Mail-Adresse",
+      "preview": "Bestätige deine E-Mail-Adresse",
+      "label": "E-Mail-Bestätigung",
+      "heading": "Bestätige deine E-Mail-Adresse",
+      "body": "Klicke auf die Schaltfläche unten, um zu bestätigen, dass diese E-Mail-Adresse dir gehört.",
+      "button": "E-Mail bestätigen",
+      "expiry": "Dieser Bestätigungslink läuft in {minutes, plural, =60 {einer Stunde} one {# Minute} other {# Minuten}} ab."
+    },
+    "changeEmail": {
+      "subject": "Bestätige die Änderung deiner Swiipy-E-Mail-Adresse",
+      "preview": "Bestätige die Änderung deiner Swiipy-E-Mail-Adresse",
+      "label": "E-Mail-Adresse ändern",
+      "heading": "Ändere deine E-Mail-Adresse",
+      "body": "Wir haben eine Anfrage erhalten, deine Swiipy-E-Mail-Adresse in <strong>{newEmail}</strong> zu ändern. Bestätige diese Anfrage bitte zuerst; wir werden die neue Adresse dann überprüfen.",
+      "button": "Änderung fortsetzen",
+      "expiry": "Dieser Bestätigungslink für die E-Mail-Änderung läuft in {minutes, plural, =60 {einer Stunde} one {# Minute} other {# Minuten}} ab."
+    }
+  }
+}

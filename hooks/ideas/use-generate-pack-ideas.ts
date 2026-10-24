@@ -3,6 +3,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef } from "react";
 import { useIdeasStore } from "@/app/stores/ideas-store";
+import { useRateLimitMessage } from "@/hooks/ideas/use-rate-limit-message";
 import { ideasResponseSchema } from "@/lib/config/ideas";
 import type { IdeaGeneratedResponse } from "@/lib/types/ideas/types";
 import { showRateLimitToast } from "@/lib/utils/rate-limit-toast";
@@ -33,6 +34,7 @@ interface UseGeneratePackIdeasResult {
 export function useGeneratePackIdeas(bio: string): UseGeneratePackIdeasResult {
   const IdeasStore = useIdeasStore((state) => state);
   const ideaCount = IdeasStore.ideas?.length ?? 0;
+  const rateLimitMessage = useRateLimitMessage();
 
   const isRequestInFlight = useRef(false);
   const isMounted = useRef(false);
@@ -76,7 +78,7 @@ export function useGeneratePackIdeas(bio: string): UseGeneratePackIdeasResult {
     },
     onError: (mutationError): void => {
       if (mutationError instanceof RateLimitError) {
-        showRateLimitToast(mutationError.retryAfterSeconds);
+        showRateLimitToast(rateLimitMessage(mutationError.retryAfterSeconds));
       }
     },
     onSettled: (): void => {

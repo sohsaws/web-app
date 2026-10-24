@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormatter, useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
 import { Widget } from "@/components/ui/widget.client";
@@ -14,27 +15,30 @@ export function CategoryDistribution({
 }: CategoryDistributionProps): ReactElement {
   const { data, isPending, isFetching, error, refetch } =
     useCategoryDistribution(userId);
+  const t = useTranslations("Dashboard.categoryDistribution");
+  const tCommon = useTranslations("Common");
+  const format = useFormatter();
 
   return (
     <Widget className="flex max-h-102 flex-col self-stretch p-6 sm:col-span-2 xl:col-span-1">
       <h2 className="text-xs tracking-widest text-app-muted uppercase">
-        Your interests
+        {t("title")}
       </h2>
       <p className="mt-4 font-serif text-2xl leading-tight text-white">
-        A little more you.
+        {t("tagline")}
       </p>
       <p className="mt-3 text-xs leading-5 text-app-muted">
-        Category distribution across your saved ideas.
+        {t("description")}
       </p>
 
       {isPending ? (
         <div className="flex min-h-48 flex-1 items-center justify-center">
-          <LoadingSpinner label="Loading your category distribution..." />
+          <LoadingSpinner label={t("loading")} />
         </div>
       ) : data && data.length > 0 ? (
         <div
           role="region"
-          aria-label="Category distribution"
+          aria-label={t("regionLabel")}
           tabIndex={0}
           className="my-6 max-h-72 overflow-y-auto rounded-sm pr-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
         >
@@ -44,10 +48,10 @@ export function CategoryDistribution({
                 <div className="flex items-start justify-between gap-4 text-sm">
                   <span className="min-w-0 wrap-anywhere">{category}</span>
                   <span className="shrink-0 font-medium text-white tabular-nums">
-                    {percentage.toLocaleString("en-US", {
+                    {format.number(percentage / 100, {
+                      style: "percent",
                       maximumFractionDigits: 1,
                     })}
-                    %
                   </span>
                 </div>
                 <div
@@ -65,17 +69,13 @@ export function CategoryDistribution({
         </div>
       ) : data ? (
         <p className="flex-1 py-12 text-sm leading-6 text-app-muted">
-          Save ideas with categories to see your interests here.
+          {t("empty")}
         </p>
       ) : null}
 
       {error ? (
         <div role="alert" className="my-6 space-y-3 text-sm text-app-muted">
-          <p>
-            {data
-              ? "Could not refresh categories. Showing the last loaded data."
-              : "Could not load your categories."}
-          </p>
+          <p>{data ? t("refreshError") : t("loadError")}</p>
           <button
             type="button"
             disabled={isFetching}
@@ -84,13 +84,15 @@ export function CategoryDistribution({
             }}
             className="min-h-10 rounded-md border border-app-border px-4 text-white transition-colors hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white disabled:opacity-50"
           >
-            {isFetching ? "Retrying..." : "Try again"}
+            {isFetching
+              ? tCommon("status.retrying")
+              : tCommon("actions.tryAgain")}
           </button>
         </div>
       ) : null}
 
       <p className="mt-auto border-t border-app-border pt-4 text-xs leading-5 text-app-muted">
-        Each category assignment counts equally. Percentages are rounded.
+        {t("footnote")}
       </p>
     </Widget>
   );

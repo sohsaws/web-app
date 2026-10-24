@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { ReactElement, ReactNode } from "react";
 import { Toaster } from "sonner";
 import { QueryProvider } from "@/components/providers/query-provider.client";
@@ -16,14 +16,18 @@ const InterFont = Inter({
   subsets: ["latin", "latin-ext", "cyrillic"],
 });
 
-export const metadata: Metadata = {
-  title: "Swiipy",
-  description: "AI-Powered Idea Discovery Platform",
-  icons: {
-    // Absolute: a relative path would resolve under the locale prefix.
-    icon: "/icon.png",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Metadata");
+
+  return {
+    title: "Swiipy",
+    description: t("description"),
+    icons: {
+      // Absolute: a relative path would resolve under the locale prefix.
+      icon: "/icon.png",
+    },
+  };
+}
 
 // Prerenders every static page once per locale.
 export function generateStaticParams(): { locale: string }[] {

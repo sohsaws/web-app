@@ -12,19 +12,27 @@ import { useAuthErrorMessage } from "@/hooks/i18n/use-auth-error-message";
 import { useRouter } from "@/i18n/navigation";
 import { authClient } from "@/lib/auth/auth-client";
 
+// Exported so the form can fill the {min}/{max} placeholders of the
+// Validation messages that these limits produce.
+export const LOGIN_IDENTIFIER_MIN_LENGTH = 3;
+export const LOGIN_IDENTIFIER_MAX_LENGTH = 50;
+export const LOGIN_PASSWORD_MIN_LENGTH = 8;
+export const LOGIN_PASSWORD_MAX_LENGTH = 50;
+
+// Messages are keys of the Validation namespace.
 const loginFormSchema = z.object({
   identifier: z
-    .string({ error: "This field is required" })
-    .min(3, "Email or username is required")
-    .max(50, "Email or username must be at most 50 characters long")
+    .string({ error: "required" })
+    .min(LOGIN_IDENTIFIER_MIN_LENGTH, "identifierRequired")
+    .max(LOGIN_IDENTIFIER_MAX_LENGTH, "identifierTooLong")
     .regex(
       /^(?:[a-z0-9_]+|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})$/i,
-      "Invalid email or username",
+      "identifierInvalid",
     ),
   password: z
-    .string({ error: "Password is required" })
-    .min(8, "Password must be at least 8 characters long")
-    .max(50, "Password must be at most 50 characters long"),
+    .string({ error: "passwordRequired" })
+    .min(LOGIN_PASSWORD_MIN_LENGTH, "passwordTooShort")
+    .max(LOGIN_PASSWORD_MAX_LENGTH, "passwordTooLong"),
 });
 
 type LoginFormValues = z.infer<typeof loginFormSchema>;

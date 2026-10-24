@@ -1,1 +1,34 @@
-{}
+{
+  "Emails": {
+    "common": {
+      "ignoreNotice": "Si no lo has solicitado,<br></br>ignora este correo."
+    },
+    "resetPassword": {
+      "subject": "Restablece tu contraseña de Swiipy",
+      "preview": "Restablece tu contraseña de Swiipy",
+      "label": "Restablecer contraseña",
+      "heading": "Restablece tu contraseña",
+      "body": "Usa el botón de abajo para elegir una nueva contraseña para tu cuenta de Swiipy.",
+      "button": "Restablecer contraseña",
+      "expiry": "Este enlace para restablecer la contraseña caduca en {minutes, plural, =60 {una hora} one {# minuto} other {# minutos}}."
+    },
+    "verification": {
+      "subject": "Verifica tu correo para Swiipy",
+      "preview": "Confirma tu dirección de correo electrónico",
+      "label": "Verificación del correo electrónico",
+      "heading": "Confirma tu correo electrónico",
+      "body": "Usa el botón de abajo para confirmar que esta dirección de correo electrónico es tuya.",
+      "button": "Confirmar correo",
+      "expiry": "Este enlace de verificación caduca en {minutes, plural, =60 {una hora} one {# minuto} other {# minutos}}."
+    },
+    "changeEmail": {
+      "subject": "Confirma el cambio de tu correo electrónico de Swiipy",
+      "preview": "Confirma el cambio de tu correo electrónico de Swiipy",
+      "label": "Cambio de correo electrónico",
+      "heading": "Cambia tu correo electrónico",
+      "body": "Hemos recibido una solicitud para cambiar tu dirección de correo electrónico de Swiipy a <strong>{newEmail}</strong>. Confirma primero esta solicitud; después verificaremos la nueva dirección.",
+      "button": "Seguir con el cambio de correo electrónico",
+      "expiry": "Este enlace de confirmación caduca en {minutes, plural, =60 {una hora} one {# minuto} other {# minutos}}."
+    }
+  }
+}

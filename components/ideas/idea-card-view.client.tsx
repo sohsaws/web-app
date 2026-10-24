@@ -2,6 +2,7 @@
 
 import { Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type { ReactElement, ReactNode } from "react";
 import { ExpandableText } from "@/components/ui/expandable-text.client";
 import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
@@ -26,6 +27,8 @@ export function IdeaCardView({
   isImagePending = false,
   dragHandle,
 }: IdeaCardViewProps): ReactElement {
+  const t = useTranslations("Ideas.card");
+
   return (
     <article
       data-card-id={id}
@@ -35,7 +38,7 @@ export function IdeaCardView({
         {image ? (
           <Image
             src={image}
-            alt={`Illustration for ${title}`}
+            alt={t("imageAlt", { title })}
             fill
             unoptimized
             draggable={false}
@@ -56,7 +59,7 @@ export function IdeaCardView({
 
         {isImagePending ? (
           <LoadingSpinner
-            label="Generating illustration..."
+            label={t("imagePending")}
             className="pointer-events-none absolute top-1/2 left-1/2 size-12 -translate-x-1/2 -translate-y-1/2"
           />
         ) : !image ? (

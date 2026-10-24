@@ -1,5 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { useForgotPassword } from "./use-forgot-password";
 
 const { authClient, toast } = vi.hoisted(() => ({
@@ -26,7 +27,9 @@ beforeEach(() => {
 
 describe("useForgotPassword", () => {
   it("requests the link for the lowercased email", async () => {
-    const { result } = renderHook(() => useForgotPassword());
+    const { result } = renderHook(() => useForgotPassword(), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, "Ann@Example.COM");
 
@@ -38,12 +41,14 @@ describe("useForgotPassword", () => {
   });
 
   it("does not reveal whether the account exists", async () => {
-    const { result } = renderHook(() => useForgotPassword());
+    const { result } = renderHook(() => useForgotPassword(), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, "nobody@example.com");
 
     expect(toast.success).toHaveBeenCalledWith(
-      "If the account exists, a reset link has been sent",
+      "If the account exists, a reset link has been sent.",
     );
   });
 
@@ -51,23 +56,43 @@ describe("useForgotPassword", () => {
     ["an invalid email", "not-an-email"],
     ["an email over 60 characters", `${"a".repeat(55)}@example.com`],
   ])("does not call the server for %s", async (_case, email) => {
-    const { result } = renderHook(() => useForgotPassword());
+    const { result } = renderHook(() => useForgotPassword(), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, email);
 
     expect(authClient.requestPasswordReset).not.toHaveBeenCalled();
   });
 
-  it("shows the error and keeps the form open", async () => {
+  it("asks the user to wait when rate-limited and keeps the form open", async () => {
     authClient.requestPasswordReset.mockResolvedValue({
       data: null,
-      error: { message: "Too many requests" },
+      error: { status: 429, message: "Too many requests" },
     });
-    const { result } = renderHook(() => useForgotPassword());
+    const { result } = renderHook(() => useForgotPassword(), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, "ann@example.com");
 
-    expect(toast.error).toHaveBeenCalledWith("Too many requests");
+    expect(toast.error).toHaveBeenCalledWith(
+      "Too many attempts. Please wait a minute and try again.",
+    );
     expect(result.current.requestedEmail).toBeUndefined();
+  });
+
+  it("names the failed action when the request fails", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    authClient.requestPasswordReset.mockRejectedValue(new Error("offline"));
+    const { result } = renderHook(() => useForgotPassword(), {
+      wrapper: IntlTestProvider,
+    });
+
+    await submit(result, "ann@example.com");
+
+    expect(toast.error).toHaveBeenCalledWith(
+      "Unable to send the password reset link.",
+    );
   });
 });

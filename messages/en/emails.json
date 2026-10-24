@@ -1,1 +1,34 @@
-{}
+{
+  "Emails": {
+    "common": {
+      "ignoreNotice": "If you didn't request this,<br></br>please ignore this email."
+    },
+    "resetPassword": {
+      "subject": "Reset your Swiipy password",
+      "preview": "Reset your Swiipy password",
+      "label": "Password reset",
+      "heading": "Reset your password",
+      "body": "Use the button below to choose a new password for your Swiipy account.",
+      "button": "Reset password",
+      "expiry": "This password reset link expires in {minutes, plural, =60 {one hour} one {# minute} other {# minutes}}."
+    },
+    "verification": {
+      "subject": "Verify your Swiipy email",
+      "preview": "Confirm your email address",
+      "label": "Email verification",
+      "heading": "Confirm your email",
+      "body": "Use the button below to confirm that this email address belongs to you.",
+      "button": "Confirm email",
+      "expiry": "This verification link expires in {minutes, plural, =60 {one hour} one {# minute} other {# minutes}}."
+    },
+    "changeEmail": {
+      "subject": "Confirm your Swiipy email change",
+      "preview": "Confirm your Swiipy email change",
+      "label": "Email change",
+      "heading": "Change your email",
+      "body": "We received a request to change your Swiipy email address to <strong>{newEmail}</strong>. Confirm this request first; we will then verify the new address.",
+      "button": "Continue email change",
+      "expiry": "This confirmation link expires in {minutes, plural, =60 {one hour} one {# minute} other {# minutes}}."
+    }
+  }
+}

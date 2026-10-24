@@ -1,8 +1,11 @@
 import { ArrowRight } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import type { ReactElement } from "react";
 import { Link } from "@/i18n/navigation";
 
-export default function NotFound(): ReactElement {
+export default async function NotFound(): Promise<ReactElement> {
+  const t = await getTranslations("Common");
+
   return (
     <main className="relative isolate z-10 flex min-h-dvh w-full min-w-0 flex-col items-center justify-center overflow-x-clip px-4 py-16 text-center">
       {/* Soft background glow; decorative only. */}
@@ -16,17 +19,20 @@ export default function NotFound(): ReactElement {
 
       <p className="flex items-center justify-center gap-3 text-xs font-medium tracking-[0.25em] text-neutral-400 uppercase motion-safe:animate-fade-up">
         <span aria-hidden="true" className="h-px w-6 bg-app-action-skip" />
-        Error 404
+        {t("notFound.eyebrow")}
       </p>
 
       <h1 className="mt-6 font-serif text-5xl leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl motion-safe:animate-fade-up motion-safe:[animation-delay:100ms]">
-        <span className="block">This page</span>
-        <span className="block text-neutral-400">wandered off.</span>
+        {t.rich("notFound.title", {
+          line: (chunks) => <span className="block">{chunks}</span>,
+          muted: (chunks) => (
+            <span className="block text-neutral-400">{chunks}</span>
+          ),
+        })}
       </h1>
 
       <p className="mt-8 max-w-md text-base leading-relaxed font-light text-neutral-300 motion-safe:animate-fade-up motion-safe:[animation-delay:200ms]">
-        The link may be broken, or the page has moved. Let&apos;s get you back
-        to deciding.
+        {t("notFound.description")}
       </p>
 
       <div className="mt-10 flex flex-wrap items-center justify-center gap-3 motion-safe:animate-fade-up motion-safe:[animation-delay:300ms]">
@@ -34,7 +40,7 @@ export default function NotFound(): ReactElement {
           href="/"
           className="group inline-flex min-h-12 items-center gap-2.5 rounded-full bg-[#ece8e1] px-7 text-sm font-semibold text-black transition-colors duration-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
         >
-          Back to home
+          {t("actions.backToHome")}
           <ArrowRight
             aria-hidden="true"
             className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 motion-reduce:transition-none"
@@ -44,7 +50,7 @@ export default function NotFound(): ReactElement {
           href="/contact"
           className="inline-flex min-h-12 items-center rounded-full border border-app-border px-7 text-sm font-medium text-neutral-300 transition-colors duration-300 hover:border-white/30 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
         >
-          Contact us
+          {t("notFound.contactUs")}
         </Link>
       </div>
     </main>

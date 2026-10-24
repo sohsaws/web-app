@@ -6,7 +6,7 @@ import {
   type FavoritesPreview,
   favoritesPreviewSchema,
 } from "@/lib/config/favorites";
-import { getApiResponseError } from "@/lib/utils/responseError";
+import { createApiResponseError } from "@/lib/utils/responseError";
 
 export function useFavoritesPreview(
   userId: string,
@@ -20,8 +20,9 @@ export function useFavoritesPreview(
       });
 
       if (!response.ok) {
-        throw new Error(
-          await getApiResponseError(response, "Unable to load saved ideas"),
+        throw await createApiResponseError(
+          response,
+          "Unable to load saved ideas",
         );
       }
 

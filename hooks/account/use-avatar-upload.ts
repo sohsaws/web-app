@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   type ChangeEvent,
   type RefObject,
@@ -8,12 +9,17 @@ import {
   useTransition,
 } from "react";
 import { toast } from "sonner";
+import { useServerErrorMessage } from "@/hooks/i18n/use-server-error-message";
 import { useRouter } from "@/i18n/navigation";
+import type { ApiErrorCode } from "@/lib/config/api-errors";
 import {
   AVATAR_MAX_SIZE_BYTES,
   isAvatarContentType,
 } from "@/lib/config/avatar";
-import { getApiResponseError } from "@/lib/utils/responseError";
+import {
+  ApiResponseError,
+  createApiResponseError,
+} from "@/lib/utils/responseError";
 
 interface UseAvatarUploadOptions {
   hasAvatar: boolean;
@@ -27,6 +33,17 @@ interface UseAvatarUploadResult {
   removeAvatar: () => Promise<void>;
 }
 
+// A response without a known code, or a network failure, gets the action's
+// own message rather than the generic "Something went wrong".
+function getAvatarErrorCode(
+  error: unknown,
+  fallback: ApiErrorCode,
+): ApiErrorCode {
+  return error instanceof ApiResponseError && error.code !== null
+    ? error.code
+    : fallback;
+}
+
 export function useAvatarUpload({
   hasAvatar,
 }: UseAvatarUploadOptions): UseAvatarUploadResult {
@@ -34,6 +51,8 @@ export function useAvatarUpload({
   const [isRequestPending, setIsRequestPending] = useState(false);
   const [isRefreshing, startRefresh] = useTransition();
   const router = useRouter();
+  const t = useTranslations("Settings.avatar");
+  const serverErrorMessage = useServerErrorMessage();
 
   // The new image URL only arrives with the refreshed server data, so the
   // transition keeps the pending state on until it is on screen.
@@ -54,19 +73,20 @@ export function useAvatarUpload({
     }
 
     if (!isAvatarContentType(file.type)) {
-      toast.error("Please select a JPG, PNG, GIF, or WebP image");
+      // The same checks as the upload route, so its messages fit here too.
+      toast.error(serverErrorMessage("UNSUPPORTED_IMAGE_TYPE"));
       input.value = "";
       return;
     }
 
     if (file.size > AVATAR_MAX_SIZE_BYTES) {
-      toast.error("File too large (max 4 MB)");
+      toast.error(serverErrorMessage("IMAGE_TOO_LARGE"));
       input.value = "";
       return;
     }
 
     setIsRequestPending(true);
-    const toastId = toast.loading("Uploading image...");
+    const toastId = toast.loading(t("uploading"));
 
     try {
       const response = await fetch("/api/upload", {
@@ -78,19 +98,15 @@ export function useAvatarUpload({
       });
 
       if (!response.ok) {
-        throw new Error(
-          await getApiResponseError(response, "Avatar upload failed"),
-        );
+        throw await createApiResponseError(response, "Avatar upload failed");
       }
 
-      toast.success("Avatar updated successfully", { id: toastId });
+      toast.success(t("uploaded"), { id: toastId });
       refreshAvatar();
     } catch (error: unknown) {
       console.error("Avatar upload failed:", error);
       toast.error(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong with the upload",
+        serverErrorMessage(getAvatarErrorCode(error, "AVATAR_UPLOAD_FAILED")),
         { id: toastId },
       );
     } finally {
@@ -105,7 +121,7 @@ export function useAvatarUpload({
     }
 
     setIsRequestPending(true);
-    const toastId = toast.loading("Removing image...");
+    const toastId = toast.loading(t("removing"));
 
     try {
       const response = await fetch("/api/upload", {
@@ -113,19 +129,15 @@ export function useAvatarUpload({
       });
 
       if (!response.ok) {
-        throw new Error(
-          await getApiResponseError(response, "Avatar removal failed"),
-        );
+        throw await createApiResponseError(response, "Avatar removal failed");
       }
 
-      toast.success("Avatar removed successfully", { id: toastId });
+      toast.success(t("removed"), { id: toastId });
       refreshAvatar();
     } catch (error: unknown) {
       console.error("Avatar removal failed:", error);
       toast.error(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong while removing the avatar",
+        serverErrorMessage(getAvatarErrorCode(error, "AVATAR_REMOVAL_FAILED")),
         { id: toastId },
       );
     } finally {

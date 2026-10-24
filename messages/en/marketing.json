@@ -2,6 +2,96 @@
   "Marketing": {
     "languageSelect": {
       "label": "Language"
+    },
+    "header": {
+      "navigationLabel": "Marketing navigation",
+      "about": "About",
+      "contact": "Contact"
+    },
+    "footer": {
+      "navigationLabel": "Footer",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "home": {
+      "eyebrow": "A calmer way to choose",
+      "titleFirstLine": "Swipe. Decide.",
+      "titleSecondLine": "Done.",
+      "subtitle": "From vacation spots to startup ideas, clarity is just a swipe away.",
+      "note": "Free to use. Built for curious minds."
+    },
+    "heroCta": {
+      "label": "Dare to decide"
+    },
+    "heroCards": {
+      "kyoto": {
+        "title": "Kyoto in autumn",
+        "description": "Walk the temple paths at sunrise, before the crowds arrive."
+      },
+      "ramen": {
+        "title": "Cook ramen from scratch",
+        "description": "Simmer a rich broth on Sunday and share bowls with friends."
+      },
+      "focus": {
+        "title": "Make room for better work",
+        "description": "Block two quiet hours a day and protect them like a meeting."
+      }
+    },
+    "about": {
+      "eyebrow": "About Swiipy",
+      "titleFirstLine": "Stop scrolling.",
+      "titleSecondLine": "Start deciding.",
+      "intro": "Swiipy turns the endless “what should I do?” into a few quick swipes.",
+      "problem": {
+        "label": "The problem",
+        "title": "Too many options, no decision",
+        "description": "A free evening, a long weekend, a new hobby to pick up. Every list online offers a hundred options, and endless scrolling leaves you more tired than when you started. Nothing actually gets done."
+      },
+      "solution": {
+        "label": "The solution",
+        "title": "One card, one decision",
+        "description": "Swiipy shows ideas one at a time, shaped by what you tell us about yourself. Swipe left to skip, right to keep. No feeds and no noise, just a short stack of ideas that fit you."
+      },
+      "howItWorks": {
+        "eyebrow": "How it works",
+        "title": "Three steps to your <muted>deck</muted>"
+      },
+      "steps": {
+        "bio": {
+          "title": "Tell us about you",
+          "description": "Write a short bio in your profile: your work, your hobbies, what you enjoy. It is the only setup Swiipy needs."
+        },
+        "swipe": {
+          "title": "Swipe through ideas",
+          "description": "AI builds a fresh deck of ideas around your bio. Skip what doesn't spark anything, save what does."
+        },
+        "keep": {
+          "title": "Keep what matters",
+          "description": "Saved ideas land in your pocket, and your overview shows which interests you keep coming back to."
+        }
+      },
+      "comingNext": {
+        "label": "Coming next",
+        "title": "From ideas to <muted>real plans</muted>",
+        "description": "Soon, your saved ideas will turn into real things to try: places nearby, clubs to join, films, games and reads picked just for you. The more you swipe, the sharper these picks get."
+      }
+    },
+    "contact": {
+      "eyebrow": "Let's talk",
+      "title": "Make the next <muted>conversation</muted> count.",
+      "intro": "Questions, thoughtful feedback, or just a good idea? We're listening. Send a note and we'll get back to you soon.",
+      "emailLabel": "Email us",
+      "replyTimeLabel": "Usually replies within",
+      "replyTimeValue": "one thoughtful day",
+      "form": {
+        "title": "Write us a note",
+        "nameLabel": "Name",
+        "namePlaceholder": "Your name",
+        "emailLabel": "Email",
+        "messageLabel": "Message",
+        "messagePlaceholder": "What's on your mind?",
+        "submit": "Send message"
+      }
     }
   }
 }

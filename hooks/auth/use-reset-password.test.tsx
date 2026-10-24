@@ -1,5 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { useResetPassword } from "./use-reset-password";
 
 const { authClient, router, toast } = vi.hoisted(() => ({
@@ -32,7 +33,9 @@ beforeEach(() => {
 
 describe("useResetPassword", () => {
   it("resets the password with the token and sends the user to log in", async () => {
-    const { result } = renderHook(() => useResetPassword(TOKEN));
+    const { result } = renderHook(() => useResetPassword(TOKEN), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, "new-secret-pass");
 
@@ -41,6 +44,7 @@ describe("useResetPassword", () => {
       token: TOKEN,
     });
     expect(router.replace).toHaveBeenCalledWith("/login?passwordReset=success");
+    expect(toast.success).toHaveBeenCalledWith("Password reset successfully.");
   });
 
   it.each([
@@ -48,7 +52,9 @@ describe("useResetPassword", () => {
     ["a password under 8 characters", "short", "short"],
     ["a password over 128 characters", "a".repeat(129), "a".repeat(129)],
   ])("does not call the server for %s", async (_case, password, confirm) => {
-    const { result } = renderHook(() => useResetPassword(TOKEN));
+    const { result } = renderHook(() => useResetPassword(TOKEN), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, password, confirm);
 
@@ -60,7 +66,9 @@ describe("useResetPassword", () => {
       data: null,
       error: { code: "INVALID_TOKEN", message: "Invalid token" },
     });
-    const { result } = renderHook(() => useResetPassword(TOKEN));
+    const { result } = renderHook(() => useResetPassword(TOKEN), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, "new-secret-pass");
 
@@ -75,11 +83,13 @@ describe("useResetPassword", () => {
       data: null,
       error: { code: "UNKNOWN", message: "Something broke" },
     });
-    const { result } = renderHook(() => useResetPassword(TOKEN));
+    const { result } = renderHook(() => useResetPassword(TOKEN), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, "new-secret-pass");
 
-    expect(toast.error).toHaveBeenCalledWith("Something broke");
+    expect(toast.error).toHaveBeenCalledWith("Unable to reset your password.");
     expect(router.replace).not.toHaveBeenCalled();
   });
 });

@@ -2,6 +2,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import type { ChangeEvent } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AVATAR_MAX_SIZE_BYTES } from "@/lib/config/avatar";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { useAvatarUpload } from "./use-avatar-upload";
 
 const { router, toast } = vi.hoisted(() => ({
@@ -37,6 +38,12 @@ function changeEventFor(
   return { currentTarget: input } as ChangeEvent<HTMLInputElement>;
 }
 
+function renderAvatarHook(hasAvatar: boolean) {
+  return renderHook(() => useAvatarUpload({ hasAvatar }), {
+    wrapper: IntlTestProvider,
+  });
+}
+
 function pngFile(size = 3): File {
   return new File([new Uint8Array(size)], "avatar.png", { type: "image/png" });
 }
@@ -52,7 +59,7 @@ beforeEach(() => {
 
 describe("useAvatarUpload: choosing a file", () => {
   it("ignores a change without a file", async () => {
-    const { result } = renderHook(() => useAvatarUpload({ hasAvatar: false }));
+    const { result } = renderAvatarHook(false);
 
     await act(() =>
       result.current.handleFileChange(changeEventFor(fileInputWith(null))),
@@ -65,16 +72,16 @@ describe("useAvatarUpload: choosing a file", () => {
     [
       "an unsupported type",
       new File(["<svg/>"], "a.svg", { type: "image/svg+xml" }),
-      "Please select a JPG, PNG, GIF, or WebP image",
+      "Please choose a JPG, PNG, GIF or WebP image.",
     ],
     [
       "a file over the size limit",
       pngFile(AVATAR_MAX_SIZE_BYTES + 1),
-      "File too large (max 4 MB)",
+      "The image is too large (max 4 MB).",
     ],
   ])("rejects %s before uploading", async (_case, file, message) => {
     const input = fileInputWith(file);
-    const { result } = renderHook(() => useAvatarUpload({ hasAvatar: false }));
+    const { result } = renderAvatarHook(false);
 
     await act(() => result.current.handleFileChange(changeEventFor(input)));
 
@@ -86,7 +93,7 @@ describe("useAvatarUpload: choosing a file", () => {
   it("uploads the file with its type and refreshes the page", async () => {
     const file = pngFile();
     const input = fileInputWith(file);
-    const { result } = renderHook(() => useAvatarUpload({ hasAvatar: false }));
+    const { result } = renderAvatarHook(false);
 
     await act(() => result.current.handleFileChange(changeEventFor(input)));
 
@@ -103,28 +110,48 @@ describe("useAvatarUpload: choosing a file", () => {
     await waitFor(() => expect(result.current.isPending).toBe(false));
   });
 
-  it("shows the server error and does not refresh", async () => {
+  it("shows the translated server error and does not refresh", async () => {
     vi.spyOn(console, "error").mockImplementation(() => undefined);
     fetchMock.mockImplementation(async () =>
-      Response.json({ error: "Unsupported image type" }, { status: 415 }),
+      Response.json(
+        { error: "Unsupported image type", code: "UNSUPPORTED_IMAGE_TYPE" },
+        { status: 415 },
+      ),
     );
     const input = fileInputWith(pngFile());
-    const { result } = renderHook(() => useAvatarUpload({ hasAvatar: false }));
+    const { result } = renderAvatarHook(false);
 
     await act(() => result.current.handleFileChange(changeEventFor(input)));
 
-    expect(toast.error).toHaveBeenCalledWith("Unsupported image type", {
-      id: "toast-1",
-    });
+    expect(toast.error).toHaveBeenCalledWith(
+      "Please choose a JPG, PNG, GIF or WebP image.",
+      { id: "toast-1" },
+    );
     expect(router.refresh).not.toHaveBeenCalled();
     expect(input.value).toBe("");
     expect(result.current.isPending).toBe(false);
+  });
+
+  it("names the upload when the request fails without a code", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    fetchMock.mockRejectedValue(new TypeError("Failed to fetch"));
+    const { result } = renderAvatarHook(false);
+
+    await act(() =>
+      result.current.handleFileChange(changeEventFor(fileInputWith(pngFile()))),
+    );
+
+    expect(toast.error).toHaveBeenCalledWith(
+      "Avatar upload failed. Please try again.",
+      { id: "toast-1" },
+    );
+    expect(router.refresh).not.toHaveBeenCalled();
   });
 });
 
 describe("useAvatarUpload: removing the avatar", () => {
   it("does nothing when there is no avatar", async () => {
-    const { result } = renderHook(() => useAvatarUpload({ hasAvatar: false }));
+    const { result } = renderAvatarHook(false);
 
     await act(() => result.current.removeAvatar());
 
@@ -133,7 +160,7 @@ describe("useAvatarUpload: removing the avatar", () => {
 
   it("deletes the avatar and refreshes the page", async () => {
     fetchMock.mockImplementation(async () => Response.json({ success: true }));
-    const { result } = renderHook(() => useAvatarUpload({ hasAvatar: true }));
+    const { result } = renderAvatarHook(true);
 
     await act(() => result.current.removeAvatar());
 
@@ -147,15 +174,19 @@ describe("useAvatarUpload: removing the avatar", () => {
   it("shows the server error and does not refresh", async () => {
     vi.spyOn(console, "error").mockImplementation(() => undefined);
     fetchMock.mockImplementation(async () =>
-      Response.json({ error: "Avatar removal failed" }, { status: 500 }),
+      Response.json(
+        { error: "Avatar removal failed", code: "AVATAR_REMOVAL_FAILED" },
+        { status: 500 },
+      ),
     );
-    const { result } = renderHook(() => useAvatarUpload({ hasAvatar: true }));
+    const { result } = renderAvatarHook(true);
 
     await act(() => result.current.removeAvatar());
 
-    expect(toast.error).toHaveBeenCalledWith("Avatar removal failed", {
-      id: "toast-1",
-    });
+    expect(toast.error).toHaveBeenCalledWith(
+      "Avatar removal failed. Please try again.",
+      { id: "toast-1" },
+    );
     expect(router.refresh).not.toHaveBeenCalled();
   });
 });

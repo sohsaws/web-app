@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { DeleteAccount } from "./delete-account.client";
 
 const { authClient, toast, assign } = vi.hoisted(() => ({
@@ -15,7 +16,9 @@ vi.mock("sonner", () => ({ toast }));
 // Opens the confirmation form, as the user does from the Danger Zone.
 async function openForm(requiresPassword: boolean) {
   const user = userEvent.setup();
-  render(<DeleteAccount requiresPassword={requiresPassword} />);
+  render(<DeleteAccount requiresPassword={requiresPassword} />, {
+    wrapper: IntlTestProvider,
+  });
   await user.click(screen.getByRole("button", { name: "Delete account" }));
   return user;
 }
@@ -32,7 +35,7 @@ beforeEach(() => {
 
 describe("DeleteAccount", () => {
   it("keeps the form closed until the user opens it", () => {
-    render(<DeleteAccount requiresPassword />);
+    render(<DeleteAccount requiresPassword />, { wrapper: IntlTestProvider });
 
     expect(
       screen.queryByLabelText("Type DELETE to confirm"),
@@ -61,11 +64,11 @@ describe("DeleteAccount", () => {
     await user.click(submitButton());
 
     expect(
-      await screen.findByText("Type DELETE to confirm", { selector: "p" }),
+      await screen.findByText("Type DELETE to confirm.", { selector: "p" }),
     ).toBeInTheDocument();
     expect(confirmationField()).toHaveAttribute("aria-invalid", "true");
     expect(confirmationField()).toHaveAccessibleDescription(
-      "Type DELETE to confirm",
+      "Type DELETE to confirm.",
     );
     expect(authClient.deleteUser).not.toHaveBeenCalled();
   });
@@ -76,7 +79,9 @@ describe("DeleteAccount", () => {
     await user.type(confirmationField(), "DELETE");
     await user.click(submitButton());
 
-    expect(await screen.findByText("Password is required")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Password is required."),
+    ).toBeInTheDocument();
     expect(authClient.deleteUser).not.toHaveBeenCalled();
   });
 
@@ -118,7 +123,7 @@ describe("DeleteAccount", () => {
     await user.click(submitButton());
 
     expect(
-      await screen.findByText("Password is incorrect"),
+      await screen.findByText("Password is incorrect."),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toHaveAttribute(
       "aria-invalid",

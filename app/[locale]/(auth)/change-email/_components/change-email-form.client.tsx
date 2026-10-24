@@ -1,8 +1,17 @@
 "use client";
 
 import { AtSign, CheckCircle } from "lucide-react";
-import type { ReactElement } from "react";
-import { useChangeEmail } from "@/hooks/auth/use-change-email";
+import { useTranslations } from "next-intl";
+import type { ReactElement, ReactNode } from "react";
+import {
+  CHANGE_EMAIL_MAX_LENGTH,
+  useChangeEmail,
+} from "@/hooks/auth/use-change-email";
+import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
+
+function highlightEmail(chunks: ReactNode): ReactNode {
+  return <span className="text-white">{chunks}</span>;
+}
 
 interface ChangeEmailFormProps {
   currentEmail: string;
@@ -13,6 +22,8 @@ export function ChangeEmailForm({
   currentEmail,
   currentEmailVerified,
 }: ChangeEmailFormProps): ReactElement {
+  const t = useTranslations("Auth.changeEmail");
+  const validationMessage = useValidationMessage();
   const { form, onSubmit, requestedEmail } = useChangeEmail(currentEmail);
   const {
     register,
@@ -33,24 +44,20 @@ export function ChangeEmailForm({
           <div className="space-y-2">
             <h1 className="text-xl font-semibold text-white">
               {currentEmailVerified
-                ? "Check your current inbox"
-                : "Check your new inbox"}
+                ? t("checkCurrentInboxTitle")
+                : t("checkNewInboxTitle")}
             </h1>
             <p className="text-sm text-neutral-500">
-              {currentEmailVerified ? (
-                <>
-                  We sent a confirmation link to{" "}
-                  <span className="text-white">{currentEmail}</span>. After you
-                  approve the request, we will send a verification link to{" "}
-                  <span className="text-white">{requestedEmail}</span>.
-                </>
-              ) : (
-                <>
-                  We sent a verification link to{" "}
-                  <span className="text-white">{requestedEmail}</span>. Your
-                  email will change only after verification.
-                </>
-              )}
+              {currentEmailVerified
+                ? t.rich("confirmationSent", {
+                    currentEmail,
+                    newEmail: requestedEmail,
+                    highlight: highlightEmail,
+                  })
+                : t.rich("verificationSent", {
+                    newEmail: requestedEmail,
+                    highlight: highlightEmail,
+                  })}
             </p>
           </div>
         </div>
@@ -68,13 +75,8 @@ export function ChangeEmailForm({
           className="text-white"
         />
         <div className="space-y-2 text-center">
-          <h1 className="text-xl font-semibold text-white">
-            Change your email
-          </h1>
-          <p className="text-sm text-neutral-500">
-            Enter a new email address. We will verify the change before updating
-            your account.
-          </p>
+          <h1 className="text-xl font-semibold text-white">{t("title")}</h1>
+          <p className="text-sm text-neutral-500">{t("subtitle")}</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
@@ -83,7 +85,7 @@ export function ChangeEmailForm({
               htmlFor="new-email"
               className="block text-xs font-medium text-neutral-500"
             >
-              New email address
+              {t("newEmailLabel")}
             </label>
             <input
               id="new-email"
@@ -97,7 +99,9 @@ export function ChangeEmailForm({
             />
             {errors.newEmail ? (
               <p id="new-email-error" className="text-xs text-red-500">
-                {errors.newEmail.message}
+                {validationMessage(errors.newEmail.message, {
+                  max: CHANGE_EMAIL_MAX_LENGTH,
+                })}
               </p>
             ) : null}
           </div>
@@ -107,7 +111,7 @@ export function ChangeEmailForm({
             disabled={isSubmitting}
             className="mt-2 w-full cursor-pointer rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isSubmitting ? "Sending..." : "Continue"}
+            {isSubmitting ? t("sending") : t("submit")}
           </button>
         </form>
       </div>

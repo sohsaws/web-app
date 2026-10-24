@@ -1,5 +1,11 @@
 {
   "Settings": {
+    "nav": {
+      "label": "Settings",
+      "profile": "Profile",
+      "security": "Security",
+      "notifications": "Notifications"
+    },
     "language": {
       "label": "Language",
       "updated": "Language changed to {language}",
@@ -7,7 +13,84 @@
       "unsavedHint": "Save or cancel your changes to switch the language."
     },
     "profile": {
+      "title": "{name}'s details",
+      "description": "Manage how your information appears to others on the platform.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Your name",
+      "emailLabel": "Email",
+      "changeEmail": "Change my email address",
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Describe your interests and what you want to try",
+      "bioDescription": "Write a short introduction.",
       "saved": "Profile updated successfully"
+    },
+    "avatar": {
+      "title": "Profile picture",
+      "hint": "Supports JPG, PNG, GIF, or WebP. Max 4 MB.",
+      "upload": "Upload new",
+      "pleaseWait": "Please wait...",
+      "updating": "Updating profile picture",
+      "uploading": "Uploading image...",
+      "uploaded": "Avatar updated successfully",
+      "removing": "Removing image...",
+      "removed": "Avatar removed successfully"
+    },
+    "bio": {
+      "hintLabel": "What is the bio for?",
+      "hint": "Your bio tells the AI what ideas to create. Describe your interests, hobbies, work and what you want to try. The more specific it is, the better your deck."
+    },
+    "emailVerification": {
+      "verifyLabel": "Verify your email address",
+      "sendingLabel": "Sending verification email",
+      "tooltip": "Please verify your email",
+      "sendingTooltip": "Sending verification email..."
+    },
+    "security": {
+      "title": "Security",
+      "description": "Manage your password, authentication, and account lifecycle.",
+      "passwordTitle": "Password",
+      "passwordDescription": "Update the password associated with your account.",
+      "passwordHint": "Secure passwords help protect your data.",
+      "changePassword": "Change password",
+      "twoFactorTitle": "Two-Factor Authentication",
+      "twoFactorDisabled": "2FA is disabled",
+      "twoFactorDescription": "Add an extra layer of security to your account by requiring a verification code from an authenticator app upon login.",
+      "twoFactorHint": "We highly recommend enabling this feature.",
+      "enableTwoFactor": "Enable 2FA",
+      "deleteTitle": "Delete Account",
+      "deleteDescription": "Permanently remove your account and all of its contents from the Swiipy platform. This action is not reversible, so please continue with caution."
+    },
+    "deleteAccount": {
+      "dangerZone": "Danger Zone",
+      "open": "Delete account",
+      "confirmationLabel": "Type {word} to confirm",
+      "passwordLabel": "Password",
+      "googleHint": "You signed in with Google, so no password is needed. If your last sign-in was more than a day ago, we will ask you to sign in again.",
+      "submit": "Delete my account permanently",
+      "deleting": "Deleting...",
+      "reauthRequired": "Please sign in again to delete your account",
+      "reauthReason": "For your safety, account deletion needs a recent sign-in.",
+      "failed": "Unable to delete your account"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Decide what Swiipy may send to {email}.",
+      "emailTitle": "Email",
+      "emailDescription": "Choose which emails Swiipy sends you.",
+      "alwaysOn": "Always on",
+      "securityEmails": {
+        "title": "Security emails",
+        "description": "Password resets, email changes and verification links. They keep your account safe, so they cannot be turned off."
+      },
+      "productUpdates": {
+        "title": "Product updates",
+        "description": "News about new features, like personalized picks in For you. Sent rarely."
+      },
+      "weeklyDigest": {
+        "title": "Weekly digest",
+        "description": "A short weekly summary of the ideas you saved and a nudge to swipe a fresh deck."
+      },
+      "optionalHint": "Optional emails are only sent if you turn them on."
     }
   }
 }

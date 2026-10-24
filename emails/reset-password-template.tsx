@@ -14,31 +14,41 @@ import {
 } from "@react-email/components";
 import { pretty, render, toPlainText } from "@react-email/render";
 import type { ReactElement } from "react";
+import type { Locale } from "@/lib/config/locales";
+import {
+  type AuthEmailCopy,
+  getIgnoreNotice,
+  type RenderedAuthEmail,
+} from "./config/auth-email-copy";
 import { emailTailwindConfig } from "./config/email-tailwind";
+import type { EmailTranslator } from "./config/email-translator";
+import { toExpiryMinutes } from "./config/link-expiry";
+import { previewEmailTranslator } from "./config/preview-email-translator";
 
 interface ResetPasswordEmailProps {
+  copy: AuthEmailCopy;
+  locale: Locale;
   url: string;
 }
 
-interface LegacyResetPasswordEmailProps {
-  passwordResetToken: string;
-  username: string;
-}
-
-interface RenderedResetPasswordEmail {
-  html: string;
-  text: string;
+interface RenderResetPasswordEmailOptions {
+  linkExpiresInSeconds: number;
+  locale: Locale;
+  t: EmailTranslator;
+  url: string;
 }
 
 export function ResetPasswordEmail({
+  copy,
+  locale,
   url,
 }: ResetPasswordEmailProps): ReactElement {
   return (
     <Tailwind config={emailTailwindConfig}>
-      <Html lang="en">
+      <Html lang={locale}>
         <Head />
         <Body className="bg-bg-2 m-0 text-center font-sans">
-          <Preview>Reset your Swiipy password</Preview>
+          <Preview>{copy.preview}</Preview>
           <Container className="mobile:mt-0 mx-auto mt-8 w-full max-w-160">
             <Section>
               <Section className="bg-bg mobile:px-2 px-6 py-4">
@@ -54,7 +64,7 @@ export function ResetPasswordEmail({
                       className="w-1/2 py-1.75 align-middle"
                     >
                       <Text className="font-13 m-0 text-right font-sans">
-                        <span className="text-fg-3">Password reset</span>
+                        <span className="text-fg-3">{copy.label}</span>
                       </Text>
                     </Column>
                   </Row>
@@ -69,13 +79,12 @@ export function ResetPasswordEmail({
                       S
                     </Text>
                     <Heading as="h1" className="font-28 text-fg m-0 font-sans">
-                      Reset your password
+                      {copy.heading}
                     </Heading>
                   </Section>
 
                   <Text className="font-16 text-fg-2 mx-auto mt-0 mb-8 max-w-95 text-center font-sans">
-                    Use the button below to choose a new password for your
-                    Swiipy account.
+                    {copy.body}
                   </Text>
 
                   <Section className="mb-6 text-center">
@@ -83,20 +92,18 @@ export function ResetPasswordEmail({
                       href={url}
                       className="bg-fg font-16 text-fg-inverted inline-block rounded-lg px-7 py-4 text-center font-sans leading-6"
                     >
-                      Reset password
+                      {copy.button}
                     </Button>
                   </Section>
 
                   <Text className="font-13 text-fg-3 mx-auto mt-8 mb-0 max-w-100 text-center font-sans">
-                    If you didn&apos;t request this,
-                    <br />
-                    please ignore this email.
+                    {copy.ignoreNotice}
                   </Text>
                 </Section>
 
                 <Section className="bg-bg">
                   <Text className="font-11 text-fg-3 m-0 px-6 py-8 text-center font-sans">
-                    This password reset link expires in one hour.
+                    {copy.expiry}
                   </Text>
                 </Section>
               </Section>
@@ -108,28 +115,43 @@ export function ResetPasswordEmail({
   );
 }
 
-export async function renderResetPasswordEmail(
-  url: string,
-): Promise<RenderedResetPasswordEmail> {
-  const html = await pretty(await render(<ResetPasswordEmail url={url} />));
+export function getResetPasswordEmailCopy(
+  t: EmailTranslator,
+  linkExpiresInSeconds: number,
+): AuthEmailCopy {
+  return {
+    preview: t("resetPassword.preview"),
+    label: t("resetPassword.label"),
+    heading: t("resetPassword.heading"),
+    body: t("resetPassword.body"),
+    button: t("resetPassword.button"),
+    ignoreNotice: getIgnoreNotice(t),
+    expiry: t("resetPassword.expiry", {
+      minutes: toExpiryMinutes(linkExpiresInSeconds),
+    }),
+  };
+}
+
+export async function renderResetPasswordEmail({
+  linkExpiresInSeconds,
+  locale,
+  t,
+  url,
+}: RenderResetPasswordEmailOptions): Promise<RenderedAuthEmail> {
+  const copy = getResetPasswordEmailCopy(t, linkExpiresInSeconds);
+  const html = await pretty(
+    await render(<ResetPasswordEmail copy={copy} locale={locale} url={url} />),
+  );
 
   return {
+    subject: t("resetPassword.subject"),
     html,
     text: toPlainText(html),
   };
 }
 
 ResetPasswordEmail.PreviewProps = {
+  copy: getResetPasswordEmailCopy(previewEmailTranslator, 60 * 60),
+  locale: "en",
   url: "https://example.com/reset-password",
 } satisfies ResetPasswordEmailProps;
-
-// Temporary compatibility for the legacy credentials action until change-password is migrated.
-export function PasswordResetTemp({
-  passwordResetToken,
-}: LegacyResetPasswordEmailProps): ReactElement {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-  const url = new URL("/change-password", baseUrl);
-  url.searchParams.set("token", passwordResetToken);
-
-  return <ResetPasswordEmail url={url.toString()} />;
-}

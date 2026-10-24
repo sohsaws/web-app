@@ -1,7 +1,10 @@
 import { randomUUID } from "node:crypto";
+import type { QueryClient } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { IdeaSaveRequest } from "@/lib/types/ideas/types";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { createQueryClientWrapper } from "@/test-utils/query-client-wrapper";
 import { useSaveFavorite } from "./use-save-favorite";
 
@@ -43,8 +46,26 @@ function getRetryAction(options: unknown): () => void {
   throw new Error("The error toast has no Retry action");
 }
 
+// next-intl for the translated toast text, around a fresh QueryClient.
+function createWrapper(): {
+  queryClient: QueryClient;
+  wrapper: ({ children }: { children: ReactNode }) => ReactNode;
+} {
+  const { queryClient, wrapper: QueryWrapper } = createQueryClientWrapper();
+
+  function wrapper({ children }: { children: ReactNode }): ReactNode {
+    return (
+      <IntlTestProvider>
+        <QueryWrapper>{children}</QueryWrapper>
+      </IntlTestProvider>
+    );
+  }
+
+  return { queryClient, wrapper };
+}
+
 function renderSaveHook() {
-  const { queryClient, wrapper } = createQueryClientWrapper();
+  const { queryClient, wrapper } = createWrapper();
   queryClient.setQueryData(PREVIEW_KEY, { cards: [], total: 0 });
   queryClient.setQueryData(IMAGE_KEY, { image: "iVBORw0KGgo=" });
   return {
@@ -93,10 +114,10 @@ describe("useSaveFavorite", () => {
     await waitFor(() => expect(result.current.isPending).toBe(false));
   });
 
-  it("keeps a sticky error toast with the server message and a Retry action", async () => {
+  it("keeps a sticky error toast with the translated server error and a Retry action", async () => {
     fetchMock.mockImplementationOnce(async () =>
       Response.json(
-        { error: "This idea cannot be saved. Please try another idea." },
+        { error: "Idea was not saved.", code: "IDEA_NOT_SAVED" },
         { status: 409 },
       ),
     );
@@ -106,15 +127,16 @@ describe("useSaveFavorite", () => {
     act(() => result.current.save(saved));
 
     await waitFor(() => expect(toast.error).toHaveBeenCalledTimes(1));
-    const [, options] = toast.error.mock.calls[0] ?? [];
+    const [title, options] = toast.error.mock.calls[0] ?? [];
+    expect(title).toBe("Could not save the card");
     expect(options).toMatchObject({
       id: saved.id,
       description: "This idea cannot be saved. Please try another idea.",
       duration: Number.POSITIVE_INFINITY,
+      action: { label: "Retry" },
     });
-    expect(result.current.error?.message).toBe(
-      "This idea cannot be saved. Please try another idea.",
-    );
+    // The error itself keeps the server's English text for logs.
+    expect(result.current.error?.message).toBe("Idea was not saved.");
     expect(queryClient.getQueryState(PREVIEW_KEY)?.isInvalidated).toBe(false);
 
     fetchMock.mockImplementationOnce(async () =>
@@ -125,5 +147,20 @@ describe("useSaveFavorite", () => {
     await waitFor(() => expect(toast.dismiss).toHaveBeenCalledWith(saved.id));
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(fetchMock.mock.calls[1]?.[1]?.body).toBe(JSON.stringify(saved));
+  });
+
+  it("shows a generic message instead of untranslated server text", async () => {
+    fetchMock.mockImplementationOnce(async () =>
+      Response.json({ error: "Database exploded." }, { status: 500 }),
+    );
+    const { result } = renderSaveHook();
+
+    act(() => result.current.save(idea()));
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalledTimes(1));
+    const [, options] = toast.error.mock.calls[0] ?? [];
+    expect(options).toMatchObject({
+      description: "Something went wrong. Please try again.",
+    });
   });
 });

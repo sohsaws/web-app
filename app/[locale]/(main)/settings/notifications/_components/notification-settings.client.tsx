@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from "lucide-react";
 import { Mail, Megaphone, ShieldCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { useNotificationPreferences } from "@/hooks/account/use-notification-preferences";
 import type {
@@ -10,28 +11,15 @@ import type {
 } from "@/lib/config/notifications";
 import { NotificationSwitch } from "./notification-switch.client";
 
+// The row text lives in messages under Settings.notifications.<key>.
 interface PreferenceRow {
   key: NotificationPreferenceKey;
-  title: string;
-  description: string;
   icon: LucideIcon;
 }
 
 const preferenceRows: readonly PreferenceRow[] = [
-  {
-    key: "productUpdates",
-    title: "Product updates",
-    description:
-      "News about new features, like personalized picks in For you. Sent rarely.",
-    icon: Megaphone,
-  },
-  {
-    key: "weeklyDigest",
-    title: "Weekly digest",
-    description:
-      "A short weekly summary of the ideas you saved and a nudge to swipe a fresh deck.",
-    icon: Mail,
-  },
+  { key: "productUpdates", icon: Megaphone },
+  { key: "weeklyDigest", icon: Mail },
 ];
 
 interface NotificationSettingsProps {
@@ -41,16 +29,15 @@ interface NotificationSettingsProps {
 export function NotificationSettings({
   initialPreferences,
 }: NotificationSettingsProps): ReactElement {
+  const t = useTranslations("Settings.notifications");
   const { preferences, isSaving, togglePreference } =
     useNotificationPreferences(initialPreferences);
 
   return (
     <div className="overflow-hidden rounded-xl border border-white/10 bg-neutral-900/30 shadow-lg shadow-black/20 backdrop-blur-md">
       <div className="border-b border-white/10 px-6 py-5">
-        <h2 className="text-base font-medium text-white">Email</h2>
-        <p className="mt-1 text-sm text-neutral-400">
-          Choose which emails Swiipy sends you.
-        </p>
+        <h2 className="text-base font-medium text-white">{t("emailTitle")}</h2>
+        <p className="mt-1 text-sm text-neutral-400">{t("emailDescription")}</p>
       </div>
 
       <ul className="divide-y divide-white/10">
@@ -67,17 +54,16 @@ export function NotificationSettings({
                 id="notification-securityEmails-label"
                 className="flex flex-wrap items-center gap-2 text-sm font-medium text-white"
               >
-                Security emails
+                {t("securityEmails.title")}
                 <span className="rounded-full border border-white/5 bg-neutral-800/80 px-2 py-0.5 text-xs font-medium text-neutral-400">
-                  Always on
+                  {t("alwaysOn")}
                 </span>
               </h3>
               <p
                 id="notification-securityEmails-description"
                 className="mt-1 text-sm leading-relaxed text-neutral-400"
               >
-                Password resets, email changes and verification links. They keep
-                your account safe, so they cannot be turned off.
+                {t("securityEmails.description")}
               </p>
             </div>
           </div>
@@ -89,7 +75,7 @@ export function NotificationSettings({
           />
         </li>
 
-        {preferenceRows.map(({ key, title, description, icon: Icon }) => (
+        {preferenceRows.map(({ key, icon: Icon }) => (
           <li
             key={key}
             className="flex items-center justify-between gap-6 px-6 py-5"
@@ -106,13 +92,13 @@ export function NotificationSettings({
                   id={`notification-${key}-label`}
                   className="text-sm font-medium text-white"
                 >
-                  {title}
+                  {t(`${key}.title`)}
                 </h3>
                 <p
                   id={`notification-${key}-description`}
                   className="mt-1 text-sm leading-relaxed text-neutral-400"
                 >
-                  {description}
+                  {t(`${key}.description`)}
                 </p>
               </div>
             </div>
@@ -128,9 +114,7 @@ export function NotificationSettings({
       </ul>
 
       <div className="border-t border-white/10 bg-white/2 px-6 py-4">
-        <p className="text-xs text-neutral-500">
-          Optional emails are only sent if you turn them on.
-        </p>
+        <p className="text-xs text-neutral-500">{t("optionalHint")}</p>
       </div>
     </div>
   );

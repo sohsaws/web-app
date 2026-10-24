@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { type ReactElement, useEffect, useState } from "react";
 import type { IdeaCategory } from "@/lib/config/categories-array";
 
@@ -55,6 +56,7 @@ export function IdeaCategories({
   categories,
   size = "default",
 }: IdeaCategoriesProps): ReactElement | null {
+  const t = useTranslations("Ideas.categories");
   const [variants, setVariants] = useState<number[]>([]);
   const len = categories.length;
 
@@ -66,7 +68,7 @@ export function IdeaCategories({
 
   return (
     <ul
-      aria-label="Idea categories"
+      aria-label={t("list")}
       className={`flex flex-wrap ${sizeClasses[size].list}`}
     >
       {categories.map((category, index) => (

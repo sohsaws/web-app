@@ -1,6 +1,7 @@
 "use client";
 
 import { RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 
 interface RegenerateDeckButtonProps {
@@ -16,6 +17,8 @@ export function RegenerateDeckButton({
   isPending,
   isRegenerating,
 }: RegenerateDeckButtonProps): ReactElement {
+  const t = useTranslations("Dive.regenerate");
+
   return (
     <button
       type="button"
@@ -31,7 +34,7 @@ export function RegenerateDeckButton({
         aria-hidden="true"
         className={`size-4 ${isRegenerating ? "motion-safe:animate-spin" : ""}`}
       />
-      {isRegenerating ? "Shuffling a new deck…" : "Shuffle a new deck"}
+      {isRegenerating ? t("pending") : t("idle")}
     </button>
   );
 }

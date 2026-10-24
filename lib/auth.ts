@@ -4,6 +4,11 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { username } from "better-auth/plugins";
 import { renderChangeEmailConfirmation } from "@/emails/change-email-confirmation-template";
+import { getEmailTranslator } from "@/emails/config/get-email-translator";
+import {
+  EMAIL_VERIFICATION_LINK_EXPIRES_IN_SECONDS,
+  RESET_PASSWORD_LINK_EXPIRES_IN_SECONDS,
+} from "@/emails/config/link-expiry";
 import { renderResetPasswordEmail } from "@/emails/reset-password-template";
 import { renderVerificationEmail } from "@/emails/verification-template";
 import {
@@ -37,30 +42,39 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     revokeSessionsOnPasswordReset: true,
-    resetPasswordTokenExpiresIn: 60 * 60,
+    resetPasswordTokenExpiresIn: RESET_PASSWORD_LINK_EXPIRES_IN_SECONDS,
+    // /api/auth has no [locale] segment, so every auth email is written in
+    // the language stored on the user. Better Auth types `user` without
+    // additional fields, but the object is the full database row (or the
+    // session user), so `locale` is there at runtime and resolveLocale
+    // checks it.
     sendResetPassword: async ({ user, url }): Promise<void> => {
-      const { html, text } = await renderResetPasswordEmail(url);
-
-      void sendAuthEmail({
-        to: user.email,
-        subject: "Reset your Swiipy password",
-        html,
-        text,
+      const locale = resolveLocale("locale" in user ? user.locale : undefined);
+      const t = getEmailTranslator(locale);
+      const { subject, html, text } = await renderResetPasswordEmail({
+        linkExpiresInSeconds: RESET_PASSWORD_LINK_EXPIRES_IN_SECONDS,
+        locale,
+        t,
+        url,
       });
+
+      void sendAuthEmail({ to: user.email, subject, html, text });
     },
   },
 
   emailVerification: {
-    expiresIn: 60 * 60,
+    expiresIn: EMAIL_VERIFICATION_LINK_EXPIRES_IN_SECONDS,
     sendVerificationEmail: async ({ user, url }): Promise<void> => {
-      const { html, text } = await renderVerificationEmail(url);
-
-      void sendAuthEmail({
-        to: user.email,
-        subject: "Verify your Swiipy email",
-        html,
-        text,
+      const locale = resolveLocale("locale" in user ? user.locale : undefined);
+      const t = getEmailTranslator(locale);
+      const { subject, html, text } = await renderVerificationEmail({
+        linkExpiresInSeconds: EMAIL_VERIFICATION_LINK_EXPIRES_IN_SECONDS,
+        locale,
+        t,
+        url,
       });
+
+      void sendAuthEmail({ to: user.email, subject, html, text });
     },
   },
 
@@ -78,17 +92,19 @@ export const auth = betterAuth({
         newEmail,
         url,
       }): Promise<void> => {
-        const { html, text } = await renderChangeEmailConfirmation({
+        const locale = resolveLocale(
+          "locale" in user ? user.locale : undefined,
+        );
+        const t = getEmailTranslator(locale);
+        const { subject, html, text } = await renderChangeEmailConfirmation({
+          linkExpiresInSeconds: EMAIL_VERIFICATION_LINK_EXPIRES_IN_SECONDS,
+          locale,
           newEmail,
+          t,
           url,
         });
 
-        void sendAuthEmail({
-          to: user.email,
-          subject: "Confirm your Swiipy email change",
-          html,
-          text,
-        });
+        void sendAuthEmail({ to: user.email, subject, html, text });
       },
     },
     additionalFields: {

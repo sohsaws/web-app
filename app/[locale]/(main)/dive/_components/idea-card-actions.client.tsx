@@ -1,6 +1,7 @@
 "use client";
 
 import { RotateCcw } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { useIdeasStore } from "@/app/stores/ideas-store";
 import { FavoriteButton } from "./favorite-idea-card.client";
@@ -17,6 +18,7 @@ export function IdeaCardActions({
   onFavorite,
   isAnimating = false,
 }: IdeaCardActionsProps): ReactElement {
+  const t = useTranslations("Dive.actions");
   const previousCard = useIdeasStore((state) => state.previousCard);
   const restorePreviousCard = useIdeasStore(
     (state) => state.restorePreviousCard,
@@ -26,8 +28,8 @@ export function IdeaCardActions({
     <div className="mt-6 flex items-center justify-center gap-8 pb-2">
       <button
         type="button"
-        aria-label="Restore previous idea"
-        title="Restore previous idea"
+        aria-label={t("restore")}
+        title={t("restore")}
         disabled={isAnimating || !previousCard}
         onClick={restorePreviousCard}
         className="card-action text-app-fg"

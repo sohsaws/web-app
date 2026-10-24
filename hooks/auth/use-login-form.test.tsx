@@ -89,6 +89,22 @@ describe("useLoginForm", () => {
     expect(authClient.signIn.username).not.toHaveBeenCalled();
   });
 
+  // The form translates these Validation keys with useValidationMessage.
+  it.each([
+    ["identifierInvalid", "identifier", "ann smith", "secret-pass"],
+    ["identifierTooLong", "identifier", "a".repeat(51), "secret-pass"],
+    ["passwordTooShort", "password", "ann@example.com", "short"],
+  ] as const)(
+    "reports %s on the %s field",
+    async (key, field, identifier, password) => {
+      const { result } = renderLoginHook();
+
+      await submit(result, identifier, password);
+
+      expect(result.current.form.getFieldState(field).error?.message).toBe(key);
+    },
+  );
+
   it("shows the translated sign-in error and stays on the page", async () => {
     authClient.signIn.email.mockResolvedValue({
       data: null,

@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { useRateLimitMessage } from "@/hooks/ideas/use-rate-limit-message";
 import {
   generatedImageSchema,
   IDEA_IMAGE_DATA_URL_PREFIX,
@@ -23,6 +24,7 @@ export function useIdeaImage(
   id: string,
   description: string,
 ): UseIdeaImageResult {
+  const rateLimitMessage = useRateLimitMessage();
   const { data, isPending, error } = useQuery({
     queryKey: ["idea-image", id, description],
     queryFn: async (): Promise<GeneratedImage> => {
@@ -52,9 +54,9 @@ export function useIdeaImage(
 
   useEffect(() => {
     if (error instanceof RateLimitError) {
-      showRateLimitToast(error.retryAfterSeconds);
+      showRateLimitToast(rateLimitMessage(error.retryAfterSeconds));
     }
-  }, [error]);
+  }, [error, rateLimitMessage]);
 
   return {
     image: data ? `${IDEA_IMAGE_DATA_URL_PREFIX}${data.image}` : null,

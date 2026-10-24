@@ -1,10 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { type ReactElement, useId, useState } from "react";
 import {
   DELETE_ACCOUNT_CONFIRMATION,
   useDeleteAccount,
 } from "@/hooks/account/use-delete-account";
+import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
 
 interface DeleteAccountProps {
   requiresPassword: boolean;
@@ -16,6 +18,9 @@ const inputClassName =
 export function DeleteAccount({
   requiresPassword,
 }: DeleteAccountProps): ReactElement {
+  const t = useTranslations("Settings.deleteAccount");
+  const tActions = useTranslations("Common.actions");
+  const validationMessage = useValidationMessage();
   const [isOpen, setIsOpen] = useState(false);
   const formId = useId();
   const {
@@ -49,7 +54,7 @@ export function DeleteAccount({
               htmlFor={`${formId}-confirmation`}
               className="block text-xs font-medium text-neutral-400"
             >
-              Type {DELETE_ACCOUNT_CONFIRMATION} to confirm
+              {t("confirmationLabel", { word: DELETE_ACCOUNT_CONFIRMATION })}
             </label>
             <input
               id={`${formId}-confirmation`}
@@ -67,7 +72,9 @@ export function DeleteAccount({
                 id={`${formId}-confirmation-error`}
                 className="text-xs text-red-400"
               >
-                {errors.confirmation.message}
+                {validationMessage(errors.confirmation.message, {
+                  word: DELETE_ACCOUNT_CONFIRMATION,
+                })}
               </p>
             ) : null}
           </div>
@@ -78,7 +85,7 @@ export function DeleteAccount({
                 htmlFor={`${formId}-password`}
                 className="block text-xs font-medium text-neutral-400"
               >
-                Password
+                {t("passwordLabel")}
               </label>
               <input
                 id={`${formId}-password`}
@@ -96,14 +103,13 @@ export function DeleteAccount({
                   id={`${formId}-password-error`}
                   className="text-xs text-red-400"
                 >
-                  {errors.password.message}
+                  {validationMessage(errors.password.message)}
                 </p>
               ) : null}
             </div>
           ) : (
             <p className="max-w-xl text-xs leading-5 text-neutral-500">
-              You signed in with Google, so no password is needed. If your last
-              sign-in was more than a day ago, we will ask you to sign in again.
+              {t("googleHint")}
             </p>
           )}
 
@@ -113,7 +119,7 @@ export function DeleteAccount({
               disabled={isSubmitting}
               className="cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isSubmitting ? "Deleting..." : "Delete my account permanently"}
+              {isSubmitting ? t("deleting") : t("submit")}
             </button>
             <button
               type="button"
@@ -121,7 +127,7 @@ export function DeleteAccount({
               disabled={isSubmitting}
               className="cursor-pointer px-3 py-2 text-sm font-medium text-neutral-500 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Cancel
+              {tActions("cancel")}
             </button>
           </div>
         </form>
@@ -129,7 +135,7 @@ export function DeleteAccount({
 
       <div className="flex items-center justify-between gap-4 border-t border-red-500/10 bg-red-500/2 px-6 py-4">
         <p className="text-xs font-medium tracking-wide text-red-500/60 uppercase">
-          Danger Zone
+          {t("dangerZone")}
         </p>
         {isOpen ? null : (
           <button
@@ -139,7 +145,7 @@ export function DeleteAccount({
             onClick={(): void => setIsOpen(true)}
             className="shrink-0 cursor-pointer rounded-lg border border-red-500/30 px-4 py-1.5 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400"
           >
-            Delete account
+            {t("open")}
           </button>
         )}
       </div>

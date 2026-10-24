@@ -1,10 +1,17 @@
 "use client";
 
 import { AtSign, CheckCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
-import { useForgotPassword } from "@/hooks/auth/use-forgot-password";
+import {
+  FORGOT_PASSWORD_EMAIL_MAX_LENGTH,
+  useForgotPassword,
+} from "@/hooks/auth/use-forgot-password";
+import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
 
 export function ForgotPasswordForm(): ReactElement {
+  const t = useTranslations("Auth.forgotPassword");
+  const validationMessage = useValidationMessage();
   const { form, onSubmit, requestedEmail } = useForgotPassword();
   const {
     register,
@@ -25,11 +32,16 @@ export function ForgotPasswordForm(): ReactElement {
           strokeWidth={1.5}
         />
         <div className="space-y-2">
-          <h2 className="text-lg font-medium text-white">Check your inbox</h2>
+          <h2 className="text-lg font-medium text-white">
+            {t("checkInboxTitle")}
+          </h2>
           <p className="text-sm leading-relaxed text-neutral-500">
-            If an account exists for{" "}
-            <span className="text-neutral-300">{requestedEmail}</span>, we sent
-            it a password reset link.
+            {t.rich("checkInboxDescription", {
+              email: requestedEmail,
+              highlight: (chunks) => (
+                <span className="text-neutral-300">{chunks}</span>
+              ),
+            })}
           </p>
         </div>
       </div>
@@ -43,7 +55,7 @@ export function ForgotPasswordForm(): ReactElement {
           htmlFor="email"
           className="block text-xs font-medium text-neutral-400"
         >
-          Email address
+          {t("emailLabel")}
         </label>
         <div className="relative">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -67,7 +79,9 @@ export function ForgotPasswordForm(): ReactElement {
         </div>
         {errors.email ? (
           <p id="email-error" className="mt-2 text-xs text-red-500">
-            {errors.email.message}
+            {validationMessage(errors.email.message, {
+              max: FORGOT_PASSWORD_EMAIL_MAX_LENGTH,
+            })}
           </p>
         ) : null}
       </div>
@@ -77,7 +91,7 @@ export function ForgotPasswordForm(): ReactElement {
         disabled={isSubmitting}
         className="flex w-full cursor-pointer justify-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-black shadow-sm transition-all hover:bg-neutral-200 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black focus:outline-none disabled:cursor-not-allowed disabled:bg-neutral-900"
       >
-        {isSubmitting ? "Sending..." : "Send reset link"}
+        {isSubmitting ? t("sending") : t("submit")}
       </button>
     </form>
   );

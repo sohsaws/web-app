@@ -1,6 +1,7 @@
 "use client";
 
 import { Bookmark } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 
 interface FavoriteButtonProps {
@@ -12,11 +13,13 @@ export function FavoriteButton({
   onClick,
   disabled = false,
 }: FavoriteButtonProps): ReactElement {
+  const t = useTranslations("Dive.actions");
+
   return (
     <button
       type="button"
-      aria-label="Favorite idea"
-      title={onClick ? "Favorite idea" : "Favorites coming soon"}
+      aria-label={t("favorite")}
+      title={onClick ? t("favorite") : t("favoriteUnavailable")}
       disabled={disabled || !onClick}
       onClick={onClick}
       className="card-action text-app-action-favorite"

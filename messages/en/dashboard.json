@@ -1,1 +1,40 @@
-{}
+{
+  "Dashboard": {
+    "page": {
+      "greeting": "Welcome back, {name}",
+      "subtitle": "Your next idea is waiting. Keep your favorites close."
+    },
+    "metrics": {
+      "savedIdeasTitle": "Saved ideas",
+      "savedIdeasLoading": "Loading saved ideas count...",
+      "savedIdeasCaption": "In your collection",
+      "savedIdeasRefreshError": "Unable to refresh your collection"
+    },
+    "youWouldLike": {
+      "title": "You'd like",
+      "comingSoon": "Coming soon..."
+    },
+    "favorites": {
+      "sectionLabel": "Your saved ideas",
+      "title": "Your pocket",
+      "tagline": "A little saved for later.",
+      "loading": "Loading your saved ideas...",
+      "refreshError": "Could not refresh saved ideas.",
+      "loadError": "Could not load saved ideas.",
+      "countUnknown": "Your favorites",
+      "count": "{count, plural, one {# idea saved} other {# ideas saved}}",
+      "discoverIdeas": "Discover ideas"
+    },
+    "categoryDistribution": {
+      "title": "Your interests",
+      "tagline": "A little more you.",
+      "description": "Category distribution across your saved ideas.",
+      "loading": "Loading your category distribution...",
+      "regionLabel": "Category distribution",
+      "empty": "Save ideas with categories to see your interests here.",
+      "refreshError": "Could not refresh categories. Showing the last loaded data.",
+      "loadError": "Could not load your categories.",
+      "footnote": "Each category assignment counts equally. Percentages are rounded."
+    }
+  }
+}

@@ -1,13 +1,14 @@
 "use client";
 
 import { Bell, ShieldCheck, User } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 
 const navItems = [
-  { href: "/settings/profile", label: "Profile", icon: User },
-  { href: "/settings/security", label: "Security", icon: ShieldCheck },
-  { href: "/settings/notifications", label: "Notifications", icon: Bell },
+  { href: "/settings/profile", labelKey: "profile", icon: User },
+  { href: "/settings/security", labelKey: "security", icon: ShieldCheck },
+  { href: "/settings/notifications", labelKey: "notifications", icon: Bell },
 ] as const;
 
 function isActivePath(pathname: string, href: string): boolean {
@@ -19,11 +20,12 @@ function isActivePath(pathname: string, href: string): boolean {
 // layout does not remount between settings pages, so the state went stale.
 export default function SideBar(): ReactElement {
   const pathname = usePathname();
+  const t = useTranslations("Settings.nav");
 
   return (
     <aside className="w-48 shrink-0">
-      <nav aria-label="Settings" className="flex flex-col space-y-1">
-        {navItems.map(({ href, label, icon: Icon }) => {
+      <nav aria-label={t("label")} className="flex flex-col space-y-1">
+        {navItems.map(({ href, labelKey, icon: Icon }) => {
           const isActive = isActivePath(pathname, href);
 
           return (
@@ -38,7 +40,7 @@ export default function SideBar(): ReactElement {
               }`}
             >
               <Icon aria-hidden="true" size={18} strokeWidth={1.5} />
-              {label}
+              {t(labelKey)}
             </Link>
           );
         })}

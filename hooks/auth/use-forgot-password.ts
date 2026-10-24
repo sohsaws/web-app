@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import {
   type SubmitHandler,
@@ -9,14 +10,18 @@ import {
 } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useAuthErrorMessage } from "@/hooks/i18n/use-auth-error-message";
 import { authClient } from "@/lib/auth/auth-client";
 
 const PASSWORD_RESET_REDIRECT_TO = "/forgot-password";
+// Exported so the form can fill the {max} placeholder of "emailTooLong".
+export const FORGOT_PASSWORD_EMAIL_MAX_LENGTH = 60;
 
+// Messages are keys of the Validation namespace.
 const forgotPasswordSchema = z.object({
   email: z
-    .email("Please enter a valid email address")
-    .max(60, "Email address is too long"),
+    .email("emailInvalid")
+    .max(FORGOT_PASSWORD_EMAIL_MAX_LENGTH, "emailTooLong"),
 });
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
@@ -28,6 +33,8 @@ interface UseForgotPasswordResult {
 }
 
 export function useForgotPassword(): UseForgotPasswordResult {
+  const t = useTranslations("Auth.forgotPassword");
+  const authErrorMessage = useAuthErrorMessage();
   const [requestedEmail, setRequestedEmail] = useState<string>();
   const form = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -48,15 +55,15 @@ export function useForgotPassword(): UseForgotPasswordResult {
       });
 
       if (error) {
-        toast.error(error.message ?? "Unable to send the password reset link");
+        toast.error(authErrorMessage(error, t("failed")));
         return;
       }
 
       setRequestedEmail(normalizedEmail);
-      toast.success("If the account exists, a reset link has been sent");
+      toast.success(t("linkSent"));
     } catch (error: unknown) {
       console.error("Password reset request failed:", error);
-      toast.error("Unable to send the password reset link");
+      toast.error(t("failed"));
     }
   };
 

@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { RegenerateDeckButton } from "./regenerate-deck-button.client";
 
 describe("RegenerateDeckButton", () => {
@@ -12,6 +13,7 @@ describe("RegenerateDeckButton", () => {
         isPending={false}
         isRegenerating={false}
       />,
+      { wrapper: IntlTestProvider },
     );
 
     await userEvent.click(
@@ -29,6 +31,7 @@ describe("RegenerateDeckButton", () => {
         isPending
         isRegenerating={false}
       />,
+      { wrapper: IntlTestProvider },
     );
     const button = screen.getByRole("button", { name: "Shuffle a new deck" });
 
@@ -44,6 +47,7 @@ describe("RegenerateDeckButton", () => {
   it("tells assistive technology that a new deck is on its way", () => {
     render(
       <RegenerateDeckButton onRegenerate={vi.fn()} isPending isRegenerating />,
+      { wrapper: IntlTestProvider },
     );
 
     const button = screen.getByRole("button", {

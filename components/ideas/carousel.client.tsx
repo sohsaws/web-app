@@ -7,6 +7,7 @@ import {
   type PanInfo,
   useReducedMotion,
 } from "motion/react";
+import { useTranslations } from "next-intl";
 import {
   type ReactElement,
   type KeyboardEvent as ReactKeyboardEvent,
@@ -59,6 +60,7 @@ interface CarouselDialogProps {
 }
 
 function CarouselDialog({ items, onClose }: CarouselDialogProps): ReactElement {
+  const t = useTranslations("Ideas.carousel");
   const [requestedIndex, setRequestedIndex] = useState(0);
   const reducedMotion = useReducedMotion();
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -138,7 +140,7 @@ function CarouselDialog({ items, onClose }: CarouselDialogProps): ReactElement {
       ref={dialogRef}
       role="dialog"
       aria-modal="true"
-      aria-label="Ideas carousel"
+      aria-label={t("label")}
       tabIndex={-1}
       onKeyDown={handleKeyDown}
       onClick={closeOnBackdropClick}
@@ -151,7 +153,7 @@ function CarouselDialog({ items, onClose }: CarouselDialogProps): ReactElement {
       <button
         ref={closeButtonRef}
         type="button"
-        aria-label="Close carousel"
+        aria-label={t("close")}
         onClick={onClose}
         className="fixed top-4 right-4 z-10 flex size-10 cursor-pointer items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none"
       >
@@ -159,7 +161,7 @@ function CarouselDialog({ items, onClose }: CarouselDialogProps): ReactElement {
       </button>
 
       <motion.ul
-        aria-label="Ideas"
+        aria-label={t("list")}
         initial={{ scale: reducedMotion ? 1 : 0.95 }}
         animate={{ scale: 1 }}
         exit={{ scale: reducedMotion ? 1 : 0.95 }}
@@ -215,12 +217,12 @@ function CarouselDialog({ items, onClose }: CarouselDialogProps): ReactElement {
         aria-live="polite"
         className="fixed top-4 left-1/2 z-20 flex h-10 -translate-x-1/2 items-center text-xs text-app-muted tabular-nums"
       >
-        {activeIndex + 1} / {items.length}
+        {t("position", { current: activeIndex + 1, total: items.length })}
       </p>
 
       <button
         type="button"
-        aria-label="Previous idea"
+        aria-label={t("previous")}
         disabled={activeIndex === 0}
         onClick={(): void => goTo(activeIndex - 1)}
         className={`left-(--carousel-control-inset) ${NAVIGATION_BUTTON_CLASS}`}
@@ -229,7 +231,7 @@ function CarouselDialog({ items, onClose }: CarouselDialogProps): ReactElement {
       </button>
       <button
         type="button"
-        aria-label="Next idea"
+        aria-label={t("next")}
         disabled={activeIndex === lastIndex}
         onClick={(): void => goTo(activeIndex + 1)}
         className={`right-(--carousel-control-inset) ${NAVIGATION_BUTTON_CLASS}`}

@@ -1,11 +1,14 @@
 import { randomUUID } from "node:crypto";
+import type { QueryClient } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { z } from "zod";
 import { useIdeasStore } from "@/app/stores/ideas-store";
 import type { ideaResponseSchema } from "@/lib/config/ideas";
 import type { IdeaSaveRequest } from "@/lib/types/ideas/types";
 import { RateLimitError } from "@/lib/utils/responseError";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { createQueryClientWrapper } from "@/test-utils/query-client-wrapper";
 import { useGeneratePackIdeas } from "./use-generate-pack-ideas";
 
@@ -63,8 +66,26 @@ function deferNextResponse(): (response: Response) => void {
   return (response) => respond(response);
 }
 
+// next-intl for the translated toast text, around a fresh QueryClient.
+function createWrapper(): {
+  queryClient: QueryClient;
+  wrapper: ({ children }: { children: ReactNode }) => ReactNode;
+} {
+  const { queryClient, wrapper: QueryWrapper } = createQueryClientWrapper();
+
+  function wrapper({ children }: { children: ReactNode }): ReactNode {
+    return (
+      <IntlTestProvider>
+        <QueryWrapper>{children}</QueryWrapper>
+      </IntlTestProvider>
+    );
+  }
+
+  return { queryClient, wrapper };
+}
+
 function renderGenerateHook() {
-  const { wrapper } = createQueryClientWrapper();
+  const { wrapper } = createWrapper();
   return renderHook(() => useGeneratePackIdeas(BIO), { wrapper });
 }
 
@@ -178,7 +199,9 @@ describe("useGeneratePackIdeas", () => {
     await waitFor(() =>
       expect(result.current.error).toBeInstanceOf(RateLimitError),
     );
-    expect(showRateLimitToast).toHaveBeenCalledWith(300);
+    expect(showRateLimitToast).toHaveBeenCalledWith(
+      "You've reached the hourly limit. Try again in 5 minutes.",
+    );
     // The refill effect must not retry in a loop after an error.
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(storedTitles()).toBeUndefined();

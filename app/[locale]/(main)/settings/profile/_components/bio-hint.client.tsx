@@ -2,6 +2,7 @@
 
 import { GraduationCap } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 
 const BIO_HINT_ID = "bio-hint";
@@ -19,12 +20,13 @@ const HINT_COLOR_CYCLE_SECONDS = 6;
 
 export function BioHint(): ReactElement {
   const reducedMotion = useReducedMotion();
+  const t = useTranslations("Settings.bio");
 
   return (
     <span className="group relative inline-flex">
       <motion.button
         type="button"
-        aria-label="What is the bio for?"
+        aria-label={t("hintLabel")}
         aria-describedby={BIO_HINT_ID}
         animate={reducedMotion ? undefined : { color: HINT_COLOR_CYCLE }}
         transition={{
@@ -47,9 +49,7 @@ export function BioHint(): ReactElement {
          group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100 
          motion-reduce:transition-none"
       >
-        Your bio tells the AI what ideas to create. Describe your interests,
-        hobbies, work and what you want to try. The more specific it is, the
-        better your deck.
+        {t("hint")}
       </span>
     </span>
   );

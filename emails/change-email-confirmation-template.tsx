@@ -14,28 +14,46 @@ import {
 } from "@react-email/components";
 import { pretty, render, toPlainText } from "@react-email/render";
 import type { ReactElement } from "react";
+import type { Locale } from "@/lib/config/locales";
+import {
+  type AuthEmailCopy,
+  getIgnoreNotice,
+  type RenderedAuthEmail,
+} from "./config/auth-email-copy";
 import { emailTailwindConfig } from "./config/email-tailwind";
+import type { EmailTranslator } from "./config/email-translator";
+import { toExpiryMinutes } from "./config/link-expiry";
+import { previewEmailTranslator } from "./config/preview-email-translator";
 
 interface ChangeEmailConfirmationProps {
-  newEmail: string;
+  copy: AuthEmailCopy;
+  locale: Locale;
   url: string;
 }
 
-interface RenderedChangeEmailConfirmation {
-  html: string;
-  text: string;
+interface ChangeEmailConfirmationCopyOptions {
+  linkExpiresInSeconds: number;
+  newEmail: string;
+}
+
+interface RenderChangeEmailConfirmationOptions
+  extends ChangeEmailConfirmationCopyOptions {
+  locale: Locale;
+  t: EmailTranslator;
+  url: string;
 }
 
 export function ChangeEmailConfirmationEmail({
-  newEmail,
+  copy,
+  locale,
   url,
 }: ChangeEmailConfirmationProps): ReactElement {
   return (
     <Tailwind config={emailTailwindConfig}>
-      <Html lang="en">
+      <Html lang={locale}>
         <Head />
         <Body className="bg-bg-2 m-0 text-center font-sans">
-          <Preview>Confirm your Swiipy email change</Preview>
+          <Preview>{copy.preview}</Preview>
           <Container className="mobile:mt-0 mx-auto mt-8 w-full max-w-160">
             <Section>
               <Section className="bg-bg mobile:px-2 px-6 py-4">
@@ -51,7 +69,7 @@ export function ChangeEmailConfirmationEmail({
                       className="w-1/2 py-1.75 align-middle"
                     >
                       <Text className="font-13 m-0 text-right font-sans">
-                        <span className="text-fg-3">Email change</span>
+                        <span className="text-fg-3">{copy.label}</span>
                       </Text>
                     </Column>
                   </Row>
@@ -66,14 +84,12 @@ export function ChangeEmailConfirmationEmail({
                       S
                     </Text>
                     <Heading as="h1" className="font-28 text-fg m-0 font-sans">
-                      Change your email
+                      {copy.heading}
                     </Heading>
                   </Section>
 
                   <Text className="font-16 text-fg-2 mx-auto mt-0 mb-8 max-w-95 text-center font-sans">
-                    We received a request to change your Swiipy email address to{" "}
-                    <strong>{newEmail}</strong>. Confirm this request first; we
-                    will then verify the new address.
+                    {copy.body}
                   </Text>
 
                   <Section className="mb-6 text-center">
@@ -81,20 +97,18 @@ export function ChangeEmailConfirmationEmail({
                       href={url}
                       className="bg-fg font-16 text-fg-inverted inline-block rounded-lg px-7 py-4 text-center font-sans leading-6"
                     >
-                      Continue email change
+                      {copy.button}
                     </Button>
                   </Section>
 
                   <Text className="font-13 text-fg-3 mx-auto mt-8 mb-0 max-w-100 text-center font-sans">
-                    If you didn&apos;t request this,
-                    <br />
-                    please ignore this email.
+                    {copy.ignoreNotice}
                   </Text>
                 </Section>
 
                 <Section className="bg-bg">
                   <Text className="font-11 text-fg-3 m-0 px-6 py-8 text-center font-sans">
-                    This confirmation link expires in one hour.
+                    {copy.expiry}
                   </Text>
                 </Section>
               </Section>
@@ -106,23 +120,55 @@ export function ChangeEmailConfirmationEmail({
   );
 }
 
+export function getChangeEmailConfirmationCopy(
+  t: EmailTranslator,
+  { linkExpiresInSeconds, newEmail }: ChangeEmailConfirmationCopyOptions,
+): AuthEmailCopy {
+  return {
+    preview: t("changeEmail.preview"),
+    label: t("changeEmail.label"),
+    heading: t("changeEmail.heading"),
+    body: t.rich("changeEmail.body", {
+      newEmail,
+      strong: (chunks) => <strong>{chunks}</strong>,
+    }),
+    button: t("changeEmail.button"),
+    ignoreNotice: getIgnoreNotice(t),
+    expiry: t("changeEmail.expiry", {
+      minutes: toExpiryMinutes(linkExpiresInSeconds),
+    }),
+  };
+}
+
 export async function renderChangeEmailConfirmation({
+  linkExpiresInSeconds,
+  locale,
   newEmail,
+  t,
   url,
-}: ChangeEmailConfirmationProps): Promise<RenderedChangeEmailConfirmation> {
+}: RenderChangeEmailConfirmationOptions): Promise<RenderedAuthEmail> {
+  const copy = getChangeEmailConfirmationCopy(t, {
+    linkExpiresInSeconds,
+    newEmail,
+  });
   const html = await pretty(
     await render(
-      <ChangeEmailConfirmationEmail newEmail={newEmail} url={url} />,
+      <ChangeEmailConfirmationEmail copy={copy} locale={locale} url={url} />,
     ),
   );
 
   return {
+    subject: t("changeEmail.subject"),
     html,
     text: toPlainText(html),
   };
 }
 
 ChangeEmailConfirmationEmail.PreviewProps = {
-  newEmail: "new-email@example.com",
+  copy: getChangeEmailConfirmationCopy(previewEmailTranslator, {
+    linkExpiresInSeconds: 60 * 60,
+    newEmail: "new-email@example.com",
+  }),
+  locale: "en",
   url: "https://example.com/confirm-email-change",
 } satisfies ChangeEmailConfirmationProps;

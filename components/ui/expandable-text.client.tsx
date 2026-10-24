@@ -2,9 +2,9 @@
 
 import { ChevronDown } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
-import { type ReactElement, useId, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { type ReactElement, useId, useMemo, useState } from "react";
 
-const sentenceSegmenter = new Intl.Segmenter("en", { granularity: "sentence" });
 const PREVIEW_SENTENCE_COUNT = 2;
 
 interface ExpandableTextProps {
@@ -19,6 +19,14 @@ export function ExpandableText({
   const [isExpanded, setIsExpanded] = useState(false);
   const contentId = useId();
   const reducedMotion = useReducedMotion();
+  const t = useTranslations("Common.actions");
+  const locale = useLocale();
+  // Sentence boundaries depend on the language of the text, which is the
+  // user's locale for generated ideas.
+  const sentenceSegmenter = useMemo(
+    () => new Intl.Segmenter(locale, { granularity: "sentence" }),
+    [locale],
+  );
   const sentences = Array.from(
     sentenceSegmenter.segment(children.trim()),
     ({ segment }) => segment,
@@ -56,7 +64,7 @@ export function ExpandableText({
             onClick={(): void => setIsExpanded((current) => !current)}
             className="mt-3 inline-flex cursor-pointer items-center gap-1.5 rounded-sm text-[0.6875rem] font-medium tracking-[0.2em] text-neutral-400 uppercase transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white motion-reduce:transition-none"
           >
-            {isExpanded ? "Show less" : "Read more"}
+            {isExpanded ? t("showLess") : t("readMore")}
             <motion.span
               aria-hidden="true"
               initial={false}

@@ -8,6 +8,7 @@ import {
   useMotionValue,
   useReducedMotion,
 } from "motion/react";
+import { useTranslations } from "next-intl";
 import {
   type ReactElement,
   type ReactNode,
@@ -20,12 +21,12 @@ import { useIdeasStore } from "@/app/stores/ideas-store";
 import { IdeaCard } from "@/components/ideas/idea-card.client";
 import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
 import { useGeneratePackIdeas } from "@/hooks/ideas/use-generate-pack-ideas";
+import { useRateLimitMessage } from "@/hooks/ideas/use-rate-limit-message";
 import { useSaveFavorite } from "@/hooks/ideas/use-save-favorite";
 import { swipeAway } from "@/lib/animations/swipe-away";
 import { getSwipeDirection } from "@/lib/animations/swipe-direction";
 import type { IdeaSaveRequest } from "@/lib/types/ideas/types";
 import { RateLimitError } from "@/lib/utils/responseError";
-import { formatRetryAfter } from "@/lib/utils/retry-after";
 import { IdeaCardActions } from "./idea-card-actions.client";
 import { RegenerateDeckButton } from "./regenerate-deck-button.client";
 
@@ -142,6 +143,10 @@ interface CardsPoolProps {
   userBio: string;
 }
 
+function mutedHeadingLine(chunks: ReactNode): ReactElement {
+  return <span className="block text-neutral-400">{chunks}</span>;
+}
+
 // Mirrors the IdeaCardView box (image ratio + text minimum height), so the
 // first card replaces the placeholder without a jump in height.
 function DeckPlaceholder({ children }: { children: ReactNode }): ReactElement {
@@ -160,6 +165,9 @@ export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
   const { generate, regenerate, isPending, isRegenerating, error } =
     useGeneratePackIdeas(userBio);
   const { save } = useSaveFavorite();
+  const t = useTranslations("Dive.cardsPool");
+  const tCommon = useTranslations("Common.actions");
+  const getRateLimitMessage = useRateLimitMessage();
 
   const currentIdea = useIdeasStore((state) => state.ideas?.[0]);
   if (!currentIdea) {
@@ -168,20 +176,19 @@ export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
         <div className="w-full max-w-100">
           <DeckPlaceholder>
             <p className="font-serif text-3xl tracking-tight text-white">
-              Couldn&apos;t shuffle
-              <span className="block text-neutral-400">your deck.</span>
+              {t.rich("errorHeading", { muted: mutedHeadingLine })}
             </p>
             <p className="text-sm leading-relaxed text-neutral-400">
               {error instanceof RateLimitError
-                ? `You've reached the hourly limit. Try again in ${formatRetryAfter(error.retryAfterSeconds)}.`
-                : "Something went wrong while generating ideas."}
+                ? getRateLimitMessage(error.retryAfterSeconds)
+                : t("generationFailed")}
             </p>
             <button
               type="button"
               onClick={generate}
               className="inline-flex min-h-12 cursor-pointer items-center rounded-full bg-[#ece8e1] px-7 text-sm font-semibold text-black transition-colors duration-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
-              Try again
+              {tCommon("tryAgain")}
             </button>
           </DeckPlaceholder>
         </div>
@@ -192,12 +199,12 @@ export function CardsPool({ userBio }: CardsPoolProps): ReactElement {
     return (
       <div className="w-full max-w-100">
         <DeckPlaceholder>
-          <LoadingSpinner label="Generating ideas" className="size-10" />
+          <LoadingSpinner label={t("loadingLabel")} className="size-10" />
           <p
             aria-hidden="true"
             className="text-xs font-medium tracking-[0.25em] text-neutral-400 uppercase"
           >
-            Shuffling your deck
+            {t("loadingText")}
           </p>
         </DeckPlaceholder>
       </div>

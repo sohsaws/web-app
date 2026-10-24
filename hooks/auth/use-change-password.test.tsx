@@ -1,5 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { useChangePassword } from "./use-change-password";
 
 const { authClient, router, toast } = vi.hoisted(() => ({
@@ -42,7 +43,9 @@ beforeEach(() => {
 
 describe("useChangePassword", () => {
   it("changes the password and signs out every other session", async () => {
-    const { result } = renderHook(() => useChangePassword());
+    const { result } = renderHook(() => useChangePassword(), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, validInput);
 
@@ -53,6 +56,9 @@ describe("useChangePassword", () => {
     });
     expect(router.replace).toHaveBeenCalledWith("/settings/security");
     expect(router.refresh).toHaveBeenCalled();
+    expect(toast.success).toHaveBeenCalledWith(
+      "Password changed successfully.",
+    );
   });
 
   it.each([
@@ -66,7 +72,9 @@ describe("useChangePassword", () => {
       { ...validInput, newPassword: "short", confirmPassword: "short" },
     ],
   ])("does not call the server for %s", async (_case, values) => {
-    const { result } = renderHook(() => useChangePassword());
+    const { result } = renderHook(() => useChangePassword(), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, values);
 
@@ -78,13 +86,15 @@ describe("useChangePassword", () => {
       data: null,
       error: { code: "INVALID_PASSWORD", message: "Invalid password" },
     });
-    const { result } = renderHook(() => useChangePassword());
+    const { result } = renderHook(() => useChangePassword(), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, validInput);
 
     expect(
       result.current.form.getFieldState("currentPassword").error?.message,
-    ).toBe("Current password is incorrect");
+    ).toBe("currentPasswordIncorrect");
     expect(router.replace).not.toHaveBeenCalled();
   });
 
@@ -93,11 +103,13 @@ describe("useChangePassword", () => {
       data: null,
       error: { code: "UNKNOWN", message: "Something broke" },
     });
-    const { result } = renderHook(() => useChangePassword());
+    const { result } = renderHook(() => useChangePassword(), {
+      wrapper: IntlTestProvider,
+    });
 
     await submit(result, validInput);
 
-    expect(toast.error).toHaveBeenCalledWith("Something broke");
+    expect(toast.error).toHaveBeenCalledWith("Unable to change your password.");
     expect(router.replace).not.toHaveBeenCalled();
   });
 });

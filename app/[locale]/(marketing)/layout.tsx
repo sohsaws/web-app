@@ -1,17 +1,19 @@
+import { getTranslations } from "next-intl/server";
 import { NavigationBar } from "@/components/layout/navigation-bar.client";
 import { Link } from "@/i18n/navigation";
 import { HeaderActions } from "./_components/header-actions.client";
 
-const navigationItems = [
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-] as const;
-
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const t = await getTranslations("Marketing");
+  const navigationItems = [
+    { href: "/about", label: t("header.about") },
+    { href: "/contact", label: t("header.contact") },
+  ] as const;
+
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="fixed top-0 z-50 h-15 w-app-screen-width border-b border-white/5 bg-app-bg">
@@ -24,7 +26,7 @@ export default function SiteLayout({
           </Link>
 
           <NavigationBar
-            ariaLabel="Marketing navigation"
+            ariaLabel={t("header.navigationLabel")}
             items={navigationItems}
             className="absolute left-1/2 -translate-x-1/2"
           />
@@ -41,13 +43,13 @@ export default function SiteLayout({
           <div className="relative mx-auto flex max-w-app-shell items-center justify-center px-app-nav-x">
             <nav
               className="flex items-center gap-10 text-app-footer-link text-neutral-500"
-              aria-label="Footer"
+              aria-label={t("footer.navigationLabel")}
             >
               <Link href="#" className="transition-colors hover:text-white">
-                Privacy
+                {t("footer.privacy")}
               </Link>
               <Link href="#" className="transition-colors hover:text-white">
-                Terms
+                {t("footer.terms")}
               </Link>
               <Link href="#" className="transition-colors hover:text-white">
                 Telegram

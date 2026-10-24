@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight, RotateCcw } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { type ReactElement, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 
@@ -13,6 +14,8 @@ export default function ErrorPage({
   error,
   retry,
 }: ErrorPageProps): ReactElement {
+  const t = useTranslations("Common");
+
   useEffect(() => {
     // No error reporting service yet, so the browser console is the only log.
     console.error(error);
@@ -29,16 +32,20 @@ export default function ErrorPage({
 
       <p className="flex items-center justify-center gap-3 text-xs font-medium tracking-[0.25em] text-neutral-400 uppercase motion-safe:animate-fade-up">
         <span aria-hidden="true" className="h-px w-6 bg-app-action-skip" />
-        Something went wrong
+        {t("errorPage.eyebrow")}
       </p>
 
       <h1 className="mt-6 font-serif text-5xl leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl motion-safe:animate-fade-up motion-safe:[animation-delay:100ms]">
-        <span className="block">We hit an</span>
-        <span className="block text-neutral-400">unexpected snag.</span>
+        {t.rich("errorPage.title", {
+          line: (chunks) => <span className="block">{chunks}</span>,
+          muted: (chunks) => (
+            <span className="block text-neutral-400">{chunks}</span>
+          ),
+        })}
       </h1>
 
       <p className="mt-8 max-w-md text-base leading-relaxed font-light text-neutral-300 motion-safe:animate-fade-up motion-safe:[animation-delay:200ms]">
-        It&apos;s not you. Try again, and if it keeps happening, let us know.
+        {t("errorPage.description")}
       </p>
 
       <div className="mt-10 flex flex-wrap items-center justify-center gap-3 motion-safe:animate-fade-up motion-safe:[animation-delay:300ms]">
@@ -51,13 +58,13 @@ export default function ErrorPage({
             aria-hidden="true"
             className="size-4 transition-transform duration-300 group-hover:-rotate-45 motion-reduce:transition-none"
           />
-          Try again
+          {t("actions.tryAgain")}
         </button>
         <Link
           href="/"
           className="group inline-flex min-h-12 items-center gap-2.5 rounded-full border border-app-border px-7 text-sm font-medium text-neutral-300 transition-colors duration-300 hover:border-white/30 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
         >
-          Back to home
+          {t("actions.backToHome")}
           <ArrowRight
             aria-hidden="true"
             className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 motion-reduce:transition-none"
@@ -67,7 +74,7 @@ export default function ErrorPage({
 
       {error.digest ? (
         <p className="mt-8 font-mono text-xs text-neutral-600">
-          Reference: {error.digest}
+          {t("errorPage.reference", { digest: error.digest })}
         </p>
       ) : null}
     </main>

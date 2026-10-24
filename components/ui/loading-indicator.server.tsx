@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import type { ReactElement } from "react";
 
 const cardSilhouettes = [
@@ -14,7 +15,9 @@ const cardSilhouettes = [
   { id: "centre", className: "-translate-y-2" },
 ] as const;
 
-export function LoadingIndicator(): ReactElement {
+export async function LoadingIndicator(): Promise<ReactElement> {
+  const t = await getTranslations("Common.loadingIndicator");
+
   return (
     <div
       role="status"
@@ -31,7 +34,7 @@ export function LoadingIndicator(): ReactElement {
 
       <p className="flex items-center gap-3 text-xs font-medium tracking-[0.25em] text-neutral-400 uppercase">
         <span aria-hidden="true" className="h-px w-6 bg-app-action-skip" />
-        Loading
+        {t("label")}
       </p>
     </div>
   );

@@ -1,34 +1,34 @@
 import { AlertCircle, CheckCircle, XCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ElementType, ReactElement } from "react";
 
 export type TokenStatus = "success" | "invalid_token" | "expired_token";
+
+// Groups under Auth.tokenStatus, each with a title and a description.
+type TokenStatusMessageKey = "success" | "invalidToken" | "expiredToken";
 
 const STATUS_CONFIG: Record<
   TokenStatus,
   {
     icon: ElementType;
     iconClass: string;
-    title: string;
-    description: string;
+    messageKey: TokenStatusMessageKey;
   }
 > = {
   success: {
     icon: CheckCircle,
     iconClass: "text-white",
-    title: "Success",
-    description: "Redirecting you back in a moment...",
+    messageKey: "success",
   },
   invalid_token: {
     icon: XCircle,
     iconClass: "text-red-500",
-    title: "Invalid link",
-    description: "This link is invalid. Please request a new one",
+    messageKey: "invalidToken",
   },
   expired_token: {
     icon: AlertCircle,
     iconClass: "text-amber-500",
-    title: "Link is expired",
-    description: "This link has expired. Please request a new one",
+    messageKey: "expiredToken",
   },
 };
 
@@ -39,7 +39,8 @@ interface TokenStatusCardProps {
 export function TokenStatusCard({
   status,
 }: TokenStatusCardProps): ReactElement {
-  const { icon: Icon, iconClass, title, description } = STATUS_CONFIG[status];
+  const t = useTranslations("Auth.tokenStatus");
+  const { icon: Icon, iconClass, messageKey } = STATUS_CONFIG[status];
 
   return (
     <div className="bg-[#080808] flex items-center justify-center min-h-screen px-4">
@@ -51,8 +52,12 @@ export function TokenStatusCard({
           className={iconClass}
         />
         <div className="space-y-2">
-          <h1 className="text-xl font-semibold text-white">{title}</h1>
-          <p className="text-sm text-neutral-500">{description}</p>
+          <h1 className="text-xl font-semibold text-white">
+            {t(`${messageKey}.title`)}
+          </h1>
+          <p className="text-sm text-neutral-500">
+            {t(`${messageKey}.description`)}
+          </p>
         </div>
       </div>
     </div>

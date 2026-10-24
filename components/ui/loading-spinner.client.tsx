@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 
 interface LoadingSpinnerProps {
@@ -10,8 +11,9 @@ interface LoadingSpinnerProps {
 
 export function LoadingSpinner({
   className = "size-6",
-  label = "Loading...",
+  label,
 }: LoadingSpinnerProps): ReactElement {
+  const t = useTranslations("Common.status");
   const reducedMotion = useReducedMotion();
 
   return (
@@ -19,7 +21,7 @@ export function LoadingSpinner({
       role="status"
       className={`inline-flex shrink-0 items-center justify-center text-white ${className}`}
     >
-      <span className="sr-only">{label}</span>
+      <span className="sr-only">{label ?? t("loading")}</span>
       <motion.svg
         aria-hidden="true"
         viewBox="0 0 24 24"

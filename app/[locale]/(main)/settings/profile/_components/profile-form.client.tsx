@@ -1,6 +1,7 @@
 "use client";
 
 import { Save } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { useProfileForm } from "@/hooks/account/use-profile-form";
 import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
@@ -27,6 +28,8 @@ export default function ProfileForm({
 }: ProfileFormProps): ReactElement {
   const { form, onSubmit, resetForm } = useProfileForm(defaultValues);
   const validationMessage = useValidationMessage();
+  const t = useTranslations("Settings.profile");
+  const tCommon = useTranslations("Common");
   const {
     register,
     handleSubmit,
@@ -42,14 +45,14 @@ export default function ProfileForm({
             htmlFor="name"
             className="block text-xs font-medium text-neutral-500"
           >
-            Name
+            {t("nameLabel")}
           </label>
           <input
             id="name"
             {...register("name")}
             aria-invalid={Boolean(errors.name)}
             aria-describedby={errors.name ? "name-error" : undefined}
-            placeholder="Your name"
+            placeholder={t("namePlaceholder")}
             className="block w-full min-w-0 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white shadow-sm outline-none transition-colors placeholder:text-neutral-600 focus:border-white/20 focus:ring-1 focus:ring-white/20"
           />
           {errors.name ? (
@@ -67,7 +70,7 @@ export default function ProfileForm({
               htmlFor="email"
               className="text-xs font-medium text-neutral-500"
             >
-              Email
+              {t("emailLabel")}
             </label>
             {!emailVerified ? <EmailVerificationWarning email={email} /> : null}
           </div>
@@ -84,7 +87,7 @@ export default function ProfileForm({
               href="/change-email"
               className="text-xs text-blue-400 transition-colors hover:text-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
             >
-              Change my email address
+              {t("changeEmail")}
             </Link>
           </div>
         </div>
@@ -98,7 +101,7 @@ export default function ProfileForm({
             htmlFor="bio"
             className="block text-xs font-medium text-neutral-500"
           >
-            Bio
+            {t("bioLabel")}
           </label>
           <BioHint />
         </div>
@@ -108,7 +111,7 @@ export default function ProfileForm({
           aria-invalid={Boolean(errors.bio)}
           aria-describedby={errors.bio ? "bio-error" : "bio-description"}
           rows={4}
-          placeholder="Describe your interests and what you want to try"
+          placeholder={t("bioPlaceholder")}
           maxLength={PROFILE_BIO_MAX_LENGTH}
           className="block w-full resize-none rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white shadow-sm outline-none transition-colors placeholder:text-neutral-600 focus:border-white/20 focus:ring-1 focus:ring-white/20"
         />
@@ -116,7 +119,7 @@ export default function ProfileForm({
           id="bio-description"
           className="flex justify-between pl-2 text-xs text-neutral-600"
         >
-          <span>Write a short introduction.</span>
+          <span>{t("bioDescription")}</span>
           <span>
             {watch("bio").length}/{PROFILE_BIO_MAX_LENGTH}
           </span>
@@ -137,7 +140,7 @@ export default function ProfileForm({
           disabled={!isDirty || isSubmitting}
           className="cursor-pointer px-4 py-2 text-sm font-medium text-neutral-500 outline-none transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Cancel
+          {tCommon("actions.cancel")}
         </button>
         <button
           type="submit"
@@ -145,7 +148,9 @@ export default function ProfileForm({
           className="flex cursor-pointer items-center gap-2 rounded-lg bg-white px-5 py-2 text-sm font-medium text-black shadow-sm outline-none transition-colors hover:bg-neutral-200 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Save aria-hidden="true" size={16} strokeWidth={1.5} />
-          {isSubmitting ? "Saving..." : "Save changes"}
+          {isSubmitting
+            ? tCommon("status.saving")
+            : tCommon("actions.saveChanges")}
         </button>
       </div>
     </form>

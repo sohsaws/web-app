@@ -6,7 +6,7 @@ import {
   categoryDistributionSchema,
 } from "@/lib/config/category-distribution";
 import { FAVORITES_QUERY_KEY } from "@/lib/config/favorites";
-import { getApiResponseError } from "@/lib/utils/responseError";
+import { createApiResponseError } from "@/lib/utils/responseError";
 
 export function useCategoryDistribution(
   userId: string,
@@ -20,8 +20,9 @@ export function useCategoryDistribution(
       });
 
       if (!response.ok) {
-        throw new Error(
-          await getApiResponseError(response, "Unable to load categories"),
+        throw await createApiResponseError(
+          response,
+          "Unable to load categories",
         );
       }
 

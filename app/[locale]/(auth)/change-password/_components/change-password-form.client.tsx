@@ -1,10 +1,19 @@
 "use client";
 
 import { KeyRound } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
-import { useChangePassword } from "@/hooks/auth/use-change-password";
+import {
+  CHANGE_PASSWORD_MAX_LENGTH,
+  CHANGE_PASSWORD_MIN_LENGTH,
+  useChangePassword,
+} from "@/hooks/auth/use-change-password";
+import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
 
 export function ChangePasswordForm(): ReactElement {
+  const t = useTranslations("Auth.changePassword");
+  const tCommon = useTranslations("Common");
+  const validationMessage = useValidationMessage();
   const { form, onSubmit } = useChangePassword();
   const {
     register,
@@ -22,12 +31,8 @@ export function ChangePasswordForm(): ReactElement {
           className="text-white"
         />
         <div className="space-y-2 text-center">
-          <h1 className="text-xl font-semibold text-white">
-            Change your password
-          </h1>
-          <p className="text-sm text-neutral-500">
-            Enter your current password and choose a new one.
-          </p>
+          <h1 className="text-xl font-semibold text-white">{t("title")}</h1>
+          <p className="text-sm text-neutral-500">{t("subtitle")}</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
@@ -36,7 +41,7 @@ export function ChangePasswordForm(): ReactElement {
               htmlFor="current-password"
               className="block text-xs font-medium text-neutral-500"
             >
-              Current password
+              {t("currentPasswordLabel")}
             </label>
             <input
               id="current-password"
@@ -51,7 +56,7 @@ export function ChangePasswordForm(): ReactElement {
             />
             {errors.currentPassword ? (
               <p id="current-password-error" className="text-xs text-red-500">
-                {errors.currentPassword.message}
+                {validationMessage(errors.currentPassword.message)}
               </p>
             ) : null}
           </div>
@@ -61,7 +66,7 @@ export function ChangePasswordForm(): ReactElement {
               htmlFor="new-password"
               className="block text-xs font-medium text-neutral-500"
             >
-              New password
+              {t("newPasswordLabel")}
             </label>
             <input
               id="new-password"
@@ -76,7 +81,10 @@ export function ChangePasswordForm(): ReactElement {
             />
             {errors.newPassword ? (
               <p id="new-password-error" className="text-xs text-red-500">
-                {errors.newPassword.message}
+                {validationMessage(errors.newPassword.message, {
+                  min: CHANGE_PASSWORD_MIN_LENGTH,
+                  max: CHANGE_PASSWORD_MAX_LENGTH,
+                })}
               </p>
             ) : null}
           </div>
@@ -86,7 +94,7 @@ export function ChangePasswordForm(): ReactElement {
               htmlFor="confirm-password"
               className="block text-xs font-medium text-neutral-500"
             >
-              Confirm new password
+              {t("confirmPasswordLabel")}
             </label>
             <input
               id="confirm-password"
@@ -101,7 +109,7 @@ export function ChangePasswordForm(): ReactElement {
             />
             {errors.confirmPassword ? (
               <p id="confirm-password-error" className="text-xs text-red-500">
-                {errors.confirmPassword.message}
+                {validationMessage(errors.confirmPassword.message)}
               </p>
             ) : null}
           </div>
@@ -111,7 +119,7 @@ export function ChangePasswordForm(): ReactElement {
             disabled={isSubmitting}
             className="mt-2 w-full cursor-pointer rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isSubmitting ? "Saving..." : "Change password"}
+            {isSubmitting ? tCommon("status.saving") : t("submit")}
           </button>
         </form>
       </div>

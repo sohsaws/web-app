@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { type ReactElement, useEffect } from "react";
 import { toast } from "sonner";
 import {
@@ -15,6 +16,7 @@ interface EmailVerificationResultProps {
 export function VerifyEmailResult({
   status,
 }: EmailVerificationResultProps): ReactElement {
+  const t = useTranslations("Auth.verifyEmail");
   const router = useRouter();
 
   useEffect(() => {
@@ -22,14 +24,14 @@ export function VerifyEmailResult({
       return;
     }
 
-    toast.success("Email verified successfully");
+    toast.success(t("verified"));
 
     const timer = setTimeout(() => {
       router.replace("/settings/profile");
     }, 2800);
 
     return () => clearTimeout(timer);
-  }, [router, status]);
+  }, [router, status, t]);
 
   return <TokenStatusCard status={status} />;
 }

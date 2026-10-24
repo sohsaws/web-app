@@ -1,6 +1,7 @@
 "use client";
 
 import { Bookmark } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { useCarouselStore } from "@/app/stores/carousel-store";
 import { Carousel } from "@/components/ideas/carousel.client";
@@ -23,28 +24,33 @@ export function DashboardFavorites({
     useFavoritesPreview(userId);
   const total = data?.total;
   const openCarousel = useCarouselStore((state) => state.open);
+  const t = useTranslations("Dashboard");
+  const tCommon = useTranslations("Common");
+  const format = useFormatter();
 
   return (
     <section
-      aria-label="Your saved ideas"
+      aria-label={t("favorites.sectionLabel")}
       className="grid items-start gap-5 sm:grid-cols-2 xl:grid-cols-[minmax(0,17.5rem)_minmax(0,21rem)_minmax(0,1fr)]"
     >
       <div className="flex flex-col gap-5 self-stretch">
         <Widget className="p-6">
           <h2 className="text-xs tracking-widest text-app-muted uppercase">
-            Saved ideas
+            {t("metrics.savedIdeasTitle")}
           </h2>
           <div className="mt-3" aria-live="polite">
             {isPending ? (
-              <LoadingSpinner label="Loading saved ideas count..." />
+              <LoadingSpinner label={t("metrics.savedIdeasLoading")} />
             ) : (
               <p className="font-serif text-4xl leading-none text-white">
-                {total === undefined ? "—" : total.toLocaleString("en-US")}
+                {total === undefined ? "—" : format.number(total)}
               </p>
             )}
           </div>
           <p className="mt-3 text-xs text-app-muted">
-            {error ? "Unable to refresh your collection" : "In your collection"}
+            {error
+              ? t("metrics.savedIdeasRefreshError")
+              : t("metrics.savedIdeasCaption")}
           </p>
         </Widget>
         <YouWouldLike />
@@ -53,7 +59,7 @@ export function DashboardFavorites({
       <Widget className="p-6">
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-xs tracking-widest text-app-muted uppercase">
-            Your pocket
+            {t("favorites.title")}
           </h2>
           <Bookmark
             aria-hidden="true"
@@ -61,12 +67,12 @@ export function DashboardFavorites({
           />
         </div>
         <p className="mt-4 font-serif text-2xl leading-tight text-white">
-          A little saved for later.
+          {t("favorites.tagline")}
         </p>
 
         {isPending ? (
           <div className="flex min-h-60 items-center justify-center">
-            <LoadingSpinner label="Loading your saved ideas..." />
+            <LoadingSpinner label={t("favorites.loading")} />
           </div>
         ) : data ? (
           <>
@@ -78,9 +84,7 @@ export function DashboardFavorites({
         {error ? (
           <div role="alert" className="my-6 space-y-3 text-sm text-app-muted">
             <p>
-              {data
-                ? "Could not refresh saved ideas."
-                : "Could not load saved ideas."}
+              {data ? t("favorites.refreshError") : t("favorites.loadError")}
             </p>
             <button
               type="button"
@@ -90,7 +94,9 @@ export function DashboardFavorites({
               }}
               className="min-h-10 rounded-md border border-app-border px-4 text-white transition-colors hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white disabled:opacity-50"
             >
-              {isFetching ? "Retrying..." : "Try again"}
+              {isFetching
+                ? tCommon("status.retrying")
+                : tCommon("actions.tryAgain")}
             </button>
           </div>
         ) : null}
@@ -98,14 +104,14 @@ export function DashboardFavorites({
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-app-border pt-4 text-xs">
           <p className="text-app-muted" aria-live="polite">
             {total === undefined
-              ? "Your favorites"
-              : `${total} ${total === 1 ? "idea" : "ideas"} saved`}
+              ? t("favorites.countUnknown")
+              : t("favorites.count", { count: total })}
           </p>
           <Link
             href="/dive"
             className="inline-flex min-h-10 items-center rounded-sm text-white transition-colors hover:text-app-action-favorite focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
           >
-            Discover ideas
+            {t("favorites.discoverIdeas")}
           </Link>
         </div>
       </Widget>
