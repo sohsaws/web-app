@@ -1,8 +1,29 @@
 {
   "Validation": {
     "invalid": "Проверьте это поле.",
+    "required": "Это поле обязательно.",
     "nameRequired": "Имя не может быть пустым.",
     "nameTooLong": "Имя не может быть длиннее {max} символов.",
-    "bioTooLong": "Текст о себе не может быть длиннее {max} символов."
+    "bioTooLong": "Текст о себе не может быть длиннее {max} символов.",
+    "usernameRequired": "Введите имя пользователя.",
+    "usernameTooShort": "Имя пользователя должно быть не короче {min} символов.",
+    "usernameTooLong": "Имя пользователя должно быть не длиннее {max} символов.",
+    "usernameInvalidCharacters": "Допускаются только буквы, цифры и подчёркивание.",
+    "emailRequired": "Введите адрес электронной почты.",
+    "emailInvalid": "Введите корректный адрес электронной почты.",
+    "emailTooLong": "Адрес электронной почты должен быть не длиннее {max} символов.",
+    "emailSameAsCurrent": "Это уже ваш текущий адрес электронной почты.",
+    "identifierRequired": "Введите адрес электронной почты или имя пользователя.",
+    "identifierTooLong": "Адрес электронной почты или имя пользователя должны быть не длиннее {max} символов.",
+    "identifierInvalid": "Неверный адрес электронной почты или имя пользователя.",
+    "passwordRequired": "Введите пароль.",
+    "passwordTooShort": "Пароль должен быть не короче {min} символов.",
+    "passwordTooLong": "Пароль должен быть не длиннее {max} символов.",
+    "passwordConfirmRequired": "Подтвердите пароль.",
+    "passwordsDoNotMatch": "Пароли не совпадают.",
+    "passwordIncorrect": "Неверный пароль.",
+    "currentPasswordRequired": "Введите текущий пароль.",
+    "currentPasswordIncorrect": "Неверный текущий пароль.",
+    "deleteConfirmation": "Введите {word} для подтверждения."
   }
 }

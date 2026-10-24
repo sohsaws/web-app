@@ -1,1 +1,40 @@
-{}
+{
+  "Dashboard": {
+    "page": {
+      "greeting": "Bon retour, {name}",
+      "subtitle": "Votre prochaine idée n’attend que vous. Gardez vos favoris à portée de main."
+    },
+    "metrics": {
+      "savedIdeasTitle": "Idées enregistrées",
+      "savedIdeasLoading": "Chargement du nombre d’idées enregistrées...",
+      "savedIdeasCaption": "Dans votre collection",
+      "savedIdeasRefreshError": "Impossible d’actualiser votre collection"
+    },
+    "youWouldLike": {
+      "title": "Vous aimerez",
+      "comingSoon": "À venir..."
+    },
+    "favorites": {
+      "sectionLabel": "Vos idées enregistrées",
+      "title": "Votre poche",
+      "tagline": "Un peu de côté pour plus tard.",
+      "loading": "Chargement de vos idées enregistrées...",
+      "refreshError": "Impossible d’actualiser les idées enregistrées.",
+      "loadError": "Impossible de charger les idées enregistrées.",
+      "countUnknown": "Vos favoris",
+      "count": "{count, plural, one {# idée enregistrée} other {# idées enregistrées}}",
+      "discoverIdeas": "Découvrez des idées"
+    },
+    "categoryDistribution": {
+      "title": "Vos centres d’intérêt",
+      "tagline": "Un peu plus de vous.",
+      "description": "Répartition par catégorie de vos idées enregistrées.",
+      "loading": "Chargement de la répartition par catégorie...",
+      "regionLabel": "Répartition par catégorie",
+      "empty": "Enregistrez des idées avec des catégories pour voir vos centres d’intérêt ici.",
+      "refreshError": "Impossible d’actualiser les catégories. Affichage des dernières données chargées.",
+      "loadError": "Impossible de charger vos catégories.",
+      "footnote": "Chaque attribution de catégorie compte autant. Les pourcentages sont arrondis."
+    }
+  }
+}

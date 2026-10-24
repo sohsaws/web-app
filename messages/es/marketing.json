@@ -2,6 +2,96 @@
   "Marketing": {
     "languageSelect": {
       "label": "Idioma"
+    },
+    "header": {
+      "navigationLabel": "Navegación principal",
+      "about": "Acerca de",
+      "contact": "Contacto"
+    },
+    "footer": {
+      "navigationLabel": "Pie de página",
+      "privacy": "Privacidad",
+      "terms": "Términos"
+    },
+    "home": {
+      "eyebrow": "Una forma más tranquila de elegir",
+      "titleFirstLine": "Desliza. Decide.",
+      "titleSecondLine": "Listo.",
+      "subtitle": "Desde destinos de vacaciones hasta ideas para startups, la claridad está a un solo deslizamiento.",
+      "note": "Es gratis. Hecho para mentes curiosas."
+    },
+    "heroCta": {
+      "label": "Atrévete a decidir"
+    },
+    "heroCards": {
+      "kyoto": {
+        "title": "Kioto en otoño",
+        "description": "Pasea por los senderos del templo al amanecer, antes de que llegue la gente."
+      },
+      "ramen": {
+        "title": "Prepara ramen desde cero",
+        "description": "Prepara un caldo sustancioso a fuego lento el domingo y compártelo con tus amigos."
+      },
+      "focus": {
+        "title": "Haz sitio para trabajar mejor",
+        "description": "Reserva dos horas de tranquilidad al día y defiéndelas como si fueran una reunión."
+      }
+    },
+    "about": {
+      "eyebrow": "Sobre Swiipy",
+      "titleFirstLine": "Deja de hacer scroll.",
+      "titleSecondLine": "Empieza a decidir.",
+      "intro": "Swiipy convierte ese eterno «¿qué hago?» en unos cuantos deslizamientos rápidos.",
+      "problem": {
+        "label": "El problema",
+        "title": "Demasiadas opciones, ninguna decisión",
+        "description": "Una tarde libre, un fin de semana largo, un nuevo pasatiempo que empezar. Todas las listas que hay por internet ofrecen un montón de opciones, y estar todo el tiempo desplazándote por la pantalla te deja más cansado que cuando empezaste. Al final, no haces nada de verdad."
+      },
+      "solution": {
+        "label": "La solución",
+        "title": "Una tarjeta, una decisión",
+        "description": "Swiipy te muestra ideas una a una, seleccionadas según lo que nos cuentes sobre ti. Desliza hacia la izquierda para saltarte una, hacia la derecha para quedártela. Sin feeds ni distracciones, solo un pequeño montón de ideas que encajan contigo."
+      },
+      "howItWorks": {
+        "eyebrow": "Cómo funciona",
+        "title": "Tres pasos hacia tu <muted>baraja</muted>"
+      },
+      "steps": {
+        "bio": {
+          "title": "Cuéntanos algo sobre ti",
+          "description": "Escribe una breve biografía en tu perfil: tu trabajo, tus aficiones, lo que te gusta. Es lo único que necesitas configurar en Swiipy."
+        },
+        "swipe": {
+          "title": "Desliza entre ideas",
+          "description": "La IA crea una nueva baraja de ideas a partir de tu biografía. Pasa por alto lo que no te diga nada y guarda lo que sí te llame la atención."
+        },
+        "keep": {
+          "title": "Quédate con lo que importa",
+          "description": "Las ideas que guardas van a parar a tu bolsillo, y en el resumen puedes ver cuáles son los temas que más te interesan y a los que vuelves una y otra vez."
+        }
+      },
+      "comingNext": {
+        "label": "Próximamente",
+        "title": "De las ideas a <muted>los planes concretos</muted>",
+        "description": "En breve, las ideas que hayas guardado se convertirán en cosas reales que podrás probar: sitios cercanos, clubes a los que apuntarte, películas, juegos y lecturas elegidas especialmente para ti. Cuanto más deslices el dedo, más acertadas serán estas recomendaciones."
+      }
+    },
+    "contact": {
+      "eyebrow": "Hablemos",
+      "title": "Haz que la próxima <muted>conversación</muted> valga la pena.",
+      "intro": "¿Tienes alguna pregunta, algún comentario constructivo o simplemente una buena idea? Estamos aquí para escucharte. Envíanos un mensaje y te responderemos en breve.",
+      "emailLabel": "Envíanos un correo electrónico",
+      "replyTimeLabel": "Normalmente respondemos en",
+      "replyTimeValue": "un día",
+      "form": {
+        "title": "Escríbenos un mensaje",
+        "nameLabel": "Nombre",
+        "namePlaceholder": "Tu nombre",
+        "emailLabel": "Correo electrónico",
+        "messageLabel": "Mensaje",
+        "messagePlaceholder": "¿En qué estás pensando?",
+        "submit": "Enviar mensaje"
+      }
     }
   }
 }

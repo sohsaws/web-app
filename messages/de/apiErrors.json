@@ -9,7 +9,7 @@
     "IDEA_SAVE_FAILED": "Diese Idee konnte nicht gespeichert werden. Bitte versuche es noch einmal.",
     "FAVORITES_LOAD_FAILED": "Deine gespeicherten Ideen konnten nicht geladen werden. Bitte versuche es noch einmal.",
     "CATEGORIES_LOAD_FAILED": "Deine Kategorien konnten nicht geladen werden. Bitte versuche es noch einmal.",
-    "INVALID_BIO": "Bitte überprüfe deine Biografie und versuche es noch einmal.",
+    "INVALID_BIO": "Bitte überprüfe deine Bio und versuche es noch einmal.",
     "GENERATION_FAILED": "Es konnten keine Ideen generiert werden. Bitte versuche es noch einmal.",
     "INVALID_IMAGE_DESCRIPTION": "Diese Idee hat keine gültige Bildbeschreibung.",
     "IMAGE_PROMPT_TOO_LONG": "Diese Idee ist zu lang, um sie zu bebildern.",

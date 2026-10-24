@@ -1,8 +1,29 @@
 {
   "Validation": {
     "invalid": "Bitte überprüfe dieses Feld.",
+    "required": "Dieses Feld muss ausgefüllt werden.",
     "nameRequired": "Der Name darf nicht leer sein.",
     "nameTooLong": "Der Name darf nicht länger als {max} Zeichen sein.",
-    "bioTooLong": "Die Biografie darf nicht länger als {max} Zeichen sein."
+    "bioTooLong": "Die Bio darf nicht länger als {max} Zeichen sein.",
+    "usernameRequired": "Ein Benutzername ist erforderlich.",
+    "usernameTooShort": "Der Benutzername muss mindestens {min} Zeichen lang sein.",
+    "usernameTooLong": "Der Benutzername darf höchstens {max} Zeichen lang sein.",
+    "usernameInvalidCharacters": "Es sind nur Buchstaben, Zahlen und Unterstriche erlaubt.",
+    "emailRequired": "Eine E-Mail-Adresse ist erforderlich.",
+    "emailInvalid": "Bitte gib eine gültige E-Mail-Adresse ein.",
+    "emailTooLong": "Die E-Mail-Adresse darf höchstens {max} Zeichen lang sein.",
+    "emailSameAsCurrent": "Das ist bereits deine aktuelle E-Mail-Adresse.",
+    "identifierRequired": "Eine E-Mail-Adresse oder ein Benutzername ist erforderlich.",
+    "identifierTooLong": "Die E-Mail-Adresse oder der Benutzername darf höchstens {max} Zeichen lang sein.",
+    "identifierInvalid": "Ungültige E-Mail-Adresse oder ungültiger Benutzername.",
+    "passwordRequired": "Ein Passwort ist erforderlich.",
+    "passwordTooShort": "Das Passwort muss mindestens {min} Zeichen lang sein.",
+    "passwordTooLong": "Das Passwort darf höchstens {max} Zeichen lang sein.",
+    "passwordConfirmRequired": "Bitte bestätige dein Passwort.",
+    "passwordsDoNotMatch": "Die Passwörter stimmen nicht überein.",
+    "passwordIncorrect": "Das Passwort ist falsch.",
+    "currentPasswordRequired": "Das aktuelle Passwort ist erforderlich.",
+    "currentPasswordIncorrect": "Das aktuelle Passwort ist falsch.",
+    "deleteConfirmation": "Gib {word} ein, um zu bestätigen."
   }
 }

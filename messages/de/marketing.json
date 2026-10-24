@@ -2,6 +2,96 @@
   "Marketing": {
     "languageSelect": {
       "label": "Sprache"
+    },
+    "header": {
+      "navigationLabel": "Hauptnavigation",
+      "about": "Über uns",
+      "contact": "Kontakt"
+    },
+    "footer": {
+      "navigationLabel": "Fußzeile",
+      "privacy": "Datenschutz",
+      "terms": "Nutzungsbedingungen"
+    },
+    "home": {
+      "eyebrow": "Eine entspanntere Art, sich zu entscheiden",
+      "titleFirstLine": "Wischen. Entscheiden.",
+      "titleSecondLine": "Erledigt.",
+      "subtitle": "Von Urlaubszielen bis hin zu Start-up-Ideen – Klarheit ist nur einen Wisch entfernt.",
+      "note": "Kostenlos nutzbar. Für Neugierige gemacht."
+    },
+    "heroCta": {
+      "label": "Trau dich zu entscheiden"
+    },
+    "heroCards": {
+      "kyoto": {
+        "title": "Kyoto im Herbst",
+        "description": "Spaziere bei Sonnenaufgang über die Tempelwege, bevor die Menschenmassen eintreffen."
+      },
+      "ramen": {
+        "title": "Koch Ramen von Grund auf",
+        "description": "Koch am Sonntag eine kräftige Brühe und teil sie mit Freunden."
+      },
+      "focus": {
+        "title": "Schaffe Platz für bessere Arbeit",
+        "description": "Nimm dir jeden Tag zwei ruhige Stunden Zeit und schütze sie wie einen Termin."
+      }
+    },
+    "about": {
+      "eyebrow": "Über Swiipy",
+      "titleFirstLine": "Hör auf zu scrollen.",
+      "titleSecondLine": "Fang an, dich zu entscheiden.",
+      "intro": "Swiipy verwandelt die endlose Frage „Was soll ich tun?“ in ein paar schnelle Wischbewegungen.",
+      "problem": {
+        "label": "Das Problem",
+        "title": "Zu viele Optionen, keine Entscheidung",
+        "description": "Ein freier Abend, ein langes Wochenende, ein neues Hobby, das man sich zulegen könnte. Jede Liste im Internet bietet hundert Möglichkeiten, und das endlose Scrollen macht dich am Ende müder als zu Beginn. Eigentlich wird gar nichts davon umgesetzt."
+      },
+      "solution": {
+        "label": "Die Lösung",
+        "title": "Eine Karte, eine Entscheidung",
+        "description": "Swiipy zeigt dir nacheinander Ideen an, die auf dem basieren, was du uns über dich erzählst. Wische nach links, um eine Idee zu überspringen, nach rechts, um sie zu behalten. Keine Feeds und kein Schnickschnack, nur eine kleine Auswahl an Ideen, die zu dir passen."
+      },
+      "howItWorks": {
+        "eyebrow": "So funktioniert’s",
+        "title": "Drei Schritte zu deinem <muted>Kartenstapel</muted>"
+      },
+      "steps": {
+        "bio": {
+          "title": "Erzähl uns etwas über dich",
+          "description": "Schreib eine kurze Bio in dein Profil: deine Arbeit, deine Hobbys, was dir Spaß macht. Das ist alles, was Swiipy braucht."
+        },
+        "swipe": {
+          "title": "Wische durch Ideen",
+          "description": "Die KI stellt aus deiner Bio einen neuen Kartenstapel zusammen. Überspringe, was dich nicht reizt, und speichere, was dich reizt."
+        },
+        "keep": {
+          "title": "Behalte das, was wichtig ist",
+          "description": "Gespeicherte Ideen landen in deiner Tasche, und in deiner Übersicht siehst du, zu welchen Interessen du immer wieder zurückkehrst."
+        }
+      },
+      "comingNext": {
+        "label": "Demnächst",
+        "title": "Von Ideen zu <muted>konkreten Plänen</muted>",
+        "description": "Schon bald werden deine gespeicherten Ideen zu konkreten Vorschlägen, die du ausprobieren kannst: Orte in deiner Nähe, Vereine, denen du beitreten kannst, Filme, Spiele und Bücher, die speziell für dich ausgewählt wurden. Je mehr du wischst, desto treffsicherer werden diese Vorschläge."
+      }
+    },
+    "contact": {
+      "eyebrow": "Lass uns reden",
+      "title": "Mach das nächste <muted>Gespräch</muted> wertvoll.",
+      "intro": "Hast du Fragen, konstruktives Feedback oder einfach nur eine gute Idee? Wir haben ein offenes Ohr dafür. Schreib uns einfach eine Nachricht, und wir melden uns bald bei dir.",
+      "emailLabel": "Schreib uns eine E-Mail",
+      "replyTimeLabel": "Wir antworten meist innerhalb von",
+      "replyTimeValue": "einem Tag",
+      "form": {
+        "title": "Schreib uns eine Nachricht",
+        "nameLabel": "Name",
+        "namePlaceholder": "Dein Name",
+        "emailLabel": "E-Mail",
+        "messageLabel": "Nachricht",
+        "messagePlaceholder": "Was beschäftigt dich gerade?",
+        "submit": "Nachricht senden"
+      }
     }
   }
 }

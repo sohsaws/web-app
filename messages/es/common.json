@@ -1,1 +1,63 @@
-{}
+{
+  "Common": {
+    "actions": {
+      "cancel": "Cancelar",
+      "saveChanges": "Guardar cambios",
+      "remove": "Eliminar",
+      "tryAgain": "Reintentar",
+      "backToHome": "Volver al inicio",
+      "signIn": "Iniciar sesión",
+      "signUp": "Registrarse",
+      "logIn": "Iniciar sesión",
+      "readMore": "Leer más",
+      "showLess": "Mostrar menos"
+    },
+    "status": {
+      "loading": "Cargando...",
+      "saving": "Guardando...",
+      "retrying": "Reintentando..."
+    },
+    "appHeader": {
+      "navigationLabel": "Navegación por la aplicación",
+      "overview": "Resumen",
+      "dive": "Dive",
+      "forYou": "Para ti",
+      "notifications": "Notificaciones"
+    },
+    "userMenu": {
+      "triggerLabel": "Abrir el menú de {name}",
+      "label": "Menú de usuario",
+      "profile": "Perfil",
+      "security": "Seguridad",
+      "logOut": "Cerrar sesión",
+      "signingOut": "Cerrando sesión..."
+    },
+    "signOut": {
+      "success": "Has cerrado sesión",
+      "failed": "No se ha podido cerrar sesión"
+    },
+    "avatar": {
+      "alt": "Foto de perfil de {name}"
+    },
+    "loadingIndicator": {
+      "label": "Cargando"
+    },
+    "errorPage": {
+      "eyebrow": "Algo ha salido mal",
+      "title": "<line>Nos hemos topado con un</line> <muted>contratiempo inesperado.</muted>",
+      "description": "No es culpa tuya. Inténtalo de nuevo y, si sigue pasando lo mismo, avísanos.",
+      "reference": "Referencia: {digest}"
+    },
+    "notFound": {
+      "eyebrow": "Error 404",
+      "title": "<line>Esta página</line> <muted>se ha perdido.</muted>",
+      "description": "Puede que el enlace esté roto o que la página se haya movido. Volvamos a decidir.",
+      "contactUs": "Contáctanos"
+    },
+    "forYouPage": {
+      "eyebrow": "Para ti",
+      "title": "Próximamente...",
+      "description": "Tus ideas guardadas se convertirán en cosas reales que probar: sitios cercanos, clubes a los que apuntarte, películas, juegos y lecturas elegidos para ti. Cada deslizamiento afina estas recomendaciones, así que cuanto más guardes, mejores serán."
+    }
+  }
+}

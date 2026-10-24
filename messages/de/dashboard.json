@@ -1,1 +1,40 @@
-{}
+{
+  "Dashboard": {
+    "page": {
+      "greeting": "Willkommen zurück, {name}",
+      "subtitle": "Deine nächste Idee wartet schon auf dich. Behalte deine Favoriten griffbereit."
+    },
+    "metrics": {
+      "savedIdeasTitle": "Gespeicherte Ideen",
+      "savedIdeasLoading": "Gespeicherte Ideen werden geladen...",
+      "savedIdeasCaption": "In deiner Sammlung",
+      "savedIdeasRefreshError": "Deine Sammlung konnte nicht aktualisiert werden"
+    },
+    "youWouldLike": {
+      "title": "Das gefällt dir",
+      "comingSoon": "Demnächst..."
+    },
+    "favorites": {
+      "sectionLabel": "Deine gespeicherten Ideen",
+      "title": "Deine Tasche",
+      "tagline": "Ein bisschen für später aufbewahrt.",
+      "loading": "Deine gespeicherten Ideen werden geladen...",
+      "refreshError": "Die gespeicherten Ideen konnten nicht aktualisiert werden.",
+      "loadError": "Die gespeicherten Ideen konnten nicht geladen werden.",
+      "countUnknown": "Deine Favoriten",
+      "count": "{count, plural, one {# Idee gespeichert} other {# Ideen gespeichert}}",
+      "discoverIdeas": "Entdecke Ideen"
+    },
+    "categoryDistribution": {
+      "title": "Deine Interessen",
+      "tagline": "Ein bisschen mehr von dir.",
+      "description": "Verteilung der Kategorien auf deine gespeicherten Ideen.",
+      "loading": "Deine Kategorieverteilung wird geladen...",
+      "regionLabel": "Kategorienverteilung",
+      "empty": "Speichere Ideen mit Kategorien, um hier deine Interessen zu sehen.",
+      "refreshError": "Die Kategorien konnten nicht aktualisiert werden. Es werden die zuletzt geladenen Daten angezeigt.",
+      "loadError": "Deine Kategorien konnten nicht geladen werden.",
+      "footnote": "Jede Kategoriezuordnung zählt gleich. Prozentwerte sind gerundet."
+    }
+  }
+}

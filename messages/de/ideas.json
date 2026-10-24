@@ -1,1 +1,34 @@
-{}
+{
+  "Ideas": {
+    "card": {
+      "imageAlt": "Illustration zu {title}",
+      "imagePending": "Illustration wird erstellt..."
+    },
+    "carousel": {
+      "label": "Ideenkarussell",
+      "list": "Ideen",
+      "close": "Karussell schließen",
+      "previous": "Vorherige Idee",
+      "next": "Nächste Idee",
+      "position": "{current} / {total}"
+    },
+    "stack": {
+      "empty": "Noch keine gespeicherten Ideen. Speichere eine Karte in Dive als Favorit, um deine Sammlung zu beginnen.",
+      "list": "Zuletzt gespeicherte Ideen",
+      "open": "Gespeicherte Ideen öffnen"
+    },
+    "categories": {
+      "list": "Ideenkategorien"
+    },
+    "miniCard": {
+      "favorite": "Favorit"
+    },
+    "favorites": {
+      "saveFailed": "Die Karte konnte nicht gespeichert werden",
+      "retry": "Erneut versuchen"
+    },
+    "rateLimit": {
+      "message": "Du hast das stündliche Limit erreicht. Versuche es in {minutes, plural, one {# Minute} other {# Minuten}} noch einmal."
+    }
+  }
+}

@@ -1,5 +1,11 @@
 {
   "Settings": {
+    "nav": {
+      "label": "Paramètres",
+      "profile": "Profil",
+      "security": "Sécurité",
+      "notifications": "Notifications"
+    },
     "language": {
       "label": "Langue",
       "updated": "Langue changée : {language}",
@@ -7,7 +13,84 @@
       "unsavedHint": "Enregistrez ou annulez vos modifications pour changer de langue."
     },
     "profile": {
+      "title": "Informations de {name}",
+      "description": "Gérez la manière dont vos informations s’affichent pour les autres utilisateurs de la plateforme.",
+      "nameLabel": "Nom",
+      "namePlaceholder": "Votre nom",
+      "emailLabel": "E-mail",
+      "changeEmail": "Modifier mon adresse e-mail",
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Décrivez vos centres d’intérêt et ce que vous souhaitez découvrir",
+      "bioDescription": "Présentez-vous en quelques mots.",
       "saved": "Votre profil a été mis à jour avec succès"
+    },
+    "avatar": {
+      "title": "Photo de profil",
+      "hint": "Prend en charge les formats JPG, PNG, GIF ou WebP. Taille maximale : 4 Mo.",
+      "upload": "Importer une nouvelle photo",
+      "pleaseWait": "Veuillez patienter...",
+      "updating": "Mise à jour de la photo de profil",
+      "uploading": "Importation de l’image...",
+      "uploaded": "L’avatar a été mis à jour avec succès",
+      "removing": "Suppression de l’image...",
+      "removed": "L’avatar a été supprimé avec succès"
+    },
+    "bio": {
+      "hintLabel": "À quoi sert la bio ?",
+      "hint": "Votre bio indique à l’IA quelles idées créer. Décrivez vos centres d’intérêt, vos loisirs, votre travail et ce que vous souhaitez essayer. Plus vous êtes précis, plus vos cartes seront pertinentes."
+    },
+    "emailVerification": {
+      "verifyLabel": "Vérifiez votre adresse e-mail",
+      "sendingLabel": "Envoi de l’e-mail de vérification",
+      "tooltip": "Veuillez vérifier votre adresse e-mail",
+      "sendingTooltip": "Envoi de l’e-mail de vérification..."
+    },
+    "security": {
+      "title": "Sécurité",
+      "description": "Gérez votre mot de passe, l’authentification et votre compte.",
+      "passwordTitle": "Mot de passe",
+      "passwordDescription": "Mettez à jour le mot de passe associé à votre compte.",
+      "passwordHint": "Des mots de passe sécurisés contribuent à protéger vos données.",
+      "changePassword": "Modifier le mot de passe",
+      "twoFactorTitle": "Authentification à deux facteurs",
+      "twoFactorDisabled": "2FA désactivée",
+      "twoFactorDescription": "Renforcez la sécurité de votre compte en exigeant la saisie d’un code de vérification provenant d’une application d’authentification lors de votre connexion.",
+      "twoFactorHint": "Nous vous recommandons vivement d’activer cette fonctionnalité.",
+      "enableTwoFactor": "Activer la 2FA",
+      "deleteTitle": "Supprimer le compte",
+      "deleteDescription": "Supprimez définitivement votre compte et tout son contenu de la plateforme Swiipy. Cette action est irréversible ; veuillez donc procéder avec prudence."
+    },
+    "deleteAccount": {
+      "dangerZone": "Zone dangereuse",
+      "open": "Supprimer le compte",
+      "confirmationLabel": "Tapez {word} pour confirmer",
+      "passwordLabel": "Mot de passe",
+      "googleHint": "Vous vous êtes connecté avec Google ; aucun mot de passe n’est donc nécessaire. Si votre dernière connexion remonte à plus d’un jour, nous vous demanderons de vous reconnecter.",
+      "submit": "Supprimer définitivement mon compte",
+      "deleting": "Suppression en cours...",
+      "reauthRequired": "Veuillez vous reconnecter pour supprimer votre compte",
+      "reauthReason": "Pour votre sécurité, la suppression de votre compte nécessite une connexion récente.",
+      "failed": "Impossible de supprimer votre compte"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Choisissez ce que Swiipy pourra envoyer à {email}.",
+      "emailTitle": "E-mail",
+      "emailDescription": "Choisissez les e-mails que Swiipy vous envoie.",
+      "alwaysOn": "Toujours activé",
+      "securityEmails": {
+        "title": "E-mails de sécurité",
+        "description": "Réinitialisation du mot de passe, changement d’adresse e-mail et liens de vérification. Ils protègent votre compte et ne peuvent donc pas être désactivés."
+      },
+      "productUpdates": {
+        "title": "Nouveautés du produit",
+        "description": "Actualités concernant les nouvelles fonctionnalités, telles que les suggestions personnalisées dans la rubrique « Pour vous ». Envoyées rarement."
+      },
+      "weeklyDigest": {
+        "title": "Résumé hebdomadaire",
+        "description": "Un bref résumé hebdomadaire des idées que vous avez enregistrées et une petite invitation à découvrir de nouvelles cartes."
+      },
+      "optionalHint": "Les e-mails facultatifs ne sont envoyés que si vous les activez."
     }
   }
 }
