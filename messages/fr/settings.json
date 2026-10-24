@@ -5,6 +5,9 @@
       "updated": "Langue changée : {language}",
       "error": "Impossible de changer la langue. Veuillez réessayer.",
       "unsavedHint": "Enregistrez ou annulez vos modifications pour changer de langue."
+    },
+    "profile": {
+      "saved": "Votre profil a été mis à jour avec succès"
     }
   }
 }

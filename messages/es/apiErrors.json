@@ -1,1 +1,30 @@
-{}
+{
+  "ApiErrors": {
+    "UNKNOWN": "Algo ha salido mal. Inténtalo de nuevo.",
+    "UNAUTHORIZED": "Tu sesión ha finalizado. Vuelve a iniciar sesión.",
+    "RATE_LIMITED": "Has alcanzado el límite. Inténtalo de nuevo más tarde.",
+    "EXPECTED_JSON": "Algo ha salido mal. Inténtalo de nuevo.",
+    "INVALID_IDEA": "Esta idea no se puede guardar.",
+    "IDEA_NOT_SAVED": "Esta idea no se puede guardar. Intenta con otra idea.",
+    "IDEA_SAVE_FAILED": "No se ha podido guardar esta idea. Inténtalo de nuevo.",
+    "FAVORITES_LOAD_FAILED": "No se han podido cargar tus ideas guardadas. Inténtalo de nuevo.",
+    "CATEGORIES_LOAD_FAILED": "No se han podido cargar tus categorías. Inténtalo de nuevo.",
+    "INVALID_BIO": "Revisa tu biografía e inténtalo de nuevo.",
+    "GENERATION_FAILED": "No se han podido generar ideas. Inténtalo de nuevo.",
+    "INVALID_IMAGE_DESCRIPTION": "Esta idea no tiene ninguna descripción válida para una imagen.",
+    "IMAGE_PROMPT_TOO_LONG": "Esta idea es demasiado larga para ilustrarla.",
+    "IMAGE_GENERATION_FAILED": "No se ha podido generar la imagen. Inténtalo de nuevo.",
+    "UNSUPPORTED_IMAGE_TYPE": "Elige una imagen en formato JPG, PNG, GIF o WebP.",
+    "NO_IMAGE": "Elige una imagen.",
+    "IMAGE_TOO_LARGE": "La imagen es demasiado grande (máximo 4 MB).",
+    "AVATAR_UPLOAD_FAILED": "No se ha podido subir el avatar. Inténtalo de nuevo.",
+    "AVATAR_REMOVAL_FAILED": "No se ha podido eliminar el avatar. Inténtalo de nuevo.",
+    "NOT_SIGNED_IN": "Tienes que haber iniciado sesión para hacer esto.",
+    "INVALID_PROFILE": "Revisa los campos del perfil e inténtalo de nuevo.",
+    "PROFILE_UPDATE_FAILED": "No se ha podido actualizar el perfil. Inténtalo de nuevo.",
+    "INVALID_NOTIFICATION_SETTINGS": "Estos ajustes de notificaciones no son válidos.",
+    "NOTIFICATIONS_SAVE_FAILED": "No se han podido guardar los ajustes de notificaciones.",
+    "UNSUPPORTED_LANGUAGE": "Este idioma no está disponible.",
+    "LANGUAGE_UPDATE_FAILED": "No se ha podido cambiar el idioma. Inténtalo de nuevo."
+  }
+}

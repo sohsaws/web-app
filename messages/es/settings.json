@@ -3,8 +3,11 @@
     "language": {
       "label": "Idioma",
       "updated": "Idioma cambiado a {language}",
-      "error": "No se pudo cambiar el idioma. Inténtalo de nuevo.",
+      "error": "No se ha podido cambiar el idioma. Inténtalo de nuevo.",
       "unsavedHint": "Guarda o cancela tus cambios para cambiar el idioma."
+    },
+    "profile": {
+      "saved": "El perfil se ha actualizado correctamente"
     }
   }
 }

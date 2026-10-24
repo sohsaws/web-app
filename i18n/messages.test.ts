@@ -3,7 +3,9 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { ACTION_ERROR_CODES } from "@/lib/config/action-errors";
 import { API_ERRORS } from "@/lib/config/api-errors";
-import { LOCALES } from "@/lib/config/locales";
+import { DEFAULT_LOCALE, LOCALES } from "@/lib/config/locales";
+import { flattenMessages, isMessageTree } from "@/scripts/i18n/message-tree";
+import { placeholderNames } from "@/scripts/i18n/placeholders";
 import { MESSAGE_NAMESPACES, namespaceMessageKey } from "./namespaces";
 
 const MESSAGES_DIR = path.join(process.cwd(), "messages");
@@ -64,4 +66,40 @@ describe("server error messages", () => {
     }
     expect(keys).toContain("UNKNOWN");
   });
+});
+
+function readMessageMap(
+  locale: string,
+  namespace: string,
+): Map<string, string> {
+  const messages = readMessages(locale, namespace);
+  if (!isMessageTree(messages)) {
+    throw new Error(
+      `messages/${locale}/${namespace}.json has a non-string leaf`,
+    );
+  }
+  return flattenMessages(messages);
+}
+
+const translatedFiles = files.filter(([locale]) => locale !== DEFAULT_LOCALE);
+
+// English is the source: a key it lacks is dead, and a placeholder a
+// translation renamed or dropped ({max} → {maximum}) would show up raw. An
+// apostrophe right before "{" quotes it in ICU (French "l'{name}"), so the
+// user would see a literal "{name}".
+describe("translations", () => {
+  it.each(translatedFiles)(
+    "messages/%s/%s.json matches the English keys and placeholders",
+    (locale, namespace) => {
+      const english = readMessageMap(DEFAULT_LOCALE, namespace);
+
+      for (const [key, text] of readMessageMap(locale, namespace)) {
+        expect(english.has(key), `${key} is not in English`).toBe(true);
+        expect(placeholderNames(text), key).toEqual(
+          placeholderNames(english.get(key) ?? ""),
+        );
+        expect(text, key).not.toMatch(/'\{/);
+      }
+    },
+  );
 });

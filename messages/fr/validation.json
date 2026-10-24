@@ -1,1 +1,8 @@
-{}
+{
+  "Validation": {
+    "invalid": "Veuillez vérifier ce champ.",
+    "nameRequired": "Le nom ne peut pas être vide.",
+    "nameTooLong": "Le nom ne doit pas dépasser {max} caractères.",
+    "bioTooLong": "La biographie ne doit pas dépasser {max} caractères."
+  }
+}
