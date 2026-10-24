@@ -40,6 +40,9 @@ describe("POST /api/ideas/generate", () => {
     const response = await POST(generateRequest({ bio: "I like hiking." }));
 
     expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toMatchObject({
+      code: "UNAUTHORIZED",
+    });
     expect(checkRateLimit).not.toHaveBeenCalled();
     expect(generateIdeas).not.toHaveBeenCalled();
   });
@@ -53,6 +56,9 @@ describe("POST /api/ideas/generate", () => {
     const response = await POST(generateRequest({ bio: "I like hiking." }));
 
     expect(response.status).toBe(429);
+    await expect(response.json()).resolves.toMatchObject({
+      code: "RATE_LIMITED",
+    });
     expect(response.headers.get("Retry-After")).toBe("300");
     expect(checkRateLimit).toHaveBeenCalledWith("generate", "u1");
     expect(generateIdeas).not.toHaveBeenCalled();

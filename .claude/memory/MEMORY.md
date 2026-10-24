@@ -259,6 +259,22 @@ picks the first supported value or English.
   - Landing header on narrow screens: the closed control shows the code
     (`EN ▾`), wider screens show the name (`English ▾`); the open list
     always shows full names.
+- **Stage 4 decisions (user, 2026-10-24):**
+  - Zod messages are **keys** (`"nameRequired"`), not text; the UI shows
+    `t(message)` from the `Validation` namespace; one schema on client and
+    server.
+  - API routes answer `{ error: "<English for logs>", code: "<CODE>" }`;
+    server actions answer `{ success: false, code }`; the client translates
+    `ApiErrors.<CODE>`. Better Auth errors map by `error.code` to
+    `Auth.errors.<CODE>` with a generic fallback.
+  - The delete-account confirmation word stays `DELETE` in every language.
+  - Text bugs found in the inventory are fixed while moving strings
+    (username hint 50 vs schema 40; "Password do not match").
+  - **Each zone is translated right after its strings are extracted**
+    (DeepL drafts for ru/es/fr/de), not in one pass at the end.
+  - `global-error.tsx` stays English (renders outside the message provider).
+  - Work order: 4a conventions by Claude → 4b parallel zone workers
+    (marketing, auth, dashboard, dive, settings, common, emails) → 4c merge.
 - **AI content in the user's language (user decisions 2026-10-21):**
   - Idea text: instructions stay in English with an explicit output-language
     line ("Write every title and description in <language>"); no translated

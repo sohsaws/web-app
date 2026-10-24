@@ -2,6 +2,7 @@
 
 import { cookies, headers } from "next/headers";
 import { auth } from "@/lib/auth";
+import type { ActionFailure } from "@/lib/config/action-errors";
 import {
   LOCALE_COOKIE_MAX_AGE_SECONDS,
   LOCALE_COOKIE_NAME,
@@ -11,7 +12,7 @@ import {
 
 export type UpdateLocaleResult =
   | { success: true; locale: Locale }
-  | { success: false; message: string };
+  | ActionFailure;
 
 // Saves the language in the profile, the source of truth inside the app, and
 // mirrors it in the cookie so pages without a locale prefix ("/") open in the
@@ -22,7 +23,7 @@ export async function updateLocale(
   const parsedLocale = localeSchema.safeParse(input);
 
   if (!parsedLocale.success) {
-    return { success: false, message: "This language is not supported" };
+    return { success: false, code: "UNSUPPORTED_LANGUAGE" };
   }
 
   const requestHeaders = await headers();
@@ -31,7 +32,7 @@ export async function updateLocale(
   if (!session) {
     return {
       success: false,
-      message: "You must be signed in to change the language",
+      code: "NOT_SIGNED_IN",
     };
   }
 
@@ -42,7 +43,7 @@ export async function updateLocale(
     });
   } catch (error: unknown) {
     console.error("Language update failed:", error);
-    return { success: false, message: "Unable to change the language" };
+    return { success: false, code: "LANGUAGE_UPDATE_FAILED" };
   }
 
   const cookieStore = await cookies();

@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { ACTION_ERROR_CODES } from "@/lib/config/action-errors";
+import { API_ERRORS } from "@/lib/config/api-errors";
 import { LOCALES } from "@/lib/config/locales";
 import { MESSAGE_NAMESPACES, namespaceMessageKey } from "./namespaces";
 
@@ -41,5 +43,25 @@ describe("namespaceMessageKey", () => {
     ["apiErrors", "ApiErrors"],
   ] as const)("maps %s to %s", (namespace, key) => {
     expect(namespaceMessageKey(namespace)).toBe(key);
+  });
+});
+
+describe("server error messages", () => {
+  // A code without an English message would reach users as the generic
+  // "Something went wrong", hiding a real, specific error.
+  it("has an English message for every route and action error code", () => {
+    const messages = readMessages("en", "apiErrors");
+    const apiErrors =
+      typeof messages === "object" &&
+      messages !== null &&
+      "ApiErrors" in messages
+        ? messages.ApiErrors
+        : {};
+    const keys = Object.keys(apiErrors ?? {});
+
+    for (const code of [...Object.keys(API_ERRORS), ...ACTION_ERROR_CODES]) {
+      expect(keys).toContain(code);
+    }
+    expect(keys).toContain("UNKNOWN");
   });
 });

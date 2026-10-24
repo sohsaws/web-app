@@ -5,6 +5,9 @@
       "updated": "Language changed to {language}",
       "error": "Could not change the language. Please try again.",
       "unsavedHint": "Save or cancel your changes to switch the language."
+    },
+    "profile": {
+      "saved": "Profile updated successfully"
     }
   }
 }

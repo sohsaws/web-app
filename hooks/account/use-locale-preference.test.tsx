@@ -70,7 +70,7 @@ describe("useLocalePreference", () => {
   it("shows the translated error and stays on the page when saving is refused", async () => {
     updateLocale.mockResolvedValue({
       success: false,
-      message: "You must be signed in to change the language",
+      code: "NOT_SIGNED_IN",
     });
     const { result } = renderLocaleHook();
 

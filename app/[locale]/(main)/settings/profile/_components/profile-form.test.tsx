@@ -43,10 +43,7 @@ const cancelButton = () => screen.getByRole("button", { name: "Cancel" });
 const saveButton = () => screen.getByRole("button", { name: /save changes/i });
 
 beforeEach(() => {
-  updateProfile.mockResolvedValue({
-    success: true,
-    message: "Profile updated successfully",
-  });
+  updateProfile.mockResolvedValue({ success: true });
 });
 
 describe("ProfileForm", () => {
@@ -81,9 +78,11 @@ describe("ProfileForm", () => {
     await user.clear(nameField());
     await user.click(saveButton());
 
-    expect(await screen.findByText("Name cannot be empty")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Name cannot be empty."),
+    ).toBeInTheDocument();
     expect(nameField()).toHaveAttribute("aria-invalid", "true");
-    expect(nameField()).toHaveAccessibleDescription("Name cannot be empty");
+    expect(nameField()).toHaveAccessibleDescription("Name cannot be empty.");
     expect(updateProfile).not.toHaveBeenCalled();
   });
 
@@ -98,8 +97,7 @@ describe("ProfileForm", () => {
   });
 
   it("saves trimmed values, locks Save while saving and refreshes", async () => {
-    let finish: (value: { success: true; message: string }) => void = () =>
-      undefined;
+    let finish: (value: { success: true }) => void = () => undefined;
     updateProfile.mockReturnValueOnce(
       new Promise((resolve) => {
         finish = resolve;
@@ -119,7 +117,7 @@ describe("ProfileForm", () => {
       bio: "Likes hiking.",
     });
 
-    finish({ success: true, message: "Profile updated successfully" });
+    finish({ success: true });
 
     await waitFor(() =>
       expect(toast.success).toHaveBeenCalledWith(

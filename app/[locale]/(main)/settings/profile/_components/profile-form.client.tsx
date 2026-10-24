@@ -3,9 +3,11 @@
 import { Save } from "lucide-react";
 import type { ReactElement } from "react";
 import { useProfileForm } from "@/hooks/account/use-profile-form";
+import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
 import { Link } from "@/i18n/navigation";
 import {
   PROFILE_BIO_MAX_LENGTH,
+  PROFILE_NAME_MAX_LENGTH,
   type ProfileFormValues,
 } from "@/lib/config/profile";
 import { BioHint } from "./bio-hint.client";
@@ -24,6 +26,7 @@ export default function ProfileForm({
   emailVerified,
 }: ProfileFormProps): ReactElement {
   const { form, onSubmit, resetForm } = useProfileForm(defaultValues);
+  const validationMessage = useValidationMessage();
   const {
     register,
     handleSubmit,
@@ -51,7 +54,9 @@ export default function ProfileForm({
           />
           {errors.name ? (
             <p id="name-error" className="text-xs text-red-500">
-              {errors.name.message}
+              {validationMessage(errors.name.message, {
+                max: PROFILE_NAME_MAX_LENGTH,
+              })}
             </p>
           ) : null}
         </div>
@@ -118,7 +123,9 @@ export default function ProfileForm({
         </div>
         {errors.bio ? (
           <p id="bio-error" className="text-xs text-red-500">
-            {errors.bio.message}
+            {validationMessage(errors.bio.message, {
+              max: PROFILE_BIO_MAX_LENGTH,
+            })}
           </p>
         ) : null}
       </div>

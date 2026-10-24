@@ -1,1 +1,8 @@
-{}
+{
+  "Validation": {
+    "invalid": "Please check this field.",
+    "nameRequired": "Name cannot be empty.",
+    "nameTooLong": "Name cannot be longer than {max} characters.",
+    "bioTooLong": "Bio cannot be longer than {max} characters."
+  }
+}

@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { del, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/api-error-response";
 import { auth } from "@/lib/auth";
 import { BLOB_FOLDERS, getUserBlobPathname } from "@/lib/blob/managed-blob-url";
 import {
@@ -36,24 +37,18 @@ export async function POST(request: Request): Promise<NextResponse> {
     const session = await auth.api.getSession({ headers: request.headers });
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiErrorResponse("UNAUTHORIZED", 401);
     }
 
     if (!request.headers.get("Content-Type")?.includes("application/json")) {
-      return NextResponse.json(
-        { error: "Expected a JSON request body" },
-        { status: 415 },
-      );
+      return apiErrorResponse("EXPECTED_JSON", 415);
     }
 
     const body: unknown = await request.json().catch(() => null);
     const result = ideaSaveRequestSchema.safeParse(body);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: "Provide a valid idea" },
-        { status: 400 },
-      );
+      return apiErrorResponse("INVALID_IDEA", 400);
     }
 
     const imageUrl = result.data.image
@@ -73,10 +68,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     if (!saved) {
-      return NextResponse.json(
-        { error: "This idea cannot be saved. Please try another idea." },
-        { status: 409 },
-      );
+      return apiErrorResponse("IDEA_NOT_SAVED", 409);
     }
 
     return NextResponse.json(
@@ -84,9 +76,6 @@ export async function POST(request: Request): Promise<NextResponse> {
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch {
-    return NextResponse.json(
-      { error: "Failed to save this idea. Please try again." },
-      { status: 500 },
-    );
+    return apiErrorResponse("IDEA_SAVE_FAILED", 500);
   }
 }

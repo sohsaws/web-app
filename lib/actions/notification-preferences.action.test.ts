@@ -29,7 +29,7 @@ describe("updateNotificationPreferences", () => {
     async (_case, input) => {
       await expect(updateNotificationPreferences(input)).resolves.toEqual({
         success: false,
-        message: "Invalid notification settings",
+        code: "INVALID_NOTIFICATION_SETTINGS",
       });
       expect(getSession).not.toHaveBeenCalled();
       expect(upsert).not.toHaveBeenCalled();
@@ -77,7 +77,7 @@ describe("updateNotificationPreferences", () => {
       }),
     ).resolves.toEqual({
       success: false,
-      message: "Unable to save notification settings",
+      code: "NOTIFICATIONS_SAVE_FAILED",
     });
     expect(consoleError).toHaveBeenCalled();
   });

@@ -8,6 +8,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { z } from "zod";
+import { useAuthErrorMessage } from "@/hooks/i18n/use-auth-error-message";
 import { useRouter } from "@/i18n/navigation";
 import { authClient } from "@/lib/auth/auth-client";
 
@@ -37,6 +38,7 @@ interface UseLoginFormResult {
 export function useLoginForm(callbackUrl: string): UseLoginFormResult {
   const router = useRouter();
   const [error, setError] = useState<string>();
+  const authErrorMessage = useAuthErrorMessage();
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
   });
@@ -57,23 +59,23 @@ export function useLoginForm(callbackUrl: string): UseLoginFormResult {
             { ...credentials, email: values.identifier },
             {
               onSuccess: () => router.push(callbackUrl),
-              onError: (context) => setError(context.error.message),
+              onError: (context) => setError(authErrorMessage(context.error)),
             },
           )
         : await authClient.signIn.username(
             { ...credentials, username: values.identifier },
             {
               onSuccess: () => router.push(callbackUrl),
-              onError: (context) => setError(context.error.message),
+              onError: (context) => setError(authErrorMessage(context.error)),
             },
           );
 
       if (result.error) {
-        setError(result.error.message);
+        setError(authErrorMessage(result.error));
       }
     } catch (caughtError: unknown) {
       console.error(caughtError);
-      setError("An unexpected error occurred");
+      setError(authErrorMessage(null));
     }
   };
 

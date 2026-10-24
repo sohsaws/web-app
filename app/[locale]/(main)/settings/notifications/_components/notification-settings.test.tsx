@@ -2,6 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { UpdateNotificationPreferencesResult } from "@/lib/actions/notification-preferences.action";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { NotificationSettings } from "./notification-settings.client";
 
 const { updateNotificationPreferences, toast } = vi.hoisted(() => ({
@@ -19,6 +20,7 @@ function renderSettings() {
     <NotificationSettings
       initialPreferences={{ productUpdates: false, weeklyDigest: true }}
     />,
+    { wrapper: IntlTestProvider },
   );
 }
 
@@ -81,7 +83,7 @@ describe("NotificationSettings", () => {
   it("turns the switch back and explains why when saving fails", async () => {
     updateNotificationPreferences.mockResolvedValue({
       success: false,
-      message: "Unable to save notification settings",
+      code: "NOTIFICATIONS_SAVE_FAILED",
     });
     renderSettings();
     const digest = screen.getByRole("switch", { name: "Weekly digest" });
@@ -95,7 +97,7 @@ describe("NotificationSettings", () => {
     });
     await waitFor(() => expect(digest).toBeChecked());
     expect(toast.error).toHaveBeenCalledWith(
-      "Unable to save notification settings",
+      "Unable to save notification settings.",
     );
   });
 });

@@ -39,7 +39,7 @@ export function useLocalePreference(): UseLocalePreferenceResult {
 
         if (!result.success) {
           setPendingLocale(null);
-          // The action's message is English; the user sees our translation.
+          // One message for every refusal: the user can only retry here.
           toast.error(t("error"));
           return;
         }

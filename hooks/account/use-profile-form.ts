@@ -1,12 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import {
   type SubmitHandler,
   type UseFormReturn,
   useForm,
 } from "react-hook-form";
 import { toast } from "sonner";
+import { useServerErrorMessage } from "@/hooks/i18n/use-server-error-message";
 import { useRouter } from "@/i18n/navigation";
 import { updateProfile } from "@/lib/actions/profile.action";
 import {
@@ -24,6 +26,8 @@ export function useProfileForm(
   defaultValues: ProfileFormValues,
 ): UseProfileFormResult {
   const router = useRouter();
+  const t = useTranslations("Settings.profile");
+  const serverErrorMessage = useServerErrorMessage();
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -34,17 +38,17 @@ export function useProfileForm(
       const result = await updateProfile(values);
 
       if (!result.success) {
-        toast.error(result.message);
+        toast.error(serverErrorMessage(result.code));
         return;
       }
 
       form.reset(values);
-      toast.success(result.message);
+      toast.success(t("saved"));
 
       router.refresh();
     } catch (error: unknown) {
       console.error("Profile update failed:", error);
-      toast.error("Something went wrong while updating your profile");
+      toast.error(serverErrorMessage(error));
     }
   };
 

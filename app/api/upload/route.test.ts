@@ -82,6 +82,9 @@ describe("POST /api/upload", () => {
     );
 
     expect(response.status).toBe(413);
+    await expect(response.json()).resolves.toMatchObject({
+      code: "IMAGE_TOO_LARGE",
+    });
     expect(put).not.toHaveBeenCalled();
   });
 

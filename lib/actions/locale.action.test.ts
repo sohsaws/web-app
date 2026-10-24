@@ -30,7 +30,7 @@ describe("updateLocale", () => {
   ])("refuses %s before reading the session", async (_case, input) => {
     await expect(updateLocale(input)).resolves.toEqual({
       success: false,
-      message: "This language is not supported",
+      code: "UNSUPPORTED_LANGUAGE",
     });
     expect(getSession).not.toHaveBeenCalled();
     expect(updateUser).not.toHaveBeenCalled();
@@ -70,7 +70,7 @@ describe("updateLocale", () => {
 
     await expect(updateLocale("de")).resolves.toEqual({
       success: false,
-      message: "Unable to change the language",
+      code: "LANGUAGE_UPDATE_FAILED",
     });
     expect(cookieStore.set).not.toHaveBeenCalled();
   });

@@ -1,5 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { useLoginForm } from "./use-login-form";
 
 const { authClient, router } = vi.hoisted(() => ({
@@ -11,6 +12,12 @@ vi.mock("@/lib/auth/auth-client", () => ({ authClient }));
 vi.mock("@/i18n/navigation", () => ({ useRouter: () => router }));
 
 const CALLBACK_URL = "/settings/security";
+
+function renderLoginHook() {
+  return renderHook(() => useLoginForm(CALLBACK_URL), {
+    wrapper: IntlTestProvider,
+  });
+}
 
 async function submit(
   result: { current: ReturnType<typeof useLoginForm> },
@@ -40,7 +47,7 @@ beforeEach(() => {
 
 describe("useLoginForm", () => {
   it("signs in by email and goes to the callback URL", async () => {
-    const { result } = renderHook(() => useLoginForm(CALLBACK_URL));
+    const { result } = renderLoginHook();
 
     await submit(result, "ann@example.com");
 
@@ -58,7 +65,7 @@ describe("useLoginForm", () => {
   });
 
   it("signs in by username when there is no @", async () => {
-    const { result } = renderHook(() => useLoginForm(CALLBACK_URL));
+    const { result } = renderLoginHook();
 
     await submit(result, "ann_99");
 
@@ -74,7 +81,7 @@ describe("useLoginForm", () => {
     ["a too short identifier", "an", "secret-pass"],
     ["a too short password", "ann@example.com", "short"],
   ])("does not call the server for %s", async (_case, identifier, password) => {
-    const { result } = renderHook(() => useLoginForm(CALLBACK_URL));
+    const { result } = renderLoginHook();
 
     await submit(result, identifier, password);
 
@@ -82,26 +89,63 @@ describe("useLoginForm", () => {
     expect(authClient.signIn.username).not.toHaveBeenCalled();
   });
 
-  it("shows the sign-in error and stays on the page", async () => {
+  it("shows the translated sign-in error and stays on the page", async () => {
     authClient.signIn.email.mockResolvedValue({
       data: null,
-      error: { message: "Invalid email or password" },
+      error: {
+        code: "INVALID_EMAIL_OR_PASSWORD",
+        message: "Invalid email or password",
+      },
     });
-    const { result } = renderHook(() => useLoginForm(CALLBACK_URL));
+    const { result } = renderLoginHook();
 
     await submit(result, "ann@example.com");
 
-    expect(result.current.error).toBe("Invalid email or password");
+    expect(result.current.error).toBe("Invalid email or password.");
     expect(router.push).not.toHaveBeenCalled();
+  });
+
+  it("asks the user to wait when Better Auth rate-limits sign-in", async () => {
+    // Better Auth's limiter answers 429 with a message but no code.
+    authClient.signIn.email.mockResolvedValue({
+      data: null,
+      error: {
+        status: 429,
+        message: "Too many requests. Please try again later.",
+      },
+    });
+    const { result } = renderLoginHook();
+
+    await submit(result, "ann@example.com");
+
+    expect(result.current.error).toBe(
+      "Too many attempts. Please wait a minute and try again.",
+    );
+  });
+
+  it.each([
+    ["an unknown code", { code: "SOMETHING_NEW", message: "x" }],
+    ["no code", { message: "x" }],
+  ])("shows a generic error for %s", async (_case, error) => {
+    authClient.signIn.email.mockResolvedValue({ data: null, error });
+    const { result } = renderLoginHook();
+
+    await submit(result, "ann@example.com");
+
+    expect(result.current.error).toBe(
+      "Something went wrong. Please try again.",
+    );
   });
 
   it("shows a generic error when the request fails", async () => {
     vi.spyOn(console, "error").mockImplementation(() => undefined);
     authClient.signIn.email.mockRejectedValue(new Error("offline"));
-    const { result } = renderHook(() => useLoginForm(CALLBACK_URL));
+    const { result } = renderLoginHook();
 
     await submit(result, "ann@example.com");
 
-    expect(result.current.error).toBe("An unexpected error occurred");
+    expect(result.current.error).toBe(
+      "Something went wrong. Please try again.",
+    );
   });
 });

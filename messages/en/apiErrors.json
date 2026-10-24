@@ -1,1 +1,30 @@
-{}
+{
+  "ApiErrors": {
+    "UNKNOWN": "Something went wrong. Please try again.",
+    "UNAUTHORIZED": "Your session has ended. Please sign in again.",
+    "RATE_LIMITED": "You've reached the limit. Please try again later.",
+    "EXPECTED_JSON": "Something went wrong. Please try again.",
+    "INVALID_IDEA": "This idea cannot be saved.",
+    "IDEA_NOT_SAVED": "This idea cannot be saved. Please try another idea.",
+    "IDEA_SAVE_FAILED": "Failed to save this idea. Please try again.",
+    "FAVORITES_LOAD_FAILED": "Unable to load your saved ideas. Please try again.",
+    "CATEGORIES_LOAD_FAILED": "Unable to load your categories. Please try again.",
+    "INVALID_BIO": "Please check your bio and try again.",
+    "GENERATION_FAILED": "Failed to generate ideas. Please try again.",
+    "INVALID_IMAGE_DESCRIPTION": "This idea has no valid description for an image.",
+    "IMAGE_PROMPT_TOO_LONG": "This idea is too long to illustrate.",
+    "IMAGE_GENERATION_FAILED": "Failed to generate an image. Please try again.",
+    "UNSUPPORTED_IMAGE_TYPE": "Please choose a JPG, PNG, GIF or WebP image.",
+    "NO_IMAGE": "Please choose an image.",
+    "IMAGE_TOO_LARGE": "The image is too large (max 4 MB).",
+    "AVATAR_UPLOAD_FAILED": "Avatar upload failed. Please try again.",
+    "AVATAR_REMOVAL_FAILED": "Avatar removal failed. Please try again.",
+    "NOT_SIGNED_IN": "You must be signed in to do this.",
+    "INVALID_PROFILE": "Please check the profile fields and try again.",
+    "PROFILE_UPDATE_FAILED": "Profile update failed. Please try again.",
+    "INVALID_NOTIFICATION_SETTINGS": "These notification settings are not valid.",
+    "NOTIFICATIONS_SAVE_FAILED": "Unable to save notification settings.",
+    "UNSUPPORTED_LANGUAGE": "This language is not supported.",
+    "LANGUAGE_UPDATE_FAILED": "Could not change the language. Please try again."
+  }
+}
