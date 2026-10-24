@@ -71,6 +71,21 @@ describe("useAuthErrorMessage", () => {
     );
   });
 
+  it("uses the caller's fallback for an unknown code", () => {
+    expect(
+      authErrorMessage()({ code: "SOMETHING_NEW" }, "Unable to change email"),
+    ).toBe("Unable to change email");
+  });
+
+  it("prefers a known code over the fallback", () => {
+    expect(
+      authErrorMessage()(
+        { code: "INVALID_PASSWORD" },
+        "Unable to change email",
+      ),
+    ).toBe("The password is incorrect.");
+  });
+
   it("asks the user to wait on a 429 without a code", () => {
     expect(authErrorMessage()({ status: 429, message: "Too many" })).toBe(
       "Too many attempts. Please wait a minute and try again.",

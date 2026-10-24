@@ -78,6 +78,7 @@ describe("applyDrafts", () => {
     ["a renamed placeholder", "Не более {maximum} символов"],
     ["a dropped placeholder", "Не более символов"],
     ["an empty draft", "  "],
+    ["a draft with an extra tag", "Не более <b>{max}</b> символов"],
   ])("rejects %s", (_case, draft) => {
     const result = applyDrafts(source, target, automatic, [draft, "Свежее"]);
 

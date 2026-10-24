@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   hasSamePlaceholders,
+  hasSameRichTags,
   needsManualTranslation,
   placeholderNames,
   protectPlaceholders,
   restorePlaceholders,
+  richTagNames,
 } from "./placeholders";
 
 describe("needsManualTranslation", () => {
@@ -35,6 +37,27 @@ describe("placeholderNames", () => {
 
   it("returns nothing for text without placeholders", () => {
     expect(placeholderNames("")).toEqual([]);
+  });
+});
+
+describe("richTagNames", () => {
+  it("lists opening tags sorted, ignoring placeholders", () => {
+    expect(
+      richTagNames("<muted>a</muted> {name} <br></br><link>b</link>"),
+    ).toEqual(["br", "link", "muted"]);
+  });
+});
+
+describe("hasSameRichTags", () => {
+  it("accepts moved tags", () => {
+    expect(hasSameRichTags("<b>x</b> y", "y <b>x</b>")).toBe(true);
+  });
+
+  it.each([
+    ["a dropped tag", "Hi <muted>there</muted>", "Hallo da"],
+    ["a renamed tag", "Hi <muted>there</muted>", "Hallo <stumm>da</stumm>"],
+  ])("rejects %s", (_case, source, translation) => {
+    expect(hasSameRichTags(source, translation)).toBe(false);
   });
 });
 

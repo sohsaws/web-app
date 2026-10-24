@@ -5,7 +5,7 @@ import { ACTION_ERROR_CODES } from "@/lib/config/action-errors";
 import { API_ERRORS } from "@/lib/config/api-errors";
 import { DEFAULT_LOCALE, LOCALES } from "@/lib/config/locales";
 import { flattenMessages, isMessageTree } from "@/scripts/i18n/message-tree";
-import { placeholderNames } from "@/scripts/i18n/placeholders";
+import { placeholderNames, richTagNames } from "@/scripts/i18n/placeholders";
 import { MESSAGE_NAMESPACES, namespaceMessageKey } from "./namespaces";
 
 const MESSAGES_DIR = path.join(process.cwd(), "messages");
@@ -84,7 +84,8 @@ function readMessageMap(
 const translatedFiles = files.filter(([locale]) => locale !== DEFAULT_LOCALE);
 
 // English is the source: a key it lacks is dead, and a placeholder a
-// translation renamed or dropped ({max} → {maximum}) would show up raw. An
+// translation renamed or dropped ({max} → {maximum}) would show up raw, and
+// a lost rich tag (<muted>) would drop its styling. An
 // apostrophe right before "{" quotes it in ICU (French "l'{name}"), so the
 // user would see a literal "{name}".
 describe("translations", () => {
@@ -97,6 +98,9 @@ describe("translations", () => {
         expect(english.has(key), `${key} is not in English`).toBe(true);
         expect(placeholderNames(text), key).toEqual(
           placeholderNames(english.get(key) ?? ""),
+        );
+        expect(richTagNames(text), key).toEqual(
+          richTagNames(english.get(key) ?? ""),
         );
         expect(text, key).not.toMatch(/'\{/);
       }

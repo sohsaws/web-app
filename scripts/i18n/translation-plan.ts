@@ -5,6 +5,7 @@ import {
 } from "./message-tree";
 import {
   hasSamePlaceholders,
+  hasSameRichTags,
   needsManualTranslation,
   restorePlaceholders,
 } from "./placeholders";
@@ -42,7 +43,7 @@ export function planTranslation(
 }
 
 // `drafts[i]` is DeepL's answer for `automatic[i]`, still protected. A draft
-// that is empty or changed its placeholders is rejected. Existing
+// that is empty or changed its placeholders or rich tags is rejected. Existing
 // translations always win, so reviewed text is never overwritten.
 export function applyDrafts(
   source: MessageTree,
@@ -56,7 +57,11 @@ export function applyDrafts(
 
   automatic.forEach(([key, text], index) => {
     const draft = restorePlaceholders(drafts[index] ?? "");
-    if (draft.trim() !== "" && hasSamePlaceholders(text, draft)) {
+    if (
+      draft.trim() !== "" &&
+      hasSamePlaceholders(text, draft) &&
+      hasSameRichTags(text, draft)
+    ) {
       accepted.set(key, draft);
     } else {
       rejected.push(key);

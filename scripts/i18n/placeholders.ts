@@ -18,6 +18,20 @@ export function placeholderNames(text: string): string[] {
     .sort();
 }
 
+const RICH_TAG_PATTERN = /<(\w+)>/g;
+
+// Opening rich-text tags rendered by t.rich (<muted>, <link>, <br>). A
+// translation that drops or renames one loses that markup.
+export function richTagNames(text: string): string[] {
+  return Array.from(text.matchAll(RICH_TAG_PATTERN), (match) => match[1])
+    .filter((name): name is string => name !== undefined)
+    .sort();
+}
+
+export function hasSameRichTags(source: string, translation: string) {
+  return richTagNames(source).join(",") === richTagNames(translation).join(",");
+}
+
 export function hasSamePlaceholders(source: string, translation: string) {
   return (
     placeholderNames(source).join(",") ===

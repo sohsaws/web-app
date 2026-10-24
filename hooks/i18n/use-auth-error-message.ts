@@ -19,19 +19,26 @@ function readAuthErrorDetails(error: unknown): AuthErrorDetails {
 }
 
 // Better Auth answers with English text plus a stable error code; the code
-// picks the translated message, and unknown codes get a generic one. The
-// error is `unknown` because Better Auth types it differently in `onError`
-// and in the returned result.
-export function useAuthErrorMessage(): (error: unknown) => string {
+// picks the translated message. Unknown codes get `fallback` (an
+// already-translated message naming the action, such as "Unable to change
+// your email") or a generic one. The error is `unknown` because Better Auth
+// types it differently in `onError` and in the returned result.
+export function useAuthErrorMessage(): (
+  error: unknown,
+  fallback?: string,
+) => string {
   const t = useTranslations("Auth.errors");
 
-  return (error) => {
+  return (error, fallback) => {
     const { code, status } = readAuthErrorDetails(error);
     // Better Auth's rate limiter answers 429 without a code; the generic
     // "try again" would send the user straight into the limit again.
     if (status === 429) {
       return t("RATE_LIMITED");
     }
-    return code !== null && t.has(code) ? t(code) : t("default");
+    if (code !== null && t.has(code)) {
+      return t(code);
+    }
+    return fallback ?? t("default");
   };
 }
