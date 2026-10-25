@@ -12,16 +12,13 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useAuthErrorMessage } from "@/hooks/i18n/use-auth-error-message";
 import { authClient } from "@/lib/auth/auth-client";
+import { EMAIL_MAX_LENGTH } from "@/lib/config/auth";
 
 const CHANGE_EMAIL_CALLBACK_URL = "/settings/profile";
-// Exported so the form can fill the {max} placeholder of "emailTooLong".
-export const CHANGE_EMAIL_MAX_LENGTH = 60;
 
 // Messages are keys of the Validation namespace.
 const changeEmailSchema = z.object({
-  newEmail: z
-    .email("emailInvalid")
-    .max(CHANGE_EMAIL_MAX_LENGTH, "emailTooLong"),
+  newEmail: z.email("emailInvalid").max(EMAIL_MAX_LENGTH, "emailTooLong"),
 });
 
 type ChangeEmailFormValues = z.infer<typeof changeEmailSchema>;

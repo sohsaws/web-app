@@ -3,11 +3,9 @@
 import { AtSign, CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactElement, ReactNode } from "react";
-import {
-  CHANGE_EMAIL_MAX_LENGTH,
-  useChangeEmail,
-} from "@/hooks/auth/use-change-email";
+import { useChangeEmail } from "@/hooks/auth/use-change-email";
 import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
+import { EMAIL_MAX_LENGTH } from "@/lib/config/auth";
 
 function highlightEmail(chunks: ReactNode): ReactNode {
   return <span className="text-white">{chunks}</span>;
@@ -100,7 +98,7 @@ export function ChangeEmailForm({
             {errors.newEmail ? (
               <p id="new-email-error" className="text-xs text-red-500">
                 {validationMessage(errors.newEmail.message, {
-                  max: CHANGE_EMAIL_MAX_LENGTH,
+                  max: EMAIL_MAX_LENGTH,
                 })}
               </p>
             ) : null}

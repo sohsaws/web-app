@@ -68,11 +68,3 @@ export async function createApiResponseError(
 
   return new ApiResponseError(message, code);
 }
-
-export async function getApiResponseError(
-  response: Response,
-  fallbackMessage: string,
-): Promise<string> {
-  const { message } = await readApiErrorDetails(response, fallbackMessage);
-  return message;
-}

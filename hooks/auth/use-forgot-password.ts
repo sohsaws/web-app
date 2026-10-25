@@ -12,16 +12,13 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useAuthErrorMessage } from "@/hooks/i18n/use-auth-error-message";
 import { authClient } from "@/lib/auth/auth-client";
+import { EMAIL_MAX_LENGTH } from "@/lib/config/auth";
 
 const PASSWORD_RESET_REDIRECT_TO = "/forgot-password";
-// Exported so the form can fill the {max} placeholder of "emailTooLong".
-export const FORGOT_PASSWORD_EMAIL_MAX_LENGTH = 60;
 
 // Messages are keys of the Validation namespace.
 const forgotPasswordSchema = z.object({
-  email: z
-    .email("emailInvalid")
-    .max(FORGOT_PASSWORD_EMAIL_MAX_LENGTH, "emailTooLong"),
+  email: z.email("emailInvalid").max(EMAIL_MAX_LENGTH, "emailTooLong"),
 });
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;

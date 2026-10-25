@@ -1,5 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { LOGIN_IDENTIFIER_MAX_LENGTH } from "@/lib/config/auth";
 import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { useLoginForm } from "./use-login-form";
 
@@ -92,7 +93,12 @@ describe("useLoginForm", () => {
   // The form translates these Validation keys with useValidationMessage.
   it.each([
     ["identifierInvalid", "identifier", "ann smith", "secret-pass"],
-    ["identifierTooLong", "identifier", "a".repeat(51), "secret-pass"],
+    [
+      "identifierTooLong",
+      "identifier",
+      "a".repeat(LOGIN_IDENTIFIER_MAX_LENGTH + 1),
+      "secret-pass",
+    ],
     ["passwordTooShort", "password", "ann@example.com", "short"],
   ] as const)(
     "reports %s on the %s field",

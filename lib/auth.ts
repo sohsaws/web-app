@@ -12,6 +12,12 @@ import {
 import { renderResetPasswordEmail } from "@/emails/reset-password-template";
 import { renderVerificationEmail } from "@/emails/verification-template";
 import {
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  USERNAME_MAX_LENGTH,
+  USERNAME_MIN_LENGTH,
+} from "@/lib/config/auth";
+import {
   DEFAULT_LOCALE,
   LOCALE_COOKIE_NAME,
   localeSchema,
@@ -41,6 +47,9 @@ export const auth = betterAuth({
 
   emailAndPassword: {
     enabled: true,
+    // The same limits as the forms (lib/config/auth.ts).
+    minPasswordLength: PASSWORD_MIN_LENGTH,
+    maxPasswordLength: PASSWORD_MAX_LENGTH,
     revokeSessionsOnPasswordReset: true,
     resetPasswordTokenExpiresIn: RESET_PASSWORD_LINK_EXPIRES_IN_SECONDS,
     // /api/auth has no [locale] segment, so every auth email is written in
@@ -156,5 +165,12 @@ export const auth = betterAuth({
     },
   },
 
-  plugins: [username(), dash(), nextCookies()],
+  plugins: [
+    username({
+      minUsernameLength: USERNAME_MIN_LENGTH,
+      maxUsernameLength: USERNAME_MAX_LENGTH,
+    }),
+    dash(),
+    nextCookies(),
+  ],
 });

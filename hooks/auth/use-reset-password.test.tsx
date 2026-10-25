@@ -1,5 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { PASSWORD_MAX_LENGTH } from "@/lib/config/auth";
 import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { useResetPassword } from "./use-reset-password";
 
@@ -50,7 +51,11 @@ describe("useResetPassword", () => {
   it.each([
     ["passwords that do not match", "new-secret-pass", "other-secret-pass"],
     ["a password under 8 characters", "short", "short"],
-    ["a password over 128 characters", "a".repeat(129), "a".repeat(129)],
+    [
+      "a password over the length limit",
+      "a".repeat(PASSWORD_MAX_LENGTH + 1),
+      "a".repeat(PASSWORD_MAX_LENGTH + 1),
+    ],
   ])("does not call the server for %s", async (_case, password, confirm) => {
     const { result } = renderHook(() => useResetPassword(TOKEN), {
       wrapper: IntlTestProvider,

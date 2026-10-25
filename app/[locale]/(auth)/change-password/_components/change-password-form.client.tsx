@@ -3,12 +3,9 @@
 import { KeyRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
-import {
-  CHANGE_PASSWORD_MAX_LENGTH,
-  CHANGE_PASSWORD_MIN_LENGTH,
-  useChangePassword,
-} from "@/hooks/auth/use-change-password";
+import { useChangePassword } from "@/hooks/auth/use-change-password";
 import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 
 export function ChangePasswordForm(): ReactElement {
   const t = useTranslations("Auth.changePassword");
@@ -82,8 +79,8 @@ export function ChangePasswordForm(): ReactElement {
             {errors.newPassword ? (
               <p id="new-password-error" className="text-xs text-red-500">
                 {validationMessage(errors.newPassword.message, {
-                  min: CHANGE_PASSWORD_MIN_LENGTH,
-                  max: CHANGE_PASSWORD_MAX_LENGTH,
+                  min: PASSWORD_MIN_LENGTH,
+                  max: PASSWORD_MAX_LENGTH,
                 })}
               </p>
             ) : null}

@@ -1,9 +1,15 @@
 import { describe, expect, it, vi } from "vitest";
+import {
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  USERNAME_MAX_LENGTH,
+} from "@/lib/config/auth";
 
 const { sendAuthEmail } = vi.hoisted(() => ({ sendAuthEmail: vi.fn() }));
 
-// Only the auth email callbacks run here: no database, no hosted dashboard
-// plugin, and no email leaves the process.
+// Prisma is an empty mock: the email callbacks never touch it, and the limit
+// tests stop at the username plugin's length check or fail on the mock right
+// after it. The hosted dashboard plugin is stubbed and no email is sent.
 vi.mock("@/lib/prisma", () => ({ default: {} }));
 vi.mock("@better-auth/infra", () => ({ dash: () => ({ id: "dash" }) }));
 vi.mock("@/lib/email/send-auth-email", () => ({ sendAuthEmail }));
@@ -95,5 +101,39 @@ describe("auth emails", () => {
         html: expect.stringMatching(/<html[^>]*\slang="en"/),
       }),
     );
+  });
+});
+
+// The forms validate with lib/config/auth.ts; the server must accept exactly
+// what they accept, or users see a form rule that the server then breaks.
+describe("auth limits", () => {
+  it("gives Better Auth the forms' password limits", () => {
+    expect(auth.options.emailAndPassword).toMatchObject({
+      minPasswordLength: PASSWORD_MIN_LENGTH,
+      maxPasswordLength: PASSWORD_MAX_LENGTH,
+    });
+  });
+
+  // The username plugin checks length before any database lookup, so a
+  // name of the maximum length gets past it (and fails later on the mocked
+  // database), while one character more is rejected as too long.
+  function signInWithUsernameOfLength(length: number) {
+    return auth.api.signInUsername({
+      body: { username: "a".repeat(length), password: "secret-pass" },
+    });
+  }
+
+  it("accepts a username of the forms' maximum length", async () => {
+    const error: unknown = await signInWithUsernameOfLength(
+      USERNAME_MAX_LENGTH,
+    ).catch((caught: unknown) => caught);
+
+    expect(error).not.toMatchObject({ body: { code: "USERNAME_TOO_LONG" } });
+  });
+
+  it("rejects a username one character over the forms' maximum", async () => {
+    await expect(
+      signInWithUsernameOfLength(USERNAME_MAX_LENGTH + 1),
+    ).rejects.toMatchObject({ body: { code: "USERNAME_TOO_LONG" } });
   });
 });

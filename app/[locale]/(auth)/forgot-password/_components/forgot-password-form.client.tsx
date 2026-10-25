@@ -3,11 +3,9 @@
 import { AtSign, CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
-import {
-  FORGOT_PASSWORD_EMAIL_MAX_LENGTH,
-  useForgotPassword,
-} from "@/hooks/auth/use-forgot-password";
+import { useForgotPassword } from "@/hooks/auth/use-forgot-password";
 import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
+import { EMAIL_MAX_LENGTH } from "@/lib/config/auth";
 
 export function ForgotPasswordForm(): ReactElement {
   const t = useTranslations("Auth.forgotPassword");
@@ -80,7 +78,7 @@ export function ForgotPasswordForm(): ReactElement {
         {errors.email ? (
           <p id="email-error" className="mt-2 text-xs text-red-500">
             {validationMessage(errors.email.message, {
-              max: FORGOT_PASSWORD_EMAIL_MAX_LENGTH,
+              max: EMAIL_MAX_LENGTH,
             })}
           </p>
         ) : null}

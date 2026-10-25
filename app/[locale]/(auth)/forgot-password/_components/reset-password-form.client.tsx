@@ -3,12 +3,9 @@
 import { KeyRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
-import {
-  RESET_PASSWORD_MAX_LENGTH,
-  RESET_PASSWORD_MIN_LENGTH,
-  useResetPassword,
-} from "@/hooks/auth/use-reset-password";
+import { useResetPassword } from "@/hooks/auth/use-reset-password";
 import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 
 interface ResetPasswordFormProps {
   token: string;
@@ -58,15 +55,15 @@ export function ResetPasswordForm({
                 errors.newPassword ? "new-password-error" : undefined
               }
               placeholder={t("newPasswordPlaceholder", {
-                min: RESET_PASSWORD_MIN_LENGTH,
+                min: PASSWORD_MIN_LENGTH,
               })}
               className="block w-full rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white placeholder-neutral-600 shadow-sm focus:border-white/20 focus:ring-1 focus:ring-white/20 outline-none transition-all"
             />
             {errors.newPassword ? (
               <p id="new-password-error" className="text-xs text-red-500">
                 {validationMessage(errors.newPassword.message, {
-                  min: RESET_PASSWORD_MIN_LENGTH,
-                  max: RESET_PASSWORD_MAX_LENGTH,
+                  min: PASSWORD_MIN_LENGTH,
+                  max: PASSWORD_MAX_LENGTH,
                 })}
               </p>
             ) : null}

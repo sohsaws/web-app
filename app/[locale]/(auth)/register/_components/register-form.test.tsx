@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { USERNAME_MAX_LENGTH } from "@/lib/config/auth";
 import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { RegisterForm } from "./register-form.client";
 
@@ -73,7 +74,10 @@ describe("RegisterForm", () => {
   it("shows the form's username limit of 40 characters", async () => {
     const user = renderForm();
 
-    await fillAndSubmit(user, { ...validInput, username: "a".repeat(41) });
+    await fillAndSubmit(user, {
+      ...validInput,
+      username: "a".repeat(USERNAME_MAX_LENGTH + 1),
+    });
 
     expect(
       await screen.findByText("Username must be at most 40 characters long."),

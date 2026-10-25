@@ -1,5 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { EMAIL_MAX_LENGTH } from "@/lib/config/auth";
 import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { useForgotPassword } from "./use-forgot-password";
 
@@ -52,10 +53,14 @@ describe("useForgotPassword", () => {
     );
   });
 
+  // Valid in form (short domain labels), so only its length can stop it.
+  const tooLongEmail = `a@${"abcdefghi.".repeat(25)}com`;
+
   it.each([
-    ["an invalid email", "not-an-email"],
-    ["an email over 60 characters", `${"a".repeat(55)}@example.com`],
-  ])("does not call the server for %s", async (_case, email) => {
+    ["an invalid email", "not-an-email", "emailInvalid"],
+    ["an email over the length limit", tooLongEmail, "emailTooLong"],
+  ])("does not call the server for %s", async (_case, email, errorKey) => {
+    expect(tooLongEmail.length).toBe(EMAIL_MAX_LENGTH + 1);
     const { result } = renderHook(() => useForgotPassword(), {
       wrapper: IntlTestProvider,
     });
@@ -63,6 +68,9 @@ describe("useForgotPassword", () => {
     await submit(result, email);
 
     expect(authClient.requestPasswordReset).not.toHaveBeenCalled();
+    expect(result.current.form.getFieldState("email").error?.message).toBe(
+      errorKey,
+    );
   });
 
   it("asks the user to wait when rate-limited and keeps the form open", async () => {

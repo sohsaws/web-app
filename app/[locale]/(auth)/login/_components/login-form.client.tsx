@@ -4,15 +4,15 @@ import { AtSign, Lock } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { GoogleAuthButton } from "@/app/[locale]/(auth)/_components/google-sign-button.client";
+import { useLoginForm } from "@/hooks/auth/use-login-form";
+import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
+import { Link } from "@/i18n/navigation";
 import {
   LOGIN_IDENTIFIER_MAX_LENGTH,
   LOGIN_IDENTIFIER_MIN_LENGTH,
-  LOGIN_PASSWORD_MAX_LENGTH,
-  LOGIN_PASSWORD_MIN_LENGTH,
-  useLoginForm,
-} from "@/hooks/auth/use-login-form";
-import { useValidationMessage } from "@/hooks/i18n/use-validation-message";
-import { Link } from "@/i18n/navigation";
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+} from "@/lib/config/auth";
 
 interface LoginFormProps {
   callbackUrl: string;
@@ -104,8 +104,8 @@ export function LoginForm({ callbackUrl }: LoginFormProps): ReactElement {
           {errors.password ? (
             <p className="mt-2 text-xs text-red-500">
               {validationMessage(errors.password.message, {
-                min: LOGIN_PASSWORD_MIN_LENGTH,
-                max: LOGIN_PASSWORD_MAX_LENGTH,
+                min: PASSWORD_MIN_LENGTH,
+                max: PASSWORD_MAX_LENGTH,
               })}
             </p>
           ) : null}

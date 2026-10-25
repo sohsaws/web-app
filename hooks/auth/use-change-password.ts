@@ -12,11 +12,7 @@ import { z } from "zod";
 import { useAuthErrorMessage } from "@/hooks/i18n/use-auth-error-message";
 import { useRouter } from "@/i18n/navigation";
 import { authClient } from "@/lib/auth/auth-client";
-
-// Exported so the form can fill the {min}/{max} placeholders of the
-// Validation messages that these limits produce.
-export const CHANGE_PASSWORD_MIN_LENGTH = 8;
-export const CHANGE_PASSWORD_MAX_LENGTH = 128;
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 
 // Messages are keys of the Validation namespace.
 const changePasswordSchema = z
@@ -24,8 +20,8 @@ const changePasswordSchema = z
     currentPassword: z.string().min(1, "currentPasswordRequired"),
     newPassword: z
       .string()
-      .min(CHANGE_PASSWORD_MIN_LENGTH, "passwordTooShort")
-      .max(CHANGE_PASSWORD_MAX_LENGTH, "passwordTooLong"),
+      .min(PASSWORD_MIN_LENGTH, "passwordTooShort")
+      .max(PASSWORD_MAX_LENGTH, "passwordTooLong"),
     confirmPassword: z.string(),
   })
   .refine(
