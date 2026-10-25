@@ -13,7 +13,7 @@
       "position": "{current} / {total}"
     },
     "stack": {
-      "empty": "Noch keine gespeicherten Ideen. Speichere eine Karte in Dive als Favorit, um deine Sammlung zu beginnen.",
+      "empty": "Noch keine gespeicherten Ideen. Speichere eine Karte unter „Tauch ein“ als Favorit, um deine Sammlung zu beginnen.",
       "list": "Zuletzt gespeicherte Ideen",
       "open": "Gespeicherte Ideen öffnen"
     },

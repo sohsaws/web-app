@@ -13,7 +13,7 @@ interface DeleteAccountProps {
 }
 
 const inputClassName =
-  "w-full sm:w-80 rounded-lg border border-white/10 bg-black/60 px-4 py-2.5 text-sm text-white outline-none transition-colors placeholder:text-neutral-600 focus:border-red-500/40 focus:ring-1 focus:ring-red-500/40";
+  "block w-full rounded-md border border-neutral-800 bg-app-card px-3 py-2 text-sm text-white shadow-sm outline-none transition-colors placeholder:text-neutral-600 focus:border-red-500/40 focus:ring-1 focus:ring-red-500/40 sm:w-80";
 
 export function DeleteAccount({
   requiresPassword,
@@ -117,7 +117,7 @@ export function DeleteAccount({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400 disabled:cursor-not-allowed disabled:opacity-50"
+              className="cursor-pointer rounded-md bg-red-600 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSubmitting ? t("deleting") : t("submit")}
             </button>
@@ -125,7 +125,7 @@ export function DeleteAccount({
               type="button"
               onClick={closeForm}
               disabled={isSubmitting}
-              className="cursor-pointer px-3 py-2 text-sm font-medium text-neutral-500 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="cursor-pointer px-3 py-2 text-xs font-medium text-neutral-500 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               {tActions("cancel")}
             </button>
@@ -133,7 +133,7 @@ export function DeleteAccount({
         </form>
       ) : null}
 
-      <div className="flex items-center justify-between gap-4 border-t border-red-500/10 bg-red-500/2 px-6 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-red-500/10 bg-red-500/2 px-6 py-4">
         <p className="text-xs font-medium tracking-wide text-red-500/60 uppercase">
           {t("dangerZone")}
         </p>
@@ -143,7 +143,7 @@ export function DeleteAccount({
             aria-expanded={false}
             aria-controls={formId}
             onClick={(): void => setIsOpen(true)}
-            className="shrink-0 cursor-pointer rounded-lg border border-red-500/30 px-4 py-1.5 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400"
+            className="shrink-0 cursor-pointer rounded-md border border-red-500/30 px-4 py-2 text-xs font-medium text-red-400 transition-colors hover:bg-red-500/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400"
           >
             {t("open")}
           </button>

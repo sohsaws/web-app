@@ -13,7 +13,7 @@
       "position": "{current} / {total}"
     },
     "stack": {
-      "empty": "Aucune idée enregistrée pour l’instant. Ajoutez une carte à vos favoris dans Dive pour commencer votre collection.",
+      "empty": "Aucune idée enregistrée pour l’instant. Ajoutez une carte à vos favoris dans « Plongez » pour commencer votre collection.",
       "list": "Idées récemment enregistrées",
       "open": "Ouvrir les idées enregistrées"
     },

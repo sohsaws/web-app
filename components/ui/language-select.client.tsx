@@ -32,7 +32,7 @@ const triggerClassNames: Record<LanguageSelectVariant, string> = {
   // up. The before: layer only grows the tap area to 40px.
   pill: "relative inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border border-white/10 bg-neutral-900/60 px-[clamp(0.75rem,3vw,1.75rem)] py-1.5 text-app-nav font-semibold tracking-tight text-neutral-300 transition-colors duration-200 before:absolute before:inset-x-0 before:-inset-y-1.5 before:content-[''] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none",
   field:
-    "flex w-full cursor-pointer items-center justify-between gap-2 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-left text-sm text-white shadow-sm outline-none transition-colors focus-visible:border-white/20 focus-visible:ring-1 focus-visible:ring-white/20 disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none",
+    "flex w-full cursor-pointer items-center justify-between gap-2 rounded-md border border-neutral-800 bg-app-card px-3 py-2 text-left text-sm text-white shadow-sm outline-none transition-colors focus-visible:border-white/20 focus-visible:ring-1 focus-visible:ring-white/20 disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none",
 };
 
 // The header pill sits at the right edge, so its list opens towards the left.

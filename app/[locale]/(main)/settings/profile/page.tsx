@@ -28,7 +28,7 @@ export default async function ProfilePage(): Promise<ReactElement> {
           <p className="text-sm text-neutral-500">{t("description")}</p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-12 p-6 rounded-3xl border border-white/5 bg-[#080808]">
+        <div className="app-settings-card mb-12 flex flex-col items-start gap-6 border-white/5 p-6 sm:flex-row sm:items-center">
           <AvatarUpload image={user.image} name={user.name} />
         </div>
         <ProfileForm

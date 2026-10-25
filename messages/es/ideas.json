@@ -13,7 +13,7 @@
       "position": "{current} / {total}"
     },
     "stack": {
-      "empty": "Aún no tienes ninguna idea guardada. Añade una tarjeta a tus favoritos en Dive para empezar tu colección.",
+      "empty": "Aún no tienes ninguna idea guardada. Añade una tarjeta a tus favoritos en «Sumérgete» para empezar tu colección.",
       "list": "Ideas guardadas recientemente",
       "open": "Abrir ideas guardadas"
     },

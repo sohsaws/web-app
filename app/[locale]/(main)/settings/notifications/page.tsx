@@ -24,11 +24,11 @@ export default async function NotificationsPage(): Promise<ReactElement> {
   return (
     <div className="min-w-0 flex-1 px-4 sm:px-10">
       <div className="max-w-3xl space-y-8">
-        <div className="mb-10 space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-white">
+        <div className="mb-10">
+          <h1 className="mb-2 text-2xl font-medium tracking-tight text-white">
             {t("title")}
           </h1>
-          <p className="mt-5 text-sm font-normal text-neutral-500">
+          <p className="text-sm text-neutral-500">
             {t("description", { email: session.user.email })}
           </p>
         </div>

@@ -34,13 +34,15 @@ export function NotificationSettings({
     useNotificationPreferences(initialPreferences);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-white/10 bg-neutral-900/30 shadow-lg shadow-black/20 backdrop-blur-md">
-      <div className="border-b border-white/10 px-6 py-5">
-        <h2 className="text-base font-medium text-white">{t("emailTitle")}</h2>
-        <p className="mt-1 text-sm text-neutral-400">{t("emailDescription")}</p>
+    <section className="app-settings-card border-white/5">
+      <div className="border-b border-white/5 p-6">
+        <h2 className="mb-1 text-sm font-medium text-white">
+          {t("emailTitle")}
+        </h2>
+        <p className="text-xs text-neutral-500">{t("emailDescription")}</p>
       </div>
 
-      <ul className="divide-y divide-white/10">
+      <ul className="divide-y divide-white/5">
         <li className="flex items-center justify-between gap-6 px-6 py-5">
           <div className="flex min-w-0 items-start gap-3">
             <ShieldCheck
@@ -61,7 +63,7 @@ export function NotificationSettings({
               </h3>
               <p
                 id="notification-securityEmails-description"
-                className="mt-1 text-sm leading-relaxed text-neutral-400"
+                className="mt-1 text-xs leading-relaxed text-neutral-500"
               >
                 {t("securityEmails.description")}
               </p>
@@ -96,7 +98,7 @@ export function NotificationSettings({
                 </h3>
                 <p
                   id={`notification-${key}-description`}
-                  className="mt-1 text-sm leading-relaxed text-neutral-400"
+                  className="mt-1 text-xs leading-relaxed text-neutral-500"
                 >
                   {t(`${key}.description`)}
                 </p>
@@ -113,9 +115,9 @@ export function NotificationSettings({
         ))}
       </ul>
 
-      <div className="border-t border-white/10 bg-white/2 px-6 py-4">
+      <div className="border-t border-white/5 px-6 py-4">
         <p className="text-xs text-neutral-500">{t("optionalHint")}</p>
       </div>
-    </div>
+    </section>
   );
 }

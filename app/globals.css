@@ -4,6 +4,7 @@
   --color-app-bg: #0a0a0a;
   --color-app-fg: #d4d4d4;
   --color-app-surface: #111113;
+  --color-app-card: #080808;
   --color-app-border: rgb(255 255 255 / 0.1);
   --color-app-muted: #9ca3af;
   --color-app-selection-bg: #ffffff;
@@ -69,6 +70,12 @@ body {
     scrollbar-width: thin;
     scrollbar-color: var(--color-app-glow) transparent;
   }
+}
+
+/* The quiet panel every settings page uses. The border color is set per use,
+   so a danger panel can be red. */
+@utility app-settings-card {
+  @apply min-w-0 rounded-3xl border bg-app-card;
 }
 
 @utility app-widget {

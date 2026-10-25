@@ -53,7 +53,7 @@ export default function ProfileForm({
             aria-invalid={Boolean(errors.name)}
             aria-describedby={errors.name ? "name-error" : undefined}
             placeholder={t("namePlaceholder")}
-            className="block w-full min-w-0 rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white shadow-sm outline-none transition-colors placeholder:text-neutral-600 focus:border-white/20 focus:ring-1 focus:ring-white/20"
+            className="block w-full min-w-0 rounded-md border border-neutral-800 bg-app-card px-3 py-2 text-sm text-white shadow-sm outline-none transition-colors placeholder:text-neutral-600 focus:border-white/20 focus:ring-1 focus:ring-white/20"
           />
           {errors.name ? (
             <p id="name-error" className="text-xs text-red-500">
@@ -113,7 +113,7 @@ export default function ProfileForm({
           rows={4}
           placeholder={t("bioPlaceholder")}
           maxLength={PROFILE_BIO_MAX_LENGTH}
-          className="block w-full resize-none rounded-md border border-neutral-800 bg-[#080808] px-3 py-2 text-sm text-white shadow-sm outline-none transition-colors placeholder:text-neutral-600 focus:border-white/20 focus:ring-1 focus:ring-white/20"
+          className="block w-full resize-none rounded-md border border-neutral-800 bg-app-card px-3 py-2 text-sm text-white shadow-sm outline-none transition-colors placeholder:text-neutral-600 focus:border-white/20 focus:ring-1 focus:ring-white/20"
         />
         <div
           id="bio-description"
