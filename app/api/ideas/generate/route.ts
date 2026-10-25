@@ -5,6 +5,7 @@ import { z } from "zod";
 import { assignIdeaCategories, generateIdeas } from "@/lib/ai/generate-ideas";
 import { apiErrorResponse } from "@/lib/api-error-response";
 import { auth } from "@/lib/auth";
+import { resolveLocale } from "@/lib/config/locales";
 import { profileBioSchema } from "@/lib/config/profile";
 import { checkRateLimit, rateLimitExceededResponse } from "@/lib/rate-limit";
 import type { IdeaGeneratedResponse } from "@/lib/types/ideas/types";
@@ -36,8 +37,11 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   const { bio } = parsedBody.data;
+  // The language comes from the profile on the server, never from the
+  // request, like the rest of the user's settings.
+  const locale = resolveLocale(session.user.locale);
   try {
-    const generated = await generateIdeas(bio);
+    const generated = await generateIdeas(bio, locale);
     const categorizedIdeas = await assignIdeaCategories(generated.ideas);
     const createdAt = new Date();
 

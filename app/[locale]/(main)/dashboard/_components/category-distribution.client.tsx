@@ -4,6 +4,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner.client";
 import { Widget } from "@/components/ui/widget.client";
+import { useCategoryLabel } from "@/hooks/i18n/use-category-label";
 import { useCategoryDistribution } from "@/hooks/ideas/use-category-distribution";
 
 interface CategoryDistributionProps {
@@ -18,6 +19,7 @@ export function CategoryDistribution({
   const t = useTranslations("Dashboard.categoryDistribution");
   const tCommon = useTranslations("Common");
   const format = useFormatter();
+  const categoryLabel = useCategoryLabel();
 
   return (
     <Widget className="flex max-h-102 flex-col self-stretch p-6 sm:col-span-2 xl:col-span-1">
@@ -46,7 +48,9 @@ export function CategoryDistribution({
             {data.map(({ category, percentage }) => (
               <li key={category}>
                 <div className="flex items-start justify-between gap-4 text-sm">
-                  <span className="min-w-0 wrap-anywhere">{category}</span>
+                  <span className="min-w-0 wrap-anywhere">
+                    {categoryLabel(category)}
+                  </span>
                   <span className="shrink-0 font-medium text-white tabular-nums">
                     {format.number(percentage / 100, {
                       style: "percent",

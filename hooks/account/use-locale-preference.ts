@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { useIdeasStore } from "@/app/stores/ideas-store";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { updateLocale } from "@/lib/actions/locale.action";
 import { LOCALE_NAMES, type Locale, resolveLocale } from "@/lib/config/locales";
@@ -20,6 +21,7 @@ export function useLocalePreference(): UseLocalePreferenceResult {
   const t = useTranslations("Settings.language");
   const router = useRouter();
   const pathname = usePathname();
+  const clearIdeas = useIdeasStore((state) => state.clearIdeas);
   // The language being switched to. After a successful save it stays set
   // until the page renders under the new locale (which remounts this hook),
   // so the field keeps showing the choice and a second switch cannot start
@@ -44,6 +46,9 @@ export function useLocalePreference(): UseLocalePreferenceResult {
           return;
         }
 
+        // The in-memory deck was written in the old language. It is dropped,
+        // not regenerated here: /dive builds a new one when the user opens it.
+        clearIdeas();
         // Shown before navigating, so it is in the language the user just
         // left and can still read.
         toast.success(t("updated", { language: LOCALE_NAMES[result.locale] }));

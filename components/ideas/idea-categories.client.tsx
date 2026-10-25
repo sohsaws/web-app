@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { type ReactElement, useEffect, useState } from "react";
+import { useCategoryLabel } from "@/hooks/i18n/use-category-label";
 import type { IdeaCategory } from "@/lib/config/categories-array";
 
 const categoryColors = [
@@ -57,6 +58,7 @@ export function IdeaCategories({
   size = "default",
 }: IdeaCategoriesProps): ReactElement | null {
   const t = useTranslations("Ideas.categories");
+  const categoryLabel = useCategoryLabel();
   const [variants, setVariants] = useState<number[]>([]);
   const len = categories.length;
 
@@ -80,7 +82,9 @@ export function IdeaCategories({
             aria-hidden="true"
             className="size-1.5 shrink-0 rounded-full bg-current"
           />
-          <span className="min-w-0 wrap-anywhere text-center">{category}</span>
+          <span className="min-w-0 wrap-anywhere text-center">
+            {categoryLabel(category)}
+          </span>
         </li>
       ))}
     </ul>

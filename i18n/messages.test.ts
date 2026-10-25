@@ -3,6 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { ACTION_ERROR_CODES } from "@/lib/config/action-errors";
 import { API_ERRORS } from "@/lib/config/api-errors";
+import { IDEA_CATEGORIES } from "@/lib/config/categories-array";
 import { DEFAULT_LOCALE, LOCALES } from "@/lib/config/locales";
 import { flattenMessages, isMessageTree } from "@/scripts/i18n/message-tree";
 import { placeholderNames, richTagNames } from "@/scripts/i18n/placeholders";
@@ -65,6 +66,18 @@ describe("server error messages", () => {
       expect(keys).toContain(code);
     }
     expect(keys).toContain("UNKNOWN");
+  });
+});
+
+describe("category messages", () => {
+  // The AI picks from IDEA_CATEGORIES and the UI looks each one up by that
+  // exact key; a category without a message would show untranslated.
+  it("has an English message for every category the AI can choose", () => {
+    const english = readMessageMap(DEFAULT_LOCALE, "categories");
+
+    expect([...english.keys()].sort()).toEqual(
+      IDEA_CATEGORIES.map((category) => `Categories.${category}`).sort(),
+    );
   });
 });
 

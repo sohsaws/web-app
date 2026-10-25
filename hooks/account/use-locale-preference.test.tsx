@@ -1,6 +1,8 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { useIdeasStore } from "@/app/stores/ideas-store";
 import type { UpdateLocaleResult } from "@/lib/actions/locale.action";
+import type { IdeaSaveRequest } from "@/lib/types/ideas/types";
 import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { useLocalePreference } from "./use-locale-preference";
 
@@ -36,8 +38,19 @@ function renderLocaleHook() {
   });
 }
 
+const englishIdea: IdeaSaveRequest = {
+  id: "idea-1",
+  title: "Night hike",
+  description: "Walk a trail at dusk.",
+  categories: ["Hiking"],
+  createdAt: new Date("2026-10-10T10:00:00.000Z"),
+};
+
 beforeEach(() => {
   updateLocale.mockResolvedValue({ success: true, locale: "de" });
+  // The deck store is a module-level singleton; each test starts with an
+  // English deck in memory.
+  useIdeasStore.setState({ ideas: [englishIdea], previousCard: englishIdea });
 });
 
 describe("useLocalePreference", () => {
@@ -65,6 +78,28 @@ describe("useLocalePreference", () => {
       router.replace.mock.invocationCallOrder[0],
     );
     expect(toast.error).not.toHaveBeenCalled();
+  });
+
+  it("drops the deck written in the old language without generating a new one", async () => {
+    const { result } = renderLocaleHook();
+
+    act(() => result.current.changeLocale("de"));
+
+    await waitFor(() => expect(router.replace).toHaveBeenCalled());
+    expect(useIdeasStore.getState()).toMatchObject({
+      ideas: [],
+      previousCard: null,
+    });
+  });
+
+  it("keeps the deck when the language is not saved", async () => {
+    updateLocale.mockResolvedValue({ success: false, code: "NOT_SIGNED_IN" });
+    const { result } = renderLocaleHook();
+
+    act(() => result.current.changeLocale("fr"));
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalled());
+    expect(useIdeasStore.getState().ideas).toEqual([englishIdea]);
   });
 
   it("shows the translated error and stays on the page when saving is refused", async () => {

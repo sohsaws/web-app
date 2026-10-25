@@ -25,6 +25,16 @@ export const LOCALE_NAMES: Record<Locale, string> = {
   de: "Deutsch",
 };
 
+// AI prompts are written in English, so they name the output language in
+// English ("Write ... in Russian").
+export const LOCALE_PROMPT_NAMES: Record<Locale, string> = {
+  en: "English",
+  ru: "Russian",
+  es: "Spanish",
+  fr: "French",
+  de: "German",
+};
+
 export const localeSchema = z.enum(LOCALES);
 
 export function isLocale(value: unknown): value is Locale {

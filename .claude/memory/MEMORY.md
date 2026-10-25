@@ -279,10 +279,19 @@ picks the first supported value or English.
   - Idea text: instructions stay in English with an explicit output-language
     line ("Write every title and description in <language>"); no translated
     system prompts (variant a). The image prompt stays English.
-  - Categories: the model chooses from category labels in the user's
-    language; code maps the label back to the English key; the DB stores the
-    English key; the UI shows `t("categories.<Key>")`. Distribution SQL,
-    `isIdeaCategory` and `z.enum(IDEA_CATEGORIES)` keep working.
+  - **Categories (changed by the user 2026-10-25):** the model keeps
+    choosing from the English `IDEA_CATEGORIES` list; the DB stores the
+    English key; only the display is translated
+    (`hooks/i18n/use-category-label.ts` → `Categories.<English name>`).
+    No localized enum and no label-to-key mapping.
+  - **Stage 6 built 2026-10-25:** `generateIdeas(bio, locale)` with the
+    locale from the session (`LOCALE_PROMPT_NAMES`); category and scene
+    prompts accept ideas in any language. Changing the language in the
+    profile clears the in-memory deck (`clearIdeas`) without regenerating;
+    /dive generates a new deck when opened.
+  - **Section name "Dive" (user, 2026-10-25):** translated: ru
+    «Погружение», es «Sumérgete», fr « Plongez », de „Tauch ein“; English
+    stays "Dive".
 - **Postponed until release (2026-10-21):** `hreflang`/`alternates` metadata
   and `sitemap.xml`. The overflow check for long German/French strings stays
   in the plan (manual browser check by the user).
