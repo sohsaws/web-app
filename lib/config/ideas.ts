@@ -38,7 +38,6 @@ export const generatedImageSchema = z.object({
   image: z.base64().min(1),
 });
 
-// Gemini image models return PNG. Every other image constant derives from these.
 export const IDEA_IMAGE_MEDIA_TYPE = "image/png";
 export const IDEA_IMAGE_FILE_EXTENSION = "png";
 export const IDEA_IMAGE_DATA_URL_PREFIX = `data:${IDEA_IMAGE_MEDIA_TYPE};base64,`;
