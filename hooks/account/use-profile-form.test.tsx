@@ -1,6 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ProfileFormValues } from "@/lib/config/profile";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { useProfileForm } from "./use-profile-form";
 
 const { updateProfile, router, toast } = vi.hoisted(() => ({
@@ -10,19 +11,22 @@ const { updateProfile, router, toast } = vi.hoisted(() => ({
 }));
 
 vi.mock("@/lib/actions/profile.action", () => ({ updateProfile }));
-vi.mock("next/navigation", () => ({ useRouter: () => router }));
+vi.mock("@/i18n/navigation", () => ({ useRouter: () => router }));
 vi.mock("sonner", () => ({ toast }));
 
 const savedProfile: ProfileFormValues = { name: "Ann", bio: "Likes hiking." };
 
 function renderProfileHook() {
-  return renderHook(() => {
-    const profileForm = useProfileForm(savedProfile);
-    // React Hook Form tracks isDirty only once it is read during render, as
-    // the real form does for its Save button.
-    void profileForm.form.formState.isDirty;
-    return profileForm;
-  });
+  return renderHook(
+    () => {
+      const profileForm = useProfileForm(savedProfile);
+      // React Hook Form tracks isDirty only once it is read during render, as
+      // the real form does for its Save button.
+      void profileForm.form.formState.isDirty;
+      return profileForm;
+    },
+    { wrapper: IntlTestProvider },
+  );
 }
 
 async function submit(
@@ -37,10 +41,7 @@ async function submit(
 }
 
 beforeEach(() => {
-  updateProfile.mockResolvedValue({
-    success: true,
-    message: "Profile updated successfully",
-  });
+  updateProfile.mockResolvedValue({ success: true });
 });
 
 describe("useProfileForm", () => {
@@ -74,17 +75,17 @@ describe("useProfileForm", () => {
     expect(updateProfile).not.toHaveBeenCalled();
   });
 
-  it("keeps the edits and shows the server message when saving is refused", async () => {
+  it("keeps the edits and shows the translated refusal when saving is refused", async () => {
     updateProfile.mockResolvedValue({
       success: false,
-      message: "You must be signed in to update your profile",
+      code: "NOT_SIGNED_IN",
     });
     const { result } = renderProfileHook();
 
     await submit(result, { name: "Ann Lee", bio: "" });
 
     expect(toast.error).toHaveBeenCalledWith(
-      "You must be signed in to update your profile",
+      "You must be signed in to do this.",
     );
     expect(router.refresh).not.toHaveBeenCalled();
     expect(result.current.form.getValues("name")).toBe("Ann Lee");
@@ -99,7 +100,7 @@ describe("useProfileForm", () => {
     await submit(result, { name: "Ann Lee", bio: "" });
 
     expect(toast.error).toHaveBeenCalledWith(
-      "Something went wrong while updating your profile",
+      "Something went wrong. Please try again.",
     );
   });
 

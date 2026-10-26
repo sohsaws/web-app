@@ -1,0 +1,44 @@
+{
+  "Dive": {
+    "page": {
+      "eyebrow": "Sumérgete",
+      "heading": "Una tarjeta. <muted>Una decisión.</muted>",
+      "intro": "Ideas inspiradas en tu biografía, una por una. Quédate con lo que te despierte algo, y deja ir el resto.",
+      "hints": {
+        "save": {
+          "title": "Desliza a la derecha para guardar",
+          "description": "Irá a tu bolsillo"
+        },
+        "skip": {
+          "title": "Desliza a la izquierda para saltar",
+          "description": "Las ideas que te saltas nunca se guardan"
+        },
+        "restore": {
+          "title": "¿Has cambiado de idea?",
+          "description": "Recupera la última tarjeta"
+        }
+      },
+      "bioRequired": {
+        "heading": "Primero, <muted>háblanos de ti.</muted>",
+        "description": "Swiipy crea tu baraja a partir de tu biografía. Añade unas líneas sobre tu trabajo, tus aficiones y lo que te gustaría probar.",
+        "cta": "Escribe tu biografía"
+      }
+    },
+    "cardsPool": {
+      "loadingLabel": "Generando ideas",
+      "loadingText": "Barajando tus tarjetas",
+      "errorHeading": "No se ha podido preparar <muted>tu baraja.</muted>",
+      "generationFailed": "Ha habido un problema al generar ideas."
+    },
+    "actions": {
+      "restore": "Recuperar la idea anterior",
+      "skip": "Omitir idea",
+      "favorite": "Añadir a favoritos",
+      "favoriteUnavailable": "Favoritos, próximamente"
+    },
+    "regenerate": {
+      "idle": "Barajar de nuevo",
+      "pending": "Barajando de nuevo…"
+    }
+  }
+}

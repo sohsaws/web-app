@@ -95,6 +95,13 @@ upgrade. Check the docs for the installed major before writing config:
   after `--` (paths with only `.test.ts` files find nothing here).
 - `jsdom` is pinned to `^29`: jsdom 30 requires Node `^22.22 || ^24.15 ||
   >=26` and does not support the user's local Node 25.
+- next-intl (since 2026-10-21): `test.server.deps.inline: ["next-intl"]` in
+  `vitest.config.mts` (its ESM imports `next/server` without an extension).
+  Components that use `Link` or translations render inside
+  `IntlTestProvider` (`test-utils/intl-test-provider.tsx`, real English
+  messages from `messages/en/*.json`). Hooks that only need the router mock
+  `@/i18n/navigation` (`useRouter`), not `next/navigation`. Never import
+  `i18n/request.ts` in tests: `next/root-params` exists only inside Next.
 - TanStack Query hooks use `createQueryClientWrapper()` from
   `test-utils/query-client-wrapper.tsx` (fresh client, no retries).
 

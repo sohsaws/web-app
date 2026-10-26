@@ -40,6 +40,9 @@ describe("POST /api/ideas/generate", () => {
     const response = await POST(generateRequest({ bio: "I like hiking." }));
 
     expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toMatchObject({
+      code: "UNAUTHORIZED",
+    });
     expect(checkRateLimit).not.toHaveBeenCalled();
     expect(generateIdeas).not.toHaveBeenCalled();
   });
@@ -53,6 +56,9 @@ describe("POST /api/ideas/generate", () => {
     const response = await POST(generateRequest({ bio: "I like hiking." }));
 
     expect(response.status).toBe(429);
+    await expect(response.json()).resolves.toMatchObject({
+      code: "RATE_LIMITED",
+    });
     expect(response.headers.get("Retry-After")).toBe("300");
     expect(checkRateLimit).toHaveBeenCalledWith("generate", "u1");
     expect(generateIdeas).not.toHaveBeenCalled();
@@ -96,13 +102,40 @@ describe("POST /api/ideas/generate", () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(generateIdeas).toHaveBeenCalledWith("I like hiking.");
+    // The session user has no locale field here, so English is used.
+    expect(generateIdeas).toHaveBeenCalledWith("I like hiking.", "en");
     expect(body.ideas).toHaveLength(1);
     expect(body.ideas[0]).toMatchObject({
       title: "Kyoto",
       categories: ["Travel", "Photography"],
     });
     expect(body.ideas[0].id).toEqual(expect.any(String));
+  });
+
+  it.each([
+    ["the profile language", "de", "de"],
+    ["English for an unsupported stored value", "xx", "en"],
+  ])("generates in %s", async (_case, storedLocale, expectedLocale) => {
+    getSession.mockResolvedValue({ user: { id: "u1", locale: storedLocale } });
+    generateIdeas.mockResolvedValue({ ideas: [] });
+    assignIdeaCategories.mockResolvedValue([]);
+
+    await POST(generateRequest({ bio: "I like hiking." }));
+
+    expect(generateIdeas).toHaveBeenCalledWith(
+      "I like hiking.",
+      expectedLocale,
+    );
+  });
+
+  it("ignores a locale sent in the request body", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1", locale: "de" } });
+    generateIdeas.mockResolvedValue({ ideas: [] });
+    assignIdeaCategories.mockResolvedValue([]);
+
+    await POST(generateRequest({ bio: "I like hiking.", locale: "fr" }));
+
+    expect(generateIdeas).toHaveBeenCalledWith("I like hiking.", "de");
   });
 
   it("returns 502 without leaking the provider error", async () => {

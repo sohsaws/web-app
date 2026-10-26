@@ -1,0 +1,63 @@
+{
+  "Common": {
+    "actions": {
+      "cancel": "Annuler",
+      "saveChanges": "Enregistrer les modifications",
+      "remove": "Supprimer",
+      "tryAgain": "Réessayer",
+      "backToHome": "Retour à l’accueil",
+      "signIn": "Se connecter",
+      "signUp": "S’inscrire",
+      "logIn": "Se connecter",
+      "readMore": "En savoir plus",
+      "showLess": "Afficher moins"
+    },
+    "status": {
+      "loading": "Chargement...",
+      "saving": "Enregistrement...",
+      "retrying": "Nouvelle tentative..."
+    },
+    "appHeader": {
+      "navigationLabel": "Navigation dans l’application",
+      "overview": "Aperçu",
+      "dive": "Plongez",
+      "forYou": "Pour vous",
+      "notifications": "Notifications"
+    },
+    "userMenu": {
+      "triggerLabel": "Ouvrir le menu pour {name}",
+      "label": "Menu utilisateur",
+      "profile": "Profil",
+      "security": "Sécurité",
+      "logOut": "Se déconnecter",
+      "signingOut": "Déconnexion..."
+    },
+    "signOut": {
+      "success": "Déconnexion effectuée avec succès",
+      "failed": "Impossible de se déconnecter"
+    },
+    "avatar": {
+      "alt": "Photo de profil de {name}"
+    },
+    "loadingIndicator": {
+      "label": "Chargement"
+    },
+    "errorPage": {
+      "eyebrow": "Une erreur s’est produite",
+      "title": "<line>Nous avons rencontré un</line> <muted>contretemps inattendu.</muted>",
+      "description": "Ce n’est pas de votre faute. Réessayez, et si le problème persiste, faites-le-nous savoir.",
+      "reference": "Référence : {digest}"
+    },
+    "notFound": {
+      "eyebrow": "Erreur 404",
+      "title": "<line>Cette page</line> <muted>a disparu.</muted>",
+      "description": "Il se peut que le lien ne fonctionne plus ou que la page ait été déplacée. Revenons-en à votre choix.",
+      "contactUs": "Contactez-nous"
+    },
+    "forYouPage": {
+      "eyebrow": "Pour vous",
+      "title": "À venir...",
+      "description": "Vos idées enregistrées se transformeront en suggestions concrètes à découvrir : des lieux à proximité, des associations auxquelles adhérer, des films, des jeux et des lectures sélectionnés spécialement pour vous. Chaque glissement affine ces suggestions ; ainsi, plus vous en enregistrez, plus elles s’améliorent."
+    }
+  }
+}

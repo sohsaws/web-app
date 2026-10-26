@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/api-error-response";
 import { auth } from "@/lib/auth";
 import { getFavoritesPreview } from "@/lib/data/get-favorites-preview";
 
@@ -7,7 +8,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const session = await auth.api.getSession({ headers: request.headers });
 
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiErrorResponse("UNAUTHORIZED", 401);
     }
 
     const preview = await getFavoritesPreview(session.user.id);
@@ -15,9 +16,6 @@ export async function GET(request: Request): Promise<NextResponse> {
       headers: { "Cache-Control": "private, no-store" },
     });
   } catch {
-    return NextResponse.json(
-      { error: "Unable to load your saved ideas. Please try again." },
-      { status: 500 },
-    );
+    return apiErrorResponse("FAVORITES_LOAD_FAILED", 500);
   }
 }

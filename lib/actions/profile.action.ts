@@ -2,14 +2,13 @@
 
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
+import type { ActionFailure } from "@/lib/config/action-errors";
 import {
   type ProfileFormValues,
   profileFormSchema,
 } from "@/lib/config/profile";
 
-export type UpdateProfileResult =
-  | { success: true; message: string }
-  | { success: false; message: string };
+export type UpdateProfileResult = { success: true } | ActionFailure;
 
 export async function updateProfile(
   input: ProfileFormValues,
@@ -19,7 +18,7 @@ export async function updateProfile(
   if (!parsedInput.success) {
     return {
       success: false,
-      message: "Please check the profile fields and try again",
+      code: "INVALID_PROFILE",
     };
   }
 
@@ -31,7 +30,7 @@ export async function updateProfile(
   if (!session) {
     return {
       success: false,
-      message: "You must be signed in to update your profile",
+      code: "NOT_SIGNED_IN",
     };
   }
 
@@ -41,15 +40,12 @@ export async function updateProfile(
       headers: requestHeaders,
     });
 
-    return {
-      success: true,
-      message: "Profile updated successfully",
-    };
+    return { success: true };
   } catch (error) {
     console.error("Profile update error:", error);
     return {
       success: false,
-      message: "Profile update failed",
+      code: "PROFILE_UPDATE_FAILED",
     };
   }
 }

@@ -173,19 +173,141 @@ on every recommendation.
 - Which paid model and which search provider.
 - The safety policy above.
 
-## 🌐 INTERNATIONALIZATION: EN / RU / KK — PLAN (agreed 2026-10-08, NOT STARTED)
+## 🌐 INTERNATIONALIZATION: EN / RU / ES / FR / DE — PLAN (agreed 2026-10-08, languages changed 2026-10-21, STAGE 1 DONE)
 
-**Postponed until after the MVP deploy, like For you. Nothing is built. Read
-this before any i18n work.** Languages: English (default), Russian, Kazakh.
+**Read this before any i18n work.** Branch `feature/i18n-language-switching`.
+**Stage 1 (scaffold) done 2026-10-21:** `next-intl` 4.14, routes under
+`app/[locale]`, `i18n/` (routing, navigation, request with `next/root-params`,
+namespaces, merge with English fallback), 60 empty message files
+(12 namespaces × 5 locales), `proxy.ts` = next-intl + session check for
+`/dashboard`, `/dive`, `/for-you`, `/settings`, locale-aware
+`Link`/`redirect`/`useRouter`/`usePathname`, Inter with `cyrillic` and
+`latin-ext`, CI runs `next typegen` before tsc. All UI text is still
+English.
+**Stage 2 (profile locale) done 2026-10-22:** `User.locale String
+@default("en")` (migration `20261022120000_add_user_locale`, applied to the
+TEST branch only; **the user applies it to production**). Better Auth
+`additionalFields.locale` with `validator: { input: localeSchema }` and the
+default `input: true` — the user's decision 2026-10-22: language is a user
+setting like `bio`, so it goes through Better Auth `updateUser`, not around
+it (`input: false` is for server-owned fields like roles).
+`databaseHooks.user.create.before` sets the guest's `NEXT_LOCALE` cookie
+locale on sign-up (email and Google). `lib/actions/locale.action.ts`
+`updateLocale` = Zod → session → `auth.api.updateUser` → cookie. `proxy.ts`
+redirects protected pages to `/{session.user.locale}/...` (query kept) and
+syncs the cookie. `resolveLocale(...candidates)` in `lib/config/locales.ts`
+picks the first supported value or English.
+
+- **Languages (changed by the user 2026-10-21):** English (default and the
+  source of every translation), Russian, Spanish, French, German. Locale codes
+  `en`, `ru`, `es`, `fr`, `de`. **Kazakh is dropped**; ignore older Kazakh
+  notes.
+- **Library confirmed by the user 2026-10-21: `next-intl`** (react-i18next was
+  considered and not chosen).
+- **Translation workflow (2026-10-21):** UI messages are written in English
+  (`messages/en.json`); drafts for the other four come from the **DeepL API
+  Free** plan (500k chars/month) at development time only, never at runtime,
+  then get reviewed and committed. Protect ICU placeholders/plurals from
+  DeepL (write plural strings by hand). Idea cards are not translated by
+  DeepL: the AI generates them directly in the user's language.
+- **Language picker (user's spec 2026-10-21):** a reusable dropdown in the
+  app's minimal style, each language written in itself: English, Русский,
+  Español, Français, Deutsch. Used in Settings → Profile (signed-in users; the
+  choice is stored in the DB and drives the app language) and on the landing
+  pages. How the choice is applied: see "User decisions" below.
+- **User decisions 2026-10-21:**
+  - English also has a prefix: `/en/about` (`localePrefix: "always"`).
+  - Signed-in users see **no** language picker on the landing pages; they
+    change the language only in Settings → Profile.
+  - Picker placement: marketing header, to the left of Sign In / Sign Up
+    (hidden for signed-in users); in Settings → Profile next to the name
+    field.
+  - **Profile wins inside the app (variant A):** `User.locale` (DB) is the
+    source of truth and is exposed in the session (Better Auth
+    `additionalFields`). On protected routes `proxy.ts` redirects
+    `/{urlLocale}/...` to `/{session.user.locale}/...` when they differ and
+    keeps the `NEXT_LOCALE` cookie in sync. The cookie also makes `/` open
+    the profile language on the landing; an explicit locale in a marketing
+    URL is shown as is. Sign-in lands on `/{user.locale}/dashboard`; sign-up
+    stores the guest's cookie locale on the new user.
+  - **Picker component:** its own reusable
+    `components/ui/language-select.client.tsx` (variants `pill` for the
+    header, `field` for the profile). **Changed by the user 2026-10-23: no
+    native `<select>`.** It is a custom select-only combobox (WAI-ARIA APG):
+    a `<button role="combobox">` (`aria-expanded`, `aria-controls`,
+    `aria-activedescendant`, focus stays on the button) and a
+    `<ul role="listbox">` styled exactly like the user menu (`DropdownMenu`
+    panel, `UserDropdown` items: dark panel, `hover:bg-app-glow/70` + text
+    glow). The selected language keeps the glow plus a light grey background
+    (`aria-selected:bg-white/10`). Keyboard: ↓/↑ open or move, Home/End,
+    Enter/Space choose, Escape closes, Tab closes, outside click closes. Used
+    in both the header and the profile. The pill uses the same padding and
+    type as Sign In / Sign Up; its `before:` layer makes a 40px tap area.
+    `appearance: base-select` is not used (Chromium-only). `DropdownMenu`
+    (an action menu) is unchanged.
+  - **Stage 3 follow-ups (user, 2026-10-23):** the profile language select
+    is disabled with a hint while the profile form has unsaved edits (a
+    locale switch remounts the page and would drop them); below `sm` the
+    marketing header hides Sign In (Sign Up and the register page's
+    sign-in link remain); the pill's invisible select is 40px tall.
+- **Stage 3 picker decisions (user, 2026-10-23):**
+  - Profile: the language applies **immediately on select** (no Save
+    button); the success toast is in the language the user switched
+    **from** (shown before navigating to the new locale).
+  - Profile placement: below Name in the same column (row 2, left);
+    Name and Email stay where they are.
+  - Landing header on narrow screens: the closed control shows the code
+    (`EN ▾`), wider screens show the name (`English ▾`); the open list
+    always shows full names.
+- **Stage 4 decisions (user, 2026-10-24):**
+  - Zod messages are **keys** (`"nameRequired"`), not text; the UI shows
+    `t(message)` from the `Validation` namespace; one schema on client and
+    server.
+  - API routes answer `{ error: "<English for logs>", code: "<CODE>" }`;
+    server actions answer `{ success: false, code }`; the client translates
+    `ApiErrors.<CODE>`. Better Auth errors map by `error.code` to
+    `Auth.errors.<CODE>` with a generic fallback.
+  - The delete-account confirmation word stays `DELETE` in every language.
+  - Text bugs found in the inventory are fixed while moving strings
+    (username hint 50 vs schema 40; "Password do not match").
+  - **Each zone is translated right after its strings are extracted**
+    (DeepL drafts for ru/es/fr/de), not in one pass at the end.
+  - `global-error.tsx` stays English (renders outside the message provider).
+  - Work order: 4a conventions by Claude → 4b parallel zone workers
+    (marketing, auth, dashboard, dive, settings, common, emails) → 4c merge.
+- **AI content in the user's language (user decisions 2026-10-21):**
+  - Idea text: instructions stay in English with an explicit output-language
+    line ("Write every title and description in <language>"); no translated
+    system prompts (variant a). The image prompt stays English.
+  - **Categories (changed by the user 2026-10-25):** the model keeps
+    choosing from the English `IDEA_CATEGORIES` list; the DB stores the
+    English key; only the display is translated
+    (`hooks/i18n/use-category-label.ts` → `Categories.<English name>`).
+    No localized enum and no label-to-key mapping.
+  - **Stage 6 built 2026-10-25:** `generateIdeas(bio, locale)` with the
+    locale from the session (`LOCALE_PROMPT_NAMES`); category and scene
+    prompts accept ideas in any language. Changing the language in the
+    profile clears the in-memory deck (`clearIdeas`) without regenerating;
+    /dive generates a new deck when opened.
+  - **Section name "Dive" (user, 2026-10-25):** translated: ru
+    «Погружение», es «Sumérgete», fr « Plongez », de „Tauch ein“; English
+    stays "Dive".
+- **Postponed until release (2026-10-21):** `hreflang`/`alternates` metadata
+  and `sitemap.xml`. The overflow check for long German/French strings stays
+  in the plan (manual browser check by the user).
+- **Database rule (user, 2026-10-21):** never touch the production database
+  (migrations, SQL, scripts); the user applies production migrations. The
+  Neon test branch (`DATABASE_URL_TEST`, `npm run test:integration`) is
+  allowed.
 
 ### Architecture (decided)
 
-- **Library: `next-intl`** (not installed yet). Supports Next 16 and
+- **Library: `next-intl`** (installed in stage 1, 4.14). Supports Next 16 and
   `proxy.ts`; in Next 16.3 it uses `next/root-params`, so static rendering
   works with `generateStaticParams` (docs: next-intl.dev/docs/routing/setup).
 - **Locale in the URL ("variant B"):** all routes move under
   `app/[locale]/...` (`api/` stays outside); files `i18n/routing.ts`
-  (`locales: ["en", "ru", "kk"]`, `defaultLocale: "en"`), `i18n/request.ts`,
+  (`locales: ["en", "ru", "es", "fr", "de"]`, `defaultLocale: "en"`), `i18n/request.ts`,
   `i18n/navigation.ts` (next-intl `Link`/`redirect`/`useRouter`), plugin in
   `next.config.ts`. `proxy.ts` must combine the existing auth check with
   next-intl locale handling.
@@ -194,7 +316,7 @@ this before any i18n work.** Languages: English (default), Russian, Kazakh.
   dynamic and breaks the static marketing pages (`dynamic = "error"`).
 - **The user's language is a profile setting, not a header switcher.** New
   `locale` field on `User` (Better Auth `additionalFields`, like `bio`, plus a
-  migration), validated server-side against `en | ru | kk`. The URL prefix is
+  migration), validated server-side against the five locales. The URL prefix is
   only the mechanism; the profile is the source of the choice:
   - after sign-in, redirect to `/{user.locale}/dashboard`;
   - Settings → Profile has a language select; saving updates the DB and
@@ -211,39 +333,39 @@ this before any i18n work.** Languages: English (default), Russian, Kazakh.
 
 ### Discussed details to respect
 
-- **Locale codes:** Kazakh is `kk` (ISO 639-1). `kz` is the country code and
-  may only appear as a visible label.
 - **Flags, if ever shown:** SVG files, never emoji (Windows renders flag emoji
-  as two letters). A flag means a country, not a language, so pair it with a
-  language label. The user first wanted a 3-cell KZ/RU/EN flag switcher in the
-  top nav (client component, links via next-intl `Link`, `aria-current`,
-  `hrefLang`, names "English" / "Русский" / "Қазақша"); this was replaced by
-  the profile setting.
-- **Fonts:** Inter is loaded with `subsets: ["latin"]` only. Russian needs
-  `cyrillic`; Kazakh letters (ә ғ қ ң ө ұ ү һ) need `cyrillic-ext`. Any future
-  serif font must support Cyrillic (Instrument Serif likely does not; verify).
-- **AI content:** pass the locale into the generation prompt. Check Kazakh
-  output quality on real samples. Saved cards keep the language they were
-  generated in; switching language does not translate an existing deck.
+  as two letters). A flag means a country, not a language. The current spec
+  uses language names only, no flags.
+- **Fonts (checked 2026-10-21):** Inter is loaded with `subsets: ["latin",
+  "latin-ext", "cyrillic"]` since stage 1 (`latin-ext` only for ẞ/Ÿ; é, ü,
+  ß, œ, « » are already in `latin`). `font-serif` is Tailwind's system
+  stack (Georgia, Cambria, Times…), which has Cyrillic; no webfont serif is
+  loaded. A future serif webfont must have Cyrillic (Instrument Serif does
+  not; PT Serif, Lora, Source Serif 4, Noto Serif do).
+- **Uppercase labels:** many eyebrows use `uppercase` + wide tracking; with
+  `lang="de"` CSS turns ß into "SS" and German/Russian labels get longer.
+  `<html lang>` must come from the locale.
+- **Text length:** German and French run ~20–35% longer than English; check
+  buttons, nav pills and cards for overflow.
+- **AI content:** pass the locale into the generation prompt. Saved cards
+  keep the language they were generated in; switching language does not
+  translate an existing deck.
 - **Categories:** keep English enum keys in the DB and AI schema; translate
   only display labels via messages, so the category distribution keeps working.
 - **Strings outside components:** Zod messages (`lib/config/*`), Better Auth
   error messages (map by error code), toasts, metadata, React Email templates.
-- **Kazakh translations need a native speaker's review.**
-- **Estimate:** setup + `[locale]` move + proxy ≈ 1 day; extracting strings and
-  RU/KK translations ≈ 2–3 days; AI language, categories, emails ≈ 1 day.
+- **Estimate (for 3 languages, scale up):** setup + `[locale]` move + proxy ≈
+  1 day; extracting strings and translations ≈ 2–3 days; AI language,
+  categories, emails ≈ 1 day.
 
 ### Open decisions (ask the user)
 
 - Onboarding as a separate page (e.g. `/welcome`, enforceable in `proxy.ts`
   until `locale`/`bio` are set) or as a modal over the dashboard. Claude
   recommended the page.
-- Marketing for anonymous visitors: browser detection only, or also a small
-  EN · RU · ҚАЗ switcher in the landing footer (Claude recommended the footer
-  switcher).
-- A signed-in user opens a link in another language: redirect to the profile
-  language or show it as is.
-- English flag (UK or US), if flags are used at all.
+- (Decided 2026-10-21, see "User decisions" above: the landing picker sits
+  left of Sign In / Sign Up for guests; inside the app the profile locale
+  wins and `proxy.ts` redirects.)
 
 ## ⏭ RATE LIMITING + REGENERATE DECK (planned 2026-10-10)
 
@@ -332,6 +454,14 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   diagnostics are always allowed.
 - The user prefers clean structure, focused patches, direct mentorship, and
   practical explanations over heavy-handed control.
+- **Explain the architecture, always (user rule, 2026-10-21).** For every
+  complex task (a stage, a feature, a refactor across files):
+  - **Before starting:** describe the solution scheme first: which
+    components take part, who calls whom, the data flow, and the order of
+    work, with an ASCII diagram. Wait for the user's OK on the scheme.
+  - **After finishing:** show the resulting architecture and the logic of the
+    solution: how it works, which component interacts with which, the
+    request/data flow as a diagram, and why it was built this way.
 - **Reviewer subagent (2026-10-13).** `.claude/agents/reviewer.md` is a
   read-only judge (no Edit/Write, opus, preloads the `typescript` and `tests`
   skills). Every code change goes to it after the verification loop is green;
@@ -380,9 +510,13 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   (`lib/ai/deepinfra.ts`, base URL `https://api.deepinfra.com/v1/openai`,
   `DEEPINFRA_API_KEY`). Text with `chat.completions.parse` +
   `zodResponseFormat`; images with `images.generate`, `1024x1024`, `b64_json`,
-  checked against the PNG base64 signature. Model ids live in
+  checked only as base64; the format is assumed to be PNG (stored as
+  `.png`/`image/png`) and is not verified (first bytes `iVBORw0KGgo` = PNG,
+  `/9j/` = JPEG, `UklGR` = WebP). Model ids live in
   `IDEA_TEXT_MODEL_ID` / `IDEA_IMAGE_MODEL_ID` and the user changes them
-  (2026-10-08: `deepseek-ai/DeepSeek-V4.1-Flash`, `Qwen/Qwen-Image-Edit-Max`).
+  (2026-10-26: `deepseek-ai/DeepSeek-V4.1-Flash`, image
+  `black-forest-labs/FLUX-2-pro` — chosen by the user after
+  `Qwen/Qwen-Image-Max` failed upstream with "Model not exist").
   Category calls for the ideas of a deck run in parallel with `Promise.all`
   since 2026-10-08 (two sequential calls per idea). The user funded $5 prepaid. Category logic stays two
   calls per idea (21 calls per deck) by the user's choice. Idea images are PNG

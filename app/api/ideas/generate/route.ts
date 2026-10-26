@@ -3,7 +3,9 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { assignIdeaCategories, generateIdeas } from "@/lib/ai/generate-ideas";
+import { apiErrorResponse } from "@/lib/api-error-response";
 import { auth } from "@/lib/auth";
+import { resolveLocale } from "@/lib/config/locales";
 import { profileBioSchema } from "@/lib/config/profile";
 import { checkRateLimit, rateLimitExceededResponse } from "@/lib/rate-limit";
 import type { IdeaGeneratedResponse } from "@/lib/types/ideas/types";
@@ -18,14 +20,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   });
 
   if (!session) {
-    return NextResponse.json(
-      {
-        error: "Unauthorized",
-      },
-      {
-        status: 401,
-      },
-    );
+    return apiErrorResponse("UNAUTHORIZED", 401);
   }
 
   // Counted before the body is read, so malformed requests use the limit too.
@@ -38,17 +33,15 @@ export async function POST(request: Request): Promise<NextResponse> {
   const parsedBody = bioRequestSchema.safeParse(body);
 
   if (!parsedBody.success) {
-    return NextResponse.json(
-      {
-        error: "Invalid request body: provide a valid bio",
-      },
-      { status: 400 },
-    );
+    return apiErrorResponse("INVALID_BIO", 400);
   }
 
   const { bio } = parsedBody.data;
+  // The language comes from the profile on the server, never from the
+  // request, like the rest of the user's settings.
+  const locale = resolveLocale(session.user.locale);
   try {
-    const generated = await generateIdeas(bio);
+    const generated = await generateIdeas(bio, locale);
     const categorizedIdeas = await assignIdeaCategories(generated.ideas);
     const createdAt = new Date();
 
@@ -72,11 +65,6 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   } catch (e) {
     console.error("Idea generation failed:", e);
-    return NextResponse.json(
-      {
-        error: "Failed to generate ideas. Please try again.",
-      },
-      { status: 502 },
-    );
+    return apiErrorResponse("GENERATION_FAILED", 502);
   }
 }

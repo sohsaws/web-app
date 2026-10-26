@@ -1,0 +1,30 @@
+{
+  "ApiErrors": {
+    "UNKNOWN": "Une erreur s’est produite. Veuillez réessayer.",
+    "UNAUTHORIZED": "Votre session a pris fin. Veuillez vous reconnecter.",
+    "RATE_LIMITED": "Vous avez atteint la limite. Veuillez réessayer plus tard.",
+    "EXPECTED_JSON": "Une erreur s’est produite. Veuillez réessayer.",
+    "INVALID_IDEA": "Cette idée ne peut pas être enregistrée.",
+    "IDEA_NOT_SAVED": "Cette idée ne peut pas être enregistrée. Veuillez essayer une autre idée.",
+    "IDEA_SAVE_FAILED": "L’enregistrement de cette idée a échoué. Veuillez réessayer.",
+    "FAVORITES_LOAD_FAILED": "Impossible de charger vos idées enregistrées. Veuillez réessayer.",
+    "CATEGORIES_LOAD_FAILED": "Impossible de charger vos catégories. Veuillez réessayer.",
+    "INVALID_BIO": "Veuillez vérifier votre bio et réessayer.",
+    "GENERATION_FAILED": "Impossible de générer des idées. Veuillez réessayer.",
+    "INVALID_IMAGE_DESCRIPTION": "Cette idée ne comporte aucune description valide pour une image.",
+    "IMAGE_PROMPT_TOO_LONG": "Cette idée est trop longue pour être illustrée.",
+    "IMAGE_GENERATION_FAILED": "La génération de l’image a échoué. Veuillez réessayer.",
+    "UNSUPPORTED_IMAGE_TYPE": "Veuillez choisir une image au format JPG, PNG, GIF ou WebP.",
+    "NO_IMAGE": "Veuillez choisir une image.",
+    "IMAGE_TOO_LARGE": "L’image est trop volumineuse (4 Mo maximum).",
+    "AVATAR_UPLOAD_FAILED": "L’envoi de l’avatar a échoué. Veuillez réessayer.",
+    "AVATAR_REMOVAL_FAILED": "La suppression de l’avatar a échoué. Veuillez réessayer.",
+    "NOT_SIGNED_IN": "Vous devez être connecté pour effectuer cette opération.",
+    "INVALID_PROFILE": "Veuillez vérifier les champs du profil et réessayer.",
+    "PROFILE_UPDATE_FAILED": "La mise à jour du profil a échoué. Veuillez réessayer.",
+    "INVALID_NOTIFICATION_SETTINGS": "Ces paramètres de notification ne sont pas valides.",
+    "NOTIFICATIONS_SAVE_FAILED": "Impossible d’enregistrer les paramètres de notification.",
+    "UNSUPPORTED_LANGUAGE": "Cette langue n’est pas prise en charge.",
+    "LANGUAGE_UPDATE_FAILED": "Impossible de changer la langue. Veuillez réessayer."
+  }
+}

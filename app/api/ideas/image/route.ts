@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { generateImages } from "@/lib/ai/generate-ideas";
+import { apiErrorResponse } from "@/lib/api-error-response";
 import { auth } from "@/lib/auth";
 import { generatedIdeaSchema } from "@/lib/config/ideas";
 import { checkRateLimit, rateLimitExceededResponse } from "@/lib/rate-limit";
@@ -11,7 +12,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return apiErrorResponse("UNAUTHORIZED", 401);
   }
 
   // Counted before the body is read, so malformed requests use the limit too.
@@ -21,20 +22,14 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   if (!request.headers.get("Content-Type")?.includes("application/json")) {
-    return NextResponse.json(
-      { error: "Expected a JSON request body" },
-      { status: 415 },
-    );
+    return apiErrorResponse("EXPECTED_JSON", 415);
   }
 
   const body: unknown = await request.json().catch(() => null);
   const parsedBody = imageRequestSchema.safeParse(body);
 
   if (!parsedBody.success) {
-    return NextResponse.json(
-      { error: "Provide a valid image description" },
-      { status: 400 },
-    );
+    return apiErrorResponse("INVALID_IMAGE_DESCRIPTION", 400);
   }
 
   try {
@@ -46,15 +41,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     console.error("Image generation failed:", error);
 
     if (error instanceof Error && error.cause instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Image description exceeds the supported prompt length" },
-        { status: 400 },
-      );
+      return apiErrorResponse("IMAGE_PROMPT_TOO_LONG", 400);
     }
 
-    return NextResponse.json(
-      { error: "Failed to generate an image. Please try again." },
-      { status: 502 },
-    );
+    return apiErrorResponse("IMAGE_GENERATION_FAILED", 502);
   }
 }

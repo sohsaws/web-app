@@ -6,10 +6,7 @@ import OpenAI from "openai";
 const DEEPINFRA_BASE_URL = "https://api.deepinfra.com/v1/openai";
 
 export const IDEA_TEXT_MODEL_ID = "deepseek-ai/DeepSeek-V4.1-Flash";
-export const IDEA_IMAGE_MODEL_ID = "Qwen/Qwen-Image-Max";
-
-//deepseek-ai/DeepSeek-V4-Flash-0731
-//black-forest-labs/FLUX-2-pro
+export const IDEA_IMAGE_MODEL_ID = "black-forest-labs/FLUX-2-pro";
 
 function getDeepInfraApiKey(): string {
   const apiKey = process.env.DEEPINFRA_API_KEY;

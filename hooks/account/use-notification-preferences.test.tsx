@@ -2,6 +2,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { UpdateNotificationPreferencesResult } from "@/lib/actions/notification-preferences.action";
 import { DEFAULT_NOTIFICATION_PREFERENCES } from "@/lib/config/notifications";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { useNotificationPreferences } from "./use-notification-preferences";
 
 const { updateNotificationPreferences, toast } = vi.hoisted(() => ({
@@ -29,8 +30,9 @@ function deferActionResult(): (
 }
 
 function renderPreferencesHook() {
-  return renderHook(() =>
-    useNotificationPreferences(DEFAULT_NOTIFICATION_PREFERENCES),
+  return renderHook(
+    () => useNotificationPreferences(DEFAULT_NOTIFICATION_PREFERENCES),
+    { wrapper: IntlTestProvider },
   );
 }
 
@@ -59,10 +61,10 @@ describe("useNotificationPreferences", () => {
     expect(toast.error).not.toHaveBeenCalled();
   });
 
-  it("rolls back and shows the server message when saving is refused", async () => {
+  it("rolls back and shows the translated refusal when saving is refused", async () => {
     updateNotificationPreferences.mockResolvedValue({
       success: false,
-      message: "You must be signed in to change notifications",
+      code: "NOT_SIGNED_IN",
     });
     const { result } = renderPreferencesHook();
 
@@ -70,7 +72,7 @@ describe("useNotificationPreferences", () => {
 
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith(
-        "You must be signed in to change notifications",
+        "You must be signed in to do this.",
       ),
     );
     expect(result.current.preferences).toEqual(
@@ -89,7 +91,7 @@ describe("useNotificationPreferences", () => {
 
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith(
-        "Unable to save notification settings",
+        "Unable to save notification settings.",
       ),
     );
     expect(result.current.preferences).toEqual(

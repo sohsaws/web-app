@@ -1,9 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  DELETE_ACCOUNT_CONFIRMATION,
-  useDeleteAccount,
-} from "./use-delete-account";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
+import { useDeleteAccount } from "./use-delete-account";
 
 const { authClient, toast, assign } = vi.hoisted(() => ({
   authClient: { deleteUser: vi.fn(), signOut: vi.fn() },
@@ -20,7 +18,9 @@ interface DeleteAccountInput {
 }
 
 function renderDeleteHook(requiresPassword: boolean) {
-  return renderHook(() => useDeleteAccount(requiresPassword));
+  return renderHook(() => useDeleteAccount(requiresPassword), {
+    wrapper: IntlTestProvider,
+  });
 }
 
 // Fills the form and runs its validated submit, as the Delete button does.
@@ -64,7 +64,7 @@ describe("useDeleteAccount", () => {
     ["an empty confirmation", ""],
     ["a lowercase confirmation", "delete"],
     ["a confirmation with spaces", " DELETE "],
-  ])("refuses %s", async (_case, confirmation) => {
+  ])("refuses %s with a Validation key", async (_case, confirmation) => {
     const { result } = renderDeleteHook(false);
 
     await submit(result, { confirmation, password: "" });
@@ -72,7 +72,7 @@ describe("useDeleteAccount", () => {
     expect(authClient.deleteUser).not.toHaveBeenCalled();
     expect(
       result.current.form.getFieldState("confirmation").error?.message,
-    ).toBe(`Type ${DELETE_ACCOUNT_CONFIRMATION} to confirm`);
+    ).toBe("deleteConfirmation");
   });
 
   it("requires the password for an account that has one", async () => {
@@ -82,7 +82,7 @@ describe("useDeleteAccount", () => {
 
     expect(authClient.deleteUser).not.toHaveBeenCalled();
     expect(result.current.form.getFieldState("password").error?.message).toBe(
-      "Password is required",
+      "passwordRequired",
     );
   });
 
@@ -115,7 +115,7 @@ describe("useDeleteAccount", () => {
     await submit(result, { confirmation: "DELETE", password: "wrong-pass" });
 
     expect(result.current.form.getFieldState("password").error?.message).toBe(
-      "Password is incorrect",
+      "passwordIncorrect",
     );
     expect(assign).not.toHaveBeenCalled();
   });
@@ -132,6 +132,10 @@ describe("useDeleteAccount", () => {
     expect(assign).not.toHaveBeenCalled();
     const [message, options] = toast.error.mock.calls[0] ?? [];
     expect(message).toBe("Please sign in again to delete your account");
+    expect(options).toMatchObject({
+      description: "For your safety, account deletion needs a recent sign-in.",
+      action: { label: "Sign In" },
+    });
 
     await act(async () => getToastAction(options)());
 
@@ -141,7 +145,20 @@ describe("useDeleteAccount", () => {
     );
   });
 
-  it("shows any other error and keeps the account", async () => {
+  it("translates a known Better Auth error by its code", async () => {
+    authClient.deleteUser.mockResolvedValue({
+      data: null,
+      error: { code: "USER_NOT_FOUND", message: "User not found" },
+    });
+    const { result } = renderDeleteHook(false);
+
+    await submit(result, { confirmation: "DELETE", password: "" });
+
+    expect(toast.error).toHaveBeenCalledWith("No account was found.");
+    expect(assign).not.toHaveBeenCalled();
+  });
+
+  it("names the deletion for an unknown error and keeps the account", async () => {
     authClient.deleteUser.mockResolvedValue({
       data: null,
       error: { code: "UNKNOWN", message: "Something broke" },
@@ -150,7 +167,7 @@ describe("useDeleteAccount", () => {
 
     await submit(result, { confirmation: "DELETE", password: "" });
 
-    expect(toast.error).toHaveBeenCalledWith("Something broke");
+    expect(toast.error).toHaveBeenCalledWith("Unable to delete your account");
     expect(assign).not.toHaveBeenCalled();
   });
 

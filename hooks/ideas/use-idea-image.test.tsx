@@ -1,7 +1,10 @@
+import type { QueryClient } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { IDEA_IMAGE_DATA_URL_PREFIX } from "@/lib/config/ideas";
 import { RateLimitError } from "@/lib/utils/responseError";
+import { IntlTestProvider } from "@/test-utils/intl-test-provider";
 import { createQueryClientWrapper } from "@/test-utils/query-client-wrapper";
 import { useIdeaImage } from "./use-idea-image";
 
@@ -19,6 +22,24 @@ function answerEveryRequestWith(body: unknown, init?: ResponseInit): void {
   fetchMock.mockImplementation(async () => Response.json(body, init));
 }
 
+// next-intl for the translated toast text, around a fresh QueryClient.
+function createWrapper(): {
+  queryClient: QueryClient;
+  wrapper: ({ children }: { children: ReactNode }) => ReactNode;
+} {
+  const { queryClient, wrapper: QueryWrapper } = createQueryClientWrapper();
+
+  function wrapper({ children }: { children: ReactNode }): ReactNode {
+    return (
+      <IntlTestProvider>
+        <QueryWrapper>{children}</QueryWrapper>
+      </IntlTestProvider>
+    );
+  }
+
+  return { queryClient, wrapper };
+}
+
 beforeEach(() => {
   vi.stubGlobal("fetch", fetchMock);
 });
@@ -26,7 +47,7 @@ beforeEach(() => {
 describe("useIdeaImage", () => {
   it("returns the generated image as a PNG data URL", async () => {
     answerEveryRequestWith({ image: PNG_BASE64 });
-    const { wrapper } = createQueryClientWrapper();
+    const { wrapper } = createWrapper();
 
     const { result } = renderHook(() => useIdeaImage("idea-1", DESCRIPTION), {
       wrapper,
@@ -45,7 +66,7 @@ describe("useIdeaImage", () => {
 
   it("pays for one image when two cards show the same idea", async () => {
     answerEveryRequestWith({ image: PNG_BASE64 });
-    const { wrapper } = createQueryClientWrapper();
+    const { wrapper } = createWrapper();
 
     const { result } = renderHook(
       () => [
@@ -61,7 +82,7 @@ describe("useIdeaImage", () => {
 
   it("does not request the image again when the card mounts again", async () => {
     answerEveryRequestWith({ image: PNG_BASE64 });
-    const { wrapper } = createQueryClientWrapper();
+    const { wrapper } = createWrapper();
     const first = renderHook(() => useIdeaImage("idea-1", DESCRIPTION), {
       wrapper,
     });
@@ -81,7 +102,7 @@ describe("useIdeaImage", () => {
       { error: "Too many requests. Please try again later." },
       { status: 429, headers: { "Retry-After": "120" } },
     );
-    const { wrapper } = createQueryClientWrapper();
+    const { wrapper } = createWrapper();
 
     const { result } = renderHook(() => useIdeaImage("idea-1", DESCRIPTION), {
       wrapper,
@@ -90,7 +111,9 @@ describe("useIdeaImage", () => {
     await waitFor(() =>
       expect(result.current.error).toBeInstanceOf(RateLimitError),
     );
-    expect(showRateLimitToast).toHaveBeenCalledWith(120);
+    expect(showRateLimitToast).toHaveBeenCalledWith(
+      "You've reached the hourly limit. Try again in 2 minutes.",
+    );
     expect(result.current.image).toBeNull();
   });
 
@@ -99,7 +122,7 @@ describe("useIdeaImage", () => {
       { error: "Failed to generate an image. Please try again." },
       { status: 502 },
     );
-    const { wrapper } = createQueryClientWrapper();
+    const { wrapper } = createWrapper();
 
     const { result } = renderHook(() => useIdeaImage("idea-1", DESCRIPTION), {
       wrapper,
@@ -115,7 +138,7 @@ describe("useIdeaImage", () => {
 
   it("rejects a body that is not base64", async () => {
     answerEveryRequestWith({ image: "<script>alert(1)</script>" });
-    const { wrapper } = createQueryClientWrapper();
+    const { wrapper } = createWrapper();
 
     const { result } = renderHook(() => useIdeaImage("idea-1", DESCRIPTION), {
       wrapper,

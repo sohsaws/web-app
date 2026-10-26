@@ -1,6 +1,7 @@
 "use client";
 
 import { Bookmark } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { MiniIdeaCard } from "@/components/ideas/mini-idea-card.client";
 import {
@@ -28,23 +29,20 @@ interface IdeasStackProps {
 }
 
 export function IdeasStack({ cards, onOpen }: IdeasStackProps): ReactElement {
+  const t = useTranslations("Ideas.stack");
+
   if (cards.length === 0) {
     return (
       <div className="flex min-h-60 flex-col items-center justify-center gap-3 text-center text-app-muted">
         <Bookmark aria-hidden="true" className="size-8" strokeWidth={1} />
-        <p className="max-w-52 text-sm leading-6">
-          No saved ideas yet. Favorite a card in Dive to start your collection.
-        </p>
+        <p className="max-w-52 text-sm leading-6">{t("empty")}</p>
       </div>
     );
   }
 
   return (
     <div className="relative mx-auto h-60 w-full max-w-64">
-      <ul
-        aria-label="Recently saved ideas"
-        className="relative isolate size-full"
-      >
+      <ul aria-label={t("list")} className="relative isolate size-full">
         {cards.slice(0, FAVORITES_PREVIEW_LIMIT).map((idea, index) => {
           const position = positions[index] ?? positions[0];
 
@@ -64,7 +62,7 @@ export function IdeasStack({ cards, onOpen }: IdeasStackProps): ReactElement {
         <button
           type="button"
           aria-haspopup="dialog"
-          aria-label="Open saved ideas"
+          aria-label={t("open")}
           onClick={onOpen}
           className="absolute inset-0 z-40 cursor-pointer rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
         />

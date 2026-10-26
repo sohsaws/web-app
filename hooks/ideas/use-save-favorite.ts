@@ -5,10 +5,12 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import { useServerErrorMessage } from "@/hooks/i18n/use-server-error-message";
 import { FAVORITES_QUERY_KEY } from "@/lib/config/favorites";
 import type { IdeaSaveRequest } from "@/lib/types/ideas/types";
-import { getApiResponseError } from "@/lib/utils/responseError";
+import { createApiResponseError } from "@/lib/utils/responseError";
 
 const FAVORITE_MUTATION_KEY = ["save-favorite"] as const;
 
@@ -19,6 +21,8 @@ interface UseSaveFavoriteResult {
 }
 
 export function useSaveFavorite(): UseSaveFavoriteResult {
+  const t = useTranslations("Ideas.favorites");
+  const serverErrorMessage = useServerErrorMessage();
   const queryClient = useQueryClient();
   const { mutate, error } = useMutation<void, Error, IdeaSaveRequest>({
     mutationKey: FAVORITE_MUTATION_KEY,
@@ -30,8 +34,9 @@ export function useSaveFavorite(): UseSaveFavoriteResult {
       });
 
       if (!response.ok) {
-        throw new Error(
-          await getApiResponseError(response, "Failed to save this idea"),
+        throw await createApiResponseError(
+          response,
+          "Failed to save this idea",
         );
       }
     },
@@ -41,12 +46,12 @@ export function useSaveFavorite(): UseSaveFavoriteResult {
       await queryClient.invalidateQueries({ queryKey: FAVORITES_QUERY_KEY });
     },
     onError: (failure, idea): void => {
-      toast.error(`Could not save the card"`, {
+      toast.error(t("saveFailed"), {
         id: idea.id,
-        description: failure.message,
+        description: serverErrorMessage(failure),
         duration: Infinity,
         action: {
-          label: "Retry",
+          label: t("retry"),
           onClick: (): void => mutate(idea),
         },
       });

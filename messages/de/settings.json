@@ -1,0 +1,96 @@
+{
+  "Settings": {
+    "nav": {
+      "label": "Einstellungen",
+      "profile": "Profil",
+      "security": "Sicherheit",
+      "notifications": "Benachrichtigungen"
+    },
+    "language": {
+      "label": "Sprache",
+      "updated": "Sprache geändert: {language}",
+      "error": "Die Sprache konnte nicht geändert werden. Bitte versuche es noch einmal.",
+      "unsavedHint": "Speichere oder verwirf deine Änderungen, um die Sprache zu wechseln."
+    },
+    "profile": {
+      "title": "Details von {name}",
+      "description": "Lege fest, wie deine Informationen für andere auf der Plattform angezeigt werden.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Dein Name",
+      "emailLabel": "E-Mail",
+      "changeEmail": "Meine E-Mail-Adresse ändern",
+      "bioLabel": "Bio",
+      "bioPlaceholder": "Beschreibe deine Interessen und was du gerne ausprobieren möchtest",
+      "bioDescription": "Stell dich kurz vor.",
+      "saved": "Profil erfolgreich aktualisiert"
+    },
+    "avatar": {
+      "title": "Profilbild",
+      "hint": "Unterstützt JPG, PNG, GIF oder WebP. Maximal 4 MB.",
+      "upload": "Neues hochladen",
+      "pleaseWait": "Bitte warten...",
+      "updating": "Profilbild wird aktualisiert",
+      "uploading": "Bild wird hochgeladen...",
+      "uploaded": "Avatar wurde erfolgreich aktualisiert",
+      "removing": "Bild wird entfernt...",
+      "removed": "Avatar wurde erfolgreich entfernt"
+    },
+    "bio": {
+      "hintLabel": "Wozu dient die Bio?",
+      "hint": "Deine Bio sagt der KI, welche Ideen sie erstellen soll. Beschreibe deine Interessen, Hobbys, deine Arbeit und was du ausprobieren möchtest. Je genauer sie ist, desto besser wird dein Kartenstapel."
+    },
+    "emailVerification": {
+      "verifyLabel": "Bestätige deine E-Mail-Adresse",
+      "sendingLabel": "Bestätigungs-E-Mail wird gesendet",
+      "tooltip": "Bitte bestätige deine E-Mail-Adresse",
+      "sendingTooltip": "Bestätigungs-E-Mail wird gesendet..."
+    },
+    "security": {
+      "title": "Sicherheit",
+      "description": "Verwalte dein Passwort, die Anmeldung und dein Konto.",
+      "passwordTitle": "Passwort",
+      "passwordDescription": "Aktualisiere das Passwort für dein Konto.",
+      "passwordHint": "Sichere Passwörter tragen zum Schutz deiner Daten bei.",
+      "changePassword": "Passwort ändern",
+      "twoFactorTitle": "Zwei-Faktor-Authentifizierung",
+      "twoFactorDisabled": "2FA ist deaktiviert",
+      "twoFactorDescription": "Sorge für zusätzliche Sicherheit bei deinem Konto, indem du bei der Anmeldung einen Bestätigungscode aus einer Authentifizierungs-App verlangst.",
+      "twoFactorHint": "Wir empfehlen dir dringend, diese Funktion zu aktivieren.",
+      "enableTwoFactor": "2FA aktivieren",
+      "deleteTitle": "Konto löschen",
+      "deleteDescription": "Lösche dein Konto und alle darin enthaltenen Inhalte dauerhaft von der Swiipy-Plattform. Dieser Vorgang kann nicht rückgängig gemacht werden, also geh bitte mit Bedacht vor."
+    },
+    "deleteAccount": {
+      "dangerZone": "Gefahrenzone",
+      "open": "Konto löschen",
+      "confirmationLabel": "Gib {word} ein, um zu bestätigen",
+      "passwordLabel": "Passwort",
+      "googleHint": "Du hast dich mit Google angemeldet, daher brauchst du kein Passwort. Wenn deine letzte Anmeldung länger als einen Tag zurückliegt, bitten wir dich, dich erneut anzumelden.",
+      "submit": "Mein Konto dauerhaft löschen",
+      "deleting": "Wird gelöscht...",
+      "reauthRequired": "Bitte melde dich noch einmal an, um dein Konto zu löschen",
+      "reauthReason": "Zu deiner Sicherheit erfordert das Löschen des Kontos eine aktuelle Anmeldung.",
+      "failed": "Dein Konto konnte nicht gelöscht werden"
+    },
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "description": "Entscheide, was Swiipy an {email} senden darf.",
+      "emailTitle": "E-Mail",
+      "emailDescription": "Wähle aus, welche E-Mails Swiipy dir schicken soll.",
+      "alwaysOn": "Immer an",
+      "securityEmails": {
+        "title": "Sicherheits-E-Mails",
+        "description": "Passwortzurücksetzungen, E-Mail-Adressänderungen und Bestätigungslinks. Sie sorgen für die Sicherheit deines Kontos und können daher nicht deaktiviert werden."
+      },
+      "productUpdates": {
+        "title": "Produkt-Updates",
+        "description": "Neuigkeiten zu neuen Funktionen, wie zum Beispiel personalisierte Empfehlungen in „Für dich“. Werden nur selten verschickt."
+      },
+      "weeklyDigest": {
+        "title": "Wochenrückblick",
+        "description": "Eine kurze wöchentliche Zusammenfassung deiner gespeicherten Ideen und ein kleiner Anstoß, einen neuen Kartenstapel durchzuwischen."
+      },
+      "optionalHint": "Optionale E-Mails werden nur verschickt, wenn du sie aktivierst."
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "Ideas": {
+    "card": {
+      "imageAlt": "Ilustración para {title}",
+      "imagePending": "Generando la ilustración..."
+    },
+    "carousel": {
+      "label": "Carrusel de ideas",
+      "list": "Ideas",
+      "close": "Cerrar el carrusel",
+      "previous": "Idea anterior",
+      "next": "Siguiente idea",
+      "position": "{current} / {total}"
+    },
+    "stack": {
+      "empty": "Aún no tienes ninguna idea guardada. Añade una tarjeta a tus favoritos en «Sumérgete» para empezar tu colección.",
+      "list": "Ideas guardadas recientemente",
+      "open": "Abrir ideas guardadas"
+    },
+    "categories": {
+      "list": "Categorías de ideas"
+    },
+    "miniCard": {
+      "favorite": "Favorito"
+    },
+    "favorites": {
+      "saveFailed": "No se ha podido guardar la tarjeta",
+      "retry": "Reintentar"
+    },
+    "rateLimit": {
+      "message": "Has alcanzado el límite por hora. Inténtalo de nuevo en {minutes, plural, one {# minuto} other {# minutos}}."
+    }
+  }
+}

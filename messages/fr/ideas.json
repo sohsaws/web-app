@@ -1,0 +1,34 @@
+{
+  "Ideas": {
+    "card": {
+      "imageAlt": "Illustration de {title}",
+      "imagePending": "Génération de l’illustration..."
+    },
+    "carousel": {
+      "label": "Carrousel d’idées",
+      "list": "Idées",
+      "close": "Fermer le carrousel",
+      "previous": "Idée précédente",
+      "next": "Idée suivante",
+      "position": "{current} / {total}"
+    },
+    "stack": {
+      "empty": "Aucune idée enregistrée pour l’instant. Ajoutez une carte à vos favoris dans « Plongez » pour commencer votre collection.",
+      "list": "Idées récemment enregistrées",
+      "open": "Ouvrir les idées enregistrées"
+    },
+    "categories": {
+      "list": "Catégories d’idées"
+    },
+    "miniCard": {
+      "favorite": "Favori"
+    },
+    "favorites": {
+      "saveFailed": "Impossible d’enregistrer la carte",
+      "retry": "Réessayer"
+    },
+    "rateLimit": {
+      "message": "Vous avez atteint la limite horaire. Réessayez dans {minutes, plural, one {# minute} other {# minutes}}."
+    }
+  }
+}

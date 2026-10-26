@@ -2,13 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { useServerErrorMessage } from "@/hooks/i18n/use-server-error-message";
 import { updateNotificationPreferences } from "@/lib/actions/notification-preferences.action";
 import type {
   NotificationPreferenceKey,
   NotificationPreferences,
 } from "@/lib/config/notifications";
-
-const SAVE_ERROR_MESSAGE = "Unable to save notification settings";
 
 interface UseNotificationPreferencesResult {
   preferences: NotificationPreferences;
@@ -21,6 +20,7 @@ export function useNotificationPreferences(
 ): UseNotificationPreferencesResult {
   const [preferences, setPreferences] = useState(initialPreferences);
   const [isSaving, startTransition] = useTransition();
+  const serverErrorMessage = useServerErrorMessage();
 
   function togglePreference(key: NotificationPreferenceKey): void {
     const previous = preferences;
@@ -35,13 +35,13 @@ export function useNotificationPreferences(
 
         if (!result.success) {
           setPreferences(previous);
-          toast.error(result.message);
+          toast.error(serverErrorMessage(result.code));
         }
       } catch (error: unknown) {
         // A throw inside an async transition would reach the error boundary.
         console.error("Notification preferences request failed:", error);
         setPreferences(previous);
-        toast.error(SAVE_ERROR_MESSAGE);
+        toast.error(serverErrorMessage("NOTIFICATIONS_SAVE_FAILED"));
       }
     });
   }

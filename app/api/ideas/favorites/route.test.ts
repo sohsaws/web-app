@@ -122,6 +122,9 @@ describe("POST /api/ideas/favorites", () => {
     );
 
     expect(response.status).toBe(409);
+    await expect(response.json()).resolves.toMatchObject({
+      code: "IDEA_NOT_SAVED",
+    });
     expect(del).toHaveBeenCalledWith(BLOB_URL);
   });
 

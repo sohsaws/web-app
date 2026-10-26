@@ -33,8 +33,11 @@ URLs redirect or refuse connections).
 - Model ids are constants there: `IDEA_TEXT_MODEL_ID` and
   `IDEA_IMAGE_MODEL_ID`. Change constants, not call sites. The user switches
   models without notice, so read the file for the current values instead of
-  trusting this list. As of 2026-10-08: text `deepseek-ai/DeepSeek-V4.1-Flash`,
-  image `Qwen/Qwen-Image-Edit-Max`.
+  trusting this list. As of 2026-10-26: text `deepseek-ai/DeepSeek-V4.1-Flash`,
+  image `black-forest-labs/FLUX-2-pro` ($0.015). `Qwen/Qwen-Image-Max` (a
+  DeepInfra "Partner" model forwarded to Alibaba DashScope, $0.075) failed on
+  2026-10-26 with upstream `404 Model not exist`; partner models can vanish
+  without notice.
 
 ## Structured text
 
@@ -57,7 +60,10 @@ A deck is `1 + MAX_IDEAS_PER_PACK × 2` text calls (21 with the current
 `MAX_IDEAS_PER_PACK = 10` in `lib/config/ideas.ts`). Derive the count from the
 constant; never hardcode 21.
 
-1. `generateIdeas(bio)`: one call returns all titles and descriptions.
+1. `generateIdeas(bio, locale)`: one call returns all titles and
+   descriptions. The locale comes from the session (never the request body);
+   the English prompt names the output language via `LOCALE_PROMPT_NAMES`
+   (2026-10-25). Categories stay English keys; only the UI translates them.
 2. `assignIdeaCategories(ideas)`: two calls per idea, by the user's choice
    (2026-10-05). Inside one idea the calls are **sequential**, because the
    second call chooses from the categories left after the first

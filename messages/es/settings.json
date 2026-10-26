@@ -1,0 +1,96 @@
+{
+  "Settings": {
+    "nav": {
+      "label": "Configuración",
+      "profile": "Perfil",
+      "security": "Seguridad",
+      "notifications": "Notificaciones"
+    },
+    "language": {
+      "label": "Idioma",
+      "updated": "Idioma cambiado a {language}",
+      "error": "No se ha podido cambiar el idioma. Inténtalo de nuevo.",
+      "unsavedHint": "Guarda o cancela tus cambios para cambiar el idioma."
+    },
+    "profile": {
+      "title": "Datos de {name}",
+      "description": "Controla cómo se muestra tu información a los demás usuarios de la plataforma.",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "Tu nombre",
+      "emailLabel": "Correo electrónico",
+      "changeEmail": "Cambiar mi dirección de correo electrónico",
+      "bioLabel": "Biografía",
+      "bioPlaceholder": "Cuéntanos cuáles son tus aficiones y qué te gustaría probar",
+      "bioDescription": "Escribe una breve presentación.",
+      "saved": "El perfil se ha actualizado correctamente"
+    },
+    "avatar": {
+      "title": "Foto de perfil",
+      "hint": "Admite formatos JPG, PNG, GIF o WebP. Máximo 4 MB.",
+      "upload": "Subir uno nuevo",
+      "pleaseWait": "Espera...",
+      "updating": "Actualizando la foto de perfil",
+      "uploading": "Subiendo la imagen...",
+      "uploaded": "El avatar se ha actualizado correctamente",
+      "removing": "Eliminando la imagen...",
+      "removed": "Se ha eliminado el avatar correctamente"
+    },
+    "bio": {
+      "hintLabel": "¿Para qué sirve la biografía?",
+      "hint": "Tu biografía le dice a la IA qué ideas crear. Describe tus intereses, aficiones, trabajo y lo que te gustaría probar. Cuanto más concreta sea, mejor será tu baraja."
+    },
+    "emailVerification": {
+      "verifyLabel": "Confirma tu dirección de correo electrónico",
+      "sendingLabel": "Enviando el correo de verificación",
+      "tooltip": "Confirma tu correo electrónico",
+      "sendingTooltip": "Enviando el correo de verificación..."
+    },
+    "security": {
+      "title": "Seguridad",
+      "description": "Gestiona tu contraseña, la autenticación y tu cuenta.",
+      "passwordTitle": "Contraseña",
+      "passwordDescription": "Actualiza la contraseña de tu cuenta.",
+      "passwordHint": "Las contraseñas seguras ayudan a proteger tus datos.",
+      "changePassword": "Cambiar contraseña",
+      "twoFactorTitle": "Autenticación de dos factores",
+      "twoFactorDisabled": "2FA desactivada",
+      "twoFactorDescription": "Añade una capa extra de seguridad a tu cuenta solicitando un código de verificación de una aplicación de autenticación cada vez que inicies sesión.",
+      "twoFactorHint": "Te recomendamos encarecidamente que actives esta función.",
+      "enableTwoFactor": "Activar 2FA",
+      "deleteTitle": "Eliminar cuenta",
+      "deleteDescription": "Elimina definitivamente tu cuenta y todo su contenido de la plataforma Swiipy. Esta acción no se puede revertir, así que ten cuidado antes de continuar."
+    },
+    "deleteAccount": {
+      "dangerZone": "Zona de peligro",
+      "open": "Eliminar cuenta",
+      "confirmationLabel": "Escribe {word} para confirmar",
+      "passwordLabel": "Contraseña",
+      "googleHint": "Has iniciado sesión con Google, así que no hace falta contraseña. Si tu último inicio de sesión fue hace más de un día, te pediremos que vuelvas a iniciar sesión.",
+      "submit": "Eliminar mi cuenta de forma definitiva",
+      "deleting": "Eliminando...",
+      "reauthRequired": "Inicia sesión de nuevo para eliminar tu cuenta",
+      "reauthReason": "Por tu seguridad, para eliminar la cuenta es necesario que hayas iniciado sesión recientemente.",
+      "failed": "No se ha podido eliminar tu cuenta"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "description": "Decide qué puede enviarte Swiipy a {email}.",
+      "emailTitle": "Correo electrónico",
+      "emailDescription": "Elige qué correos te envía Swiipy.",
+      "alwaysOn": "Siempre activo",
+      "securityEmails": {
+        "title": "Correos de seguridad",
+        "description": "Restablecimiento de contraseñas, cambios de correo electrónico y enlaces de verificación. Sirven para mantener tu cuenta segura, así que no se pueden desactivar."
+      },
+      "productUpdates": {
+        "title": "Novedades del producto",
+        "description": "Noticias sobre nuevas funciones, como las recomendaciones personalizadas en «Para ti». No te las mandamos muy a menudo."
+      },
+      "weeklyDigest": {
+        "title": "Resumen semanal",
+        "description": "Un breve resumen semanal de las ideas que has guardado y un empujoncito para deslizar una baraja nueva."
+      },
+      "optionalHint": "Los correos opcionales solo se envían si los activas."
+    }
+  }
+}

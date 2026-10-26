@@ -1,0 +1,63 @@
+{
+  "Common": {
+    "actions": {
+      "cancel": "Cancel",
+      "saveChanges": "Save changes",
+      "remove": "Remove",
+      "tryAgain": "Try again",
+      "backToHome": "Back to home",
+      "signIn": "Sign In",
+      "signUp": "Sign Up",
+      "logIn": "Log in",
+      "readMore": "Read more",
+      "showLess": "Show less"
+    },
+    "status": {
+      "loading": "Loading...",
+      "saving": "Saving...",
+      "retrying": "Retrying..."
+    },
+    "appHeader": {
+      "navigationLabel": "Application navigation",
+      "overview": "Overview",
+      "dive": "Dive",
+      "forYou": "For you",
+      "notifications": "Notifications"
+    },
+    "userMenu": {
+      "triggerLabel": "Open menu for {name}",
+      "label": "User menu",
+      "profile": "Profile",
+      "security": "Security",
+      "logOut": "Log out",
+      "signingOut": "Signing out..."
+    },
+    "signOut": {
+      "success": "Signed out successfully",
+      "failed": "Unable to sign out"
+    },
+    "avatar": {
+      "alt": "{name}'s profile picture"
+    },
+    "loadingIndicator": {
+      "label": "Loading"
+    },
+    "errorPage": {
+      "eyebrow": "Something went wrong",
+      "title": "<line>We hit an</line> <muted>unexpected snag.</muted>",
+      "description": "It's not you. Try again, and if it keeps happening, let us know.",
+      "reference": "Reference: {digest}"
+    },
+    "notFound": {
+      "eyebrow": "Error 404",
+      "title": "<line>This page</line> <muted>wandered off.</muted>",
+      "description": "The link may be broken, or the page has moved. Let's get you back to deciding.",
+      "contactUs": "Contact us"
+    },
+    "forYouPage": {
+      "eyebrow": "For you",
+      "title": "Coming soon...",
+      "description": "Your saved ideas will turn into real things to try: places nearby, clubs to join, films, games and reads picked just for you. Every swipe sharpens these picks, so the more you save, the better they get."
+    }
+  }
+}

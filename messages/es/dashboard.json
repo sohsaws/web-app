@@ -1,0 +1,40 @@
+{
+  "Dashboard": {
+    "page": {
+      "greeting": "Hola de nuevo, {name}",
+      "subtitle": "Tu próxima idea te está esperando. Ten a mano tus favoritos."
+    },
+    "metrics": {
+      "savedIdeasTitle": "Ideas guardadas",
+      "savedIdeasLoading": "Cargando el número de ideas guardadas...",
+      "savedIdeasCaption": "En tu colección",
+      "savedIdeasRefreshError": "No se ha podido actualizar tu colección"
+    },
+    "youWouldLike": {
+      "title": "Te gustará",
+      "comingSoon": "Próximamente..."
+    },
+    "favorites": {
+      "sectionLabel": "Tus ideas guardadas",
+      "title": "Tu bolsillo",
+      "tagline": "Un poco guardado para después.",
+      "loading": "Cargando tus ideas guardadas...",
+      "refreshError": "No se han podido actualizar las ideas guardadas.",
+      "loadError": "No se han podido cargar las ideas guardadas.",
+      "countUnknown": "Tus favoritos",
+      "count": "{count, plural, one {# idea guardada} other {# ideas guardadas}}",
+      "discoverIdeas": "Descubre ideas"
+    },
+    "categoryDistribution": {
+      "title": "Tus intereses",
+      "tagline": "Un poco más de ti.",
+      "description": "Distribución por categorías de tus ideas guardadas.",
+      "loading": "Cargando la distribución de tus categorías...",
+      "regionLabel": "Distribución por categorías",
+      "empty": "Guarda ideas con categorías para ver aquí tus intereses.",
+      "refreshError": "No se han podido actualizar las categorías. Se muestran los últimos datos cargados.",
+      "loadError": "No se han podido cargar tus categorías.",
+      "footnote": "Cada asignación de categoría cuenta lo mismo. Los porcentajes están redondeados."
+    }
+  }
+}

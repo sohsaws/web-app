@@ -19,7 +19,8 @@ describe("profileFormSchema", () => {
     ])("rejects a name that is %s", (_, name) => {
       const result = profileFormSchema.safeParse({ ...validProfile, name });
       expect(result.success).toBe(false);
-      expect(result.error?.issues[0]?.message).toBe("Name cannot be empty");
+      // A key of the Validation messages, translated where it is shown.
+      expect(result.error?.issues[0]?.message).toBe("nameRequired");
     });
 
     it("accepts 50 characters and rejects 51", () => {
@@ -27,10 +28,12 @@ describe("profileFormSchema", () => {
         profileFormSchema.safeParse({ ...validProfile, name: "a".repeat(50) })
           .success,
       ).toBe(true);
-      expect(
-        profileFormSchema.safeParse({ ...validProfile, name: "a".repeat(51) })
-          .success,
-      ).toBe(false);
+      const tooLong = profileFormSchema.safeParse({
+        ...validProfile,
+        name: "a".repeat(51),
+      });
+      expect(tooLong.success).toBe(false);
+      expect(tooLong.error?.issues[0]?.message).toBe("nameTooLong");
     });
   });
 

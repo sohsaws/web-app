@@ -1,0 +1,44 @@
+{
+  "Dive": {
+    "page": {
+      "eyebrow": "Plongez",
+      "heading": "Une carte. <muted>Une décision.</muted>",
+      "intro": "Des idées façonnées par votre bio, une à la fois. Gardez ce qui vous parle, laissez filer le reste.",
+      "hints": {
+        "save": {
+          "title": "Glissez à droite pour enregistrer",
+          "description": "Elle atterrit dans votre poche"
+        },
+        "skip": {
+          "title": "Glissez à gauche pour passer",
+          "description": "Les idées ignorées ne sont jamais enregistrées"
+        },
+        "restore": {
+          "title": "Vous avez changé d’avis ?",
+          "description": "Récupérez la dernière carte"
+        }
+      },
+      "bioRequired": {
+        "heading": "Parlez-nous de vous <muted>d’abord.</muted>",
+        "description": "Swiipy crée vos cartes à partir de votre bio. Ajoutez quelques lignes sur votre travail, vos loisirs et ce que vous aimeriez essayer.",
+        "cta": "Rédigez votre bio"
+      }
+    },
+    "cardsPool": {
+      "loadingLabel": "Génération des idées",
+      "loadingText": "On mélange vos cartes",
+      "errorHeading": "Impossible de mélanger <muted>vos cartes.</muted>",
+      "generationFailed": "Une erreur s’est produite lors de la génération d’idées."
+    },
+    "actions": {
+      "restore": "Rétablir l’idée précédente",
+      "skip": "Passer cette idée",
+      "favorite": "Ajouter aux favoris",
+      "favoriteUnavailable": "Favoris bientôt disponibles"
+    },
+    "regenerate": {
+      "idle": "Mélanger de nouvelles cartes",
+      "pending": "Mélange en cours..."
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "Dive": {
+    "page": {
+      "eyebrow": "Tauch ein",
+      "heading": "Eine Karte. <muted>Eine Entscheidung.</muted>",
+      "intro": "Ideen nach deiner Bio, eine nach der anderen. Behalte, was dich anspricht, und lass den Rest los.",
+      "hints": {
+        "save": {
+          "title": "Wische nach rechts, um zu speichern",
+          "description": "Sie landet in deiner Tasche"
+        },
+        "skip": {
+          "title": "Wische nach links, um zu überspringen",
+          "description": "Übersprungene Ideen werden nie gespeichert"
+        },
+        "restore": {
+          "title": "Hast du es dir anders überlegt?",
+          "description": "Hol die letzte Karte zurück"
+        }
+      },
+      "bioRequired": {
+        "heading": "Erzähl uns zuerst <muted>von dir.</muted>",
+        "description": "Swiipy stellt deinen Kartenstapel aus deiner Bio zusammen. Schreib ein paar Zeilen über deine Arbeit, deine Hobbys und was du ausprobieren möchtest.",
+        "cta": "Schreib deine Bio"
+      }
+    },
+    "cardsPool": {
+      "loadingLabel": "Ideen werden generiert",
+      "loadingText": "Dein Stapel wird gemischt",
+      "errorHeading": "Dein Stapel konnte <muted>nicht gemischt werden.</muted>",
+      "generationFailed": "Beim Generieren von Ideen ist ein Fehler aufgetreten."
+    },
+    "actions": {
+      "restore": "Vorherige Idee wiederherstellen",
+      "skip": "Idee überspringen",
+      "favorite": "Zu Favoriten hinzufügen",
+      "favoriteUnavailable": "Favoriten – bald verfügbar"
+    },
+    "regenerate": {
+      "idle": "Neuen Stapel mischen",
+      "pending": "Neuer Stapel wird gemischt…"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "Validation": {
+    "invalid": "Revisa este campo.",
+    "required": "Este campo es obligatorio.",
+    "nameRequired": "El nombre no puede estar vacío.",
+    "nameTooLong": "El nombre no puede tener más de {max} caracteres.",
+    "bioTooLong": "La biografía no puede tener más de {max} caracteres.",
+    "usernameRequired": "Introduce un nombre de usuario.",
+    "usernameTooShort": "El nombre de usuario debe tener al menos {min} caracteres.",
+    "usernameTooLong": "El nombre de usuario debe tener como máximo {max} caracteres.",
+    "usernameInvalidCharacters": "Solo se permiten letras, números y guiones bajos.",
+    "emailRequired": "Introduce tu correo electrónico.",
+    "emailInvalid": "Introduce una dirección de correo electrónico válida.",
+    "emailTooLong": "El correo electrónico no puede tener más de {max} caracteres.",
+    "emailSameAsCurrent": "Esta ya es tu dirección de correo actual.",
+    "identifierRequired": "Introduce un correo electrónico o un nombre de usuario.",
+    "identifierTooLong": "El correo electrónico o el nombre de usuario no pueden tener más de {max} caracteres.",
+    "identifierInvalid": "Correo electrónico o nombre de usuario no válido.",
+    "passwordRequired": "Introduce una contraseña.",
+    "passwordTooShort": "La contraseña debe tener al menos {min} caracteres.",
+    "passwordTooLong": "La contraseña debe tener como máximo {max} caracteres.",
+    "passwordConfirmRequired": "Confirma tu contraseña.",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden.",
+    "passwordIncorrect": "La contraseña es incorrecta.",
+    "currentPasswordRequired": "Introduce tu contraseña actual.",
+    "currentPasswordIncorrect": "La contraseña actual es incorrecta.",
+    "deleteConfirmation": "Escribe {word} para confirmar."
+  }
+}

@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  formatRetryAfter,
-  getRetryAfterSeconds,
-  parseRetryAfterSeconds,
-} from "./retry-after";
+import { getRetryAfterSeconds, parseRetryAfterSeconds } from "./retry-after";
 
 describe("getRetryAfterSeconds", () => {
   it("rounds the remaining time up to whole seconds", () => {
@@ -35,16 +31,5 @@ describe("parseRetryAfterSeconds", () => {
     ["a fraction", "1.5"],
   ])("falls back to one minute for %s", (_case, value) => {
     expect(parseRetryAfterSeconds(value)).toBe(60);
-  });
-});
-
-describe("formatRetryAfter", () => {
-  it.each([
-    [1, "1 minute"],
-    [60, "1 minute"],
-    [61, "2 minutes"],
-    [3600, "60 minutes"],
-  ])("formats %i seconds as %j", (seconds, expected) => {
-    expect(formatRetryAfter(seconds)).toBe(expected);
   });
 });

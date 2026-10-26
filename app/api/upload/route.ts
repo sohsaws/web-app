@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { del, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/api-error-response";
 import { auth } from "@/lib/auth";
 import {
   BLOB_FOLDERS,
@@ -12,10 +13,6 @@ import {
   AVATAR_MAX_SIZE_BYTES,
   isAvatarContentType,
 } from "@/lib/config/avatar";
-
-function errorResponse(message: string, status: number): NextResponse {
-  return NextResponse.json({ error: message }, { status });
-}
 
 async function deleteUserAvatarBlob(
   value: string | null | undefined,
@@ -38,23 +35,23 @@ export async function POST(request: Request): Promise<NextResponse> {
   });
 
   if (!session) {
-    return errorResponse("Unauthorized", 401);
+    return apiErrorResponse("UNAUTHORIZED", 401);
   }
 
   const contentType = request.headers.get("content-type") ?? "";
 
   if (!isAvatarContentType(contentType)) {
-    return errorResponse("Unsupported image type", 415);
+    return apiErrorResponse("UNSUPPORTED_IMAGE_TYPE", 415);
   }
 
   const file = await request.blob();
 
   if (file.size === 0) {
-    return errorResponse("No image provided", 400);
+    return apiErrorResponse("NO_IMAGE", 400);
   }
 
   if (file.size > AVATAR_MAX_SIZE_BYTES) {
-    return errorResponse("File too large (max 4 MB)", 413);
+    return apiErrorResponse("IMAGE_TOO_LARGE", 413);
   }
 
   const extension = AVATAR_CONTENT_TYPE_TO_EXTENSION[contentType];
@@ -85,7 +82,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   } catch (error: unknown) {
     await deleteUserAvatarBlob(uploadedUrl, session.user.id);
     console.error("Avatar upload failed:", error);
-    return errorResponse("Avatar upload failed", 500);
+    return apiErrorResponse("AVATAR_UPLOAD_FAILED", 500);
   }
 }
 
@@ -95,7 +92,7 @@ export async function DELETE(request: Request): Promise<NextResponse> {
   });
 
   if (!session) {
-    return errorResponse("Unauthorized", 401);
+    return apiErrorResponse("UNAUTHORIZED", 401);
   }
 
   const previousImage = session.user.image;
@@ -117,6 +114,6 @@ export async function DELETE(request: Request): Promise<NextResponse> {
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
     console.error("Avatar removal failed:", error);
-    return errorResponse("Avatar removal failed", 500);
+    return apiErrorResponse("AVATAR_REMOVAL_FAILED", 500);
   }
 }

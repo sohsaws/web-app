@@ -1,0 +1,44 @@
+{
+  "Dive": {
+    "page": {
+      "eyebrow": "Dive",
+      "heading": "One card. <muted>One decision.</muted>",
+      "intro": "Ideas shaped by your bio, one at a time. Keep what sparks something, let the rest go.",
+      "hints": {
+        "save": {
+          "title": "Swipe right to save",
+          "description": "It lands in your pocket"
+        },
+        "skip": {
+          "title": "Swipe left to skip",
+          "description": "Skipped ideas are never stored"
+        },
+        "restore": {
+          "title": "Changed your mind?",
+          "description": "Bring back the last card"
+        }
+      },
+      "bioRequired": {
+        "heading": "Tell us about you <muted>first.</muted>",
+        "description": "Swiipy builds your deck from your bio. Add a few lines about your work, your hobbies and what you want to try.",
+        "cta": "Write your bio"
+      }
+    },
+    "cardsPool": {
+      "loadingLabel": "Generating ideas",
+      "loadingText": "Shuffling your deck",
+      "errorHeading": "Couldn't shuffle <muted>your deck.</muted>",
+      "generationFailed": "Something went wrong while generating ideas."
+    },
+    "actions": {
+      "restore": "Restore previous idea",
+      "skip": "Skip idea",
+      "favorite": "Favorite idea",
+      "favoriteUnavailable": "Favorites coming soon"
+    },
+    "regenerate": {
+      "idle": "Shuffle a new deck",
+      "pending": "Shuffling a new deck…"
+    }
+  }
+}

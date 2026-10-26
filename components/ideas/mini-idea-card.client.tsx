@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { IdeaCategories } from "@/components/ideas/idea-categories.client";
 import type { FavoritePreviewCard } from "@/lib/config/favorites";
@@ -19,6 +20,8 @@ export function MiniIdeaCard({
   idea,
   tone = "warm",
 }: MiniIdeaCardProps): ReactElement {
+  const t = useTranslations("Ideas.miniCard");
+
   return (
     <article
       className={`flex aspect-11/10 min-w-0 flex-col justify-between overflow-hidden rounded-xl border border-app-border bg-linear-to-br p-4 shadow-xl shadow-black/40 ${toneClasses[tone]}`}
@@ -27,7 +30,7 @@ export function MiniIdeaCard({
         <IdeaCategories categories={idea.categories} size="compact" />
       ) : (
         <p className="text-[0.625rem] tracking-widest text-app-action-skip uppercase">
-          Favorite
+          {t("favorite")}
         </p>
       )}
       <div className="min-w-0">

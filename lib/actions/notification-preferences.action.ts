@@ -2,18 +2,19 @@
 
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
+import type { ActionFailure } from "@/lib/config/action-errors";
 import { isNotificationPreferences } from "@/lib/config/notifications";
 import prisma from "@/lib/prisma";
 
 export type UpdateNotificationPreferencesResult =
   | { success: true }
-  | { success: false; message: string };
+  | ActionFailure;
 
 export async function updateNotificationPreferences(
   input: unknown,
 ): Promise<UpdateNotificationPreferencesResult> {
   if (!isNotificationPreferences(input)) {
-    return { success: false, message: "Invalid notification settings" };
+    return { success: false, code: "INVALID_NOTIFICATION_SETTINGS" };
   }
 
   const session = await auth.api.getSession({
@@ -23,7 +24,7 @@ export async function updateNotificationPreferences(
   if (!session) {
     return {
       success: false,
-      message: "You must be signed in to change notifications",
+      code: "NOT_SIGNED_IN",
     };
   }
 
@@ -44,6 +45,6 @@ export async function updateNotificationPreferences(
     return { success: true };
   } catch (error: unknown) {
     console.error("Notification preferences update failed:", error);
-    return { success: false, message: "Unable to save notification settings" };
+    return { success: false, code: "NOTIFICATIONS_SAVE_FAILED" };
   }
 }

@@ -6,18 +6,18 @@ const { toastError } = vi.hoisted(() => ({ toastError: vi.fn() }));
 vi.mock("sonner", () => ({ toast: { error: toastError } }));
 
 describe("showRateLimitToast", () => {
-  it("tells the user how long to wait", () => {
-    showRateLimitToast(90);
+  it("shows the text the caller translated", () => {
+    showRateLimitToast("Try again in 2 minutes.");
 
     expect(toastError).toHaveBeenCalledWith(
-      "You've reached the hourly limit. Try again in 2 minutes.",
+      "Try again in 2 minutes.",
       expect.anything(),
     );
   });
 
   it("reuses one toast id so parallel 429s update a single toast", () => {
-    showRateLimitToast(30);
-    showRateLimitToast(3600);
+    showRateLimitToast("Try again in 1 minute.");
+    showRateLimitToast("Try again in 60 minutes.");
 
     const ids = toastError.mock.calls.map(([, options]) => options?.id);
     expect(ids).toHaveLength(2);

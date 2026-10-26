@@ -2,7 +2,8 @@ import "server-only";
 
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-import { NextResponse } from "next/server";
+import type { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/api-error-response";
 import { RATE_LIMITS, type RateLimitScope } from "@/lib/config/rate-limit";
 import { getRetryAfterSeconds } from "@/lib/utils/retry-after";
 
@@ -52,11 +53,7 @@ export async function checkRateLimit(
 export function rateLimitExceededResponse(
   retryAfterSeconds: number,
 ): NextResponse {
-  return NextResponse.json(
-    { error: "Too many requests. Please try again later." },
-    {
-      status: 429,
-      headers: { "Retry-After": String(retryAfterSeconds) },
-    },
-  );
+  return apiErrorResponse("RATE_LIMITED", 429, {
+    "Retry-After": String(retryAfterSeconds),
+  });
 }

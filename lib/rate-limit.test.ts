@@ -110,6 +110,7 @@ describe("rateLimitExceededResponse", () => {
     expect(response.headers.get("Retry-After")).toBe("42");
     await expect(response.json()).resolves.toEqual({
       error: "Too many requests. Please try again later.",
+      code: "RATE_LIMITED",
     });
   });
 });

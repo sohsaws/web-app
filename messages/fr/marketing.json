@@ -1,0 +1,97 @@
+{
+  "Marketing": {
+    "languageSelect": {
+      "label": "Langue"
+    },
+    "header": {
+      "navigationLabel": "Navigation principale",
+      "about": "À propos",
+      "contact": "Contact"
+    },
+    "footer": {
+      "navigationLabel": "Pied de page",
+      "privacy": "Confidentialité",
+      "terms": "Conditions"
+    },
+    "home": {
+      "eyebrow": "Une manière plus sereine de faire son choix",
+      "titleFirstLine": "Glissez. Décidez.",
+      "titleSecondLine": "Et voilà.",
+      "subtitle": "Des destinations de vacances aux idées de start-up, il suffit d’un glissement pour y voir plus clair.",
+      "note": "Utilisation gratuite. Conçu pour les esprits curieux."
+    },
+    "heroCta": {
+      "label": "Osez décider"
+    },
+    "heroCards": {
+      "kyoto": {
+        "title": "Kyoto en automne",
+        "description": "Promenez-vous dans les allées du temple au lever du soleil, avant l’arrivée de la foule."
+      },
+      "ramen": {
+        "title": "Préparez des ramen maison",
+        "description": "Préparez un bouillon bien corsé le dimanche et partagez-le avec vos amis."
+      },
+      "focus": {
+        "title": "Faites de la place pour mieux travailler",
+        "description": "Réservez-vous deux heures de calme par jour et protégez-les comme s’il s’agissait d’une réunion."
+      }
+    },
+    "about": {
+      "eyebrow": "À propos de Swiipy",
+      "titleFirstLine": "Arrêtez de faire défiler.",
+      "titleSecondLine": "Commencez à décider.",
+      "intro": "Swiipy transforme cette éternelle question « Que vais-je faire ? » en quelques glissements rapides.",
+      "problem": {
+        "label": "Le problème",
+        "title": "Trop de choix, impossible de se décider",
+        "description": "Une soirée libre, un long week-end, un nouveau passe-temps à découvrir. Toutes les listes que l’on trouve en ligne proposent une centaine d’options, et ce défilement sans fin vous laisse plus fatigué qu’au début. Au final, on ne fait rien de concret."
+      },
+      "solution": {
+        "label": "La solution",
+        "title": "Une carte, une décision",
+        "description": "Swiipy vous présente des idées une par une, sélectionnées en fonction de ce que vous nous dites sur vous-même. Glissez vers la gauche pour passer à la suivante, vers la droite pour la conserver. Pas de flux d’actualités ni de distractions, juste une petite sélection d’idées qui vous correspondent."
+      },
+      "howItWorks": {
+        "eyebrow": "Comment ça marche",
+        "title": "Trois étapes vers vos <muted>cartes</muted>"
+      },
+      "steps": {
+        "bio": {
+          "title": "Parlez-nous un peu de vous",
+          "description": "Rédigez une courte bio dans votre profil : votre travail, vos loisirs, ce que vous aimez. C’est la seule configuration dont Swiipy a besoin."
+        },
+        "swipe": {
+          "title": "Glissez d’une idée à l’autre",
+          "description": "L’IA vous propose de nouvelles cartes d’idées à partir de votre bio. Écartez ce qui ne vous inspire pas, et conservez ce qui vous inspire."
+        },
+        "keep": {
+          "title": "Conservez ce qui compte vraiment",
+          "description": "Les idées que vous avez enregistrées se retrouvent dans votre poche, et votre aperçu vous indique les centres d’intérêt vers lesquels vous revenez sans cesse."
+        }
+      },
+      "comingNext": {
+        "label": "À suivre",
+        "title": "Des idées aux <muted>projets concrets</muted>",
+        "description": "Très bientôt, vos idées enregistrées se transformeront en véritables suggestions à découvrir : des lieux à proximité, des clubs auxquels adhérer, des films, des jeux et des livres sélectionnés spécialement pour vous. Plus vous glissez, plus ces suggestions seront pertinentes."
+      }
+    },
+    "contact": {
+      "eyebrow": "Parlons-en",
+      "title": "Faites en sorte que votre prochaine <muted>conversation</muted> soit fructueuse.",
+      "intro": "Des questions, des commentaires constructifs ou simplement une bonne idée ? Nous sommes à votre écoute. Envoyez-nous un message et nous vous répondrons dans les plus brefs délais.",
+      "emailLabel": "Envoyez-nous un e-mail",
+      "replyTimeLabel": "Nous répondons généralement sous",
+      "replyTimeValue": "une journée",
+      "form": {
+        "title": "Écrivez-nous un message",
+        "nameLabel": "Nom",
+        "namePlaceholder": "Votre nom",
+        "emailLabel": "E-mail",
+        "messageLabel": "Message",
+        "messagePlaceholder": "Qu’avez-vous en tête ?",
+        "submit": "Envoyer un message"
+      }
+    }
+  }
+}

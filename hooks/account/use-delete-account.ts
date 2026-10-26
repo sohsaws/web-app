@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import {
   type SubmitHandler,
   type UseFormReturn,
@@ -8,19 +9,24 @@ import {
 } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useAuthErrorMessage } from "@/hooks/i18n/use-auth-error-message";
 import { authClient } from "@/lib/auth/auth-client";
 
+// The same word in every language (user decision); only the text around it
+// is translated.
 export const DELETE_ACCOUNT_CONFIRMATION = "DELETE";
 
 const REAUTH_URL = "/login?callbackUrl=/settings/security";
 
+// Messages are Validation keys; the form shows them through
+// useValidationMessage.
 const deleteAccountFieldsSchema = z.object({
   confirmation: z
     .string()
     // Explicit boolean: an inferred type predicate would narrow the output
     // type to the literal "DELETE" and break the form's input/output types.
     .refine((value): boolean => value === DELETE_ACCOUNT_CONFIRMATION, {
-      message: `Type ${DELETE_ACCOUNT_CONFIRMATION} to confirm`,
+      message: "deleteConfirmation",
     }),
   password: z.string(),
 });
@@ -36,7 +42,7 @@ function createDeleteAccountSchema(
         context.addIssue({
           code: "custom",
           path: ["password"],
-          message: "Password is required",
+          message: "passwordRequired",
         });
       }
     },
@@ -56,6 +62,9 @@ interface UseDeleteAccountResult {
 export function useDeleteAccount(
   requiresPassword: boolean,
 ): UseDeleteAccountResult {
+  const t = useTranslations("Settings.deleteAccount");
+  const tActions = useTranslations("Common.actions");
+  const authErrorMessage = useAuthErrorMessage();
   const form = useForm<DeleteAccountFormValues>({
     resolver: zodResolver(createDeleteAccountSchema(requiresPassword)),
     defaultValues: { confirmation: "", password: "" },
@@ -71,15 +80,14 @@ export function useDeleteAccount(
 
       if (error) {
         if (error.code === "INVALID_PASSWORD") {
-          form.setError("password", { message: "Password is incorrect" });
+          form.setError("password", { message: "passwordIncorrect" });
           return;
         }
         if (error.code === "SESSION_EXPIRED") {
-          toast.error("Please sign in again to delete your account", {
-            description:
-              "For your safety, account deletion needs a recent sign-in.",
+          toast.error(t("reauthRequired"), {
+            description: t("reauthReason"),
             action: {
-              label: "Sign in",
+              label: tActions("signIn"),
               onClick: (): void => {
                 void signOutAndReauthenticate();
               },
@@ -88,7 +96,7 @@ export function useDeleteAccount(
           return;
         }
 
-        toast.error(error.message ?? "Unable to delete your account");
+        toast.error(authErrorMessage(error, t("failed")));
         return;
       }
 
@@ -97,7 +105,7 @@ export function useDeleteAccount(
       window.location.assign("/");
     } catch (error: unknown) {
       console.error("Account deletion failed:", error);
-      toast.error("Unable to delete your account");
+      toast.error(t("failed"));
     }
   };
 

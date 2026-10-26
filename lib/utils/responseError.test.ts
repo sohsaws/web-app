@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  ApiResponseError,
   createApiResponseError,
-  getApiResponseError,
   RateLimitError,
 } from "./responseError";
 
@@ -14,14 +14,15 @@ function jsonResponse(body: unknown): Response {
   });
 }
 
-describe("getApiResponseError", () => {
-  it("returns the error message from a JSON body", async () => {
-    await expect(
-      getApiResponseError(
-        jsonResponse({ error: "Provide a valid idea" }),
-        FALLBACK,
-      ),
-    ).resolves.toBe("Provide a valid idea");
+// The message is the server's English text, kept for logs.
+describe("createApiResponseError messages", () => {
+  it("takes the error message from a JSON body", async () => {
+    const error = await createApiResponseError(
+      jsonResponse({ error: "Provide a valid idea" }),
+      FALLBACK,
+    );
+
+    expect(error.message).toBe("Provide a valid idea");
   });
 
   it.each([
@@ -34,9 +35,10 @@ describe("getApiResponseError", () => {
     ],
     ["the body is empty", new Response(null, { status: 500 })],
   ])("falls back when %s", async (_, response) => {
-    await expect(getApiResponseError(response, FALLBACK)).resolves.toBe(
-      FALLBACK,
-    );
+    const error = await createApiResponseError(response, FALLBACK);
+
+    expect(error.message).toBe(FALLBACK);
+    expect(error.code).toBeNull();
   });
 });
 
@@ -75,5 +77,46 @@ describe("createApiResponseError", () => {
 
     expect(error).not.toBeInstanceOf(RateLimitError);
     expect(error.message).toBe("Provide a valid idea");
+  });
+});
+
+describe("createApiResponseError codes", () => {
+  it("keeps the server's error code for translation", async () => {
+    const error = await createApiResponseError(
+      new Response(
+        JSON.stringify({
+          error: "This idea cannot be saved. Please try another idea.",
+          code: "IDEA_NOT_SAVED",
+        }),
+        { status: 409 },
+      ),
+      FALLBACK,
+    );
+
+    expect(error).toBeInstanceOf(ApiResponseError);
+    expect(error.code).toBe("IDEA_NOT_SAVED");
+  });
+
+  it.each([
+    ["an unknown code", { error: "x", code: "SOMETHING_NEW" }],
+    ["an inherited key", { error: "x", code: "toString" }],
+    ["no code", { error: "x" }],
+  ])("has no code for %s", async (_case, body) => {
+    const error = await createApiResponseError(
+      new Response(JSON.stringify(body), { status: 400 }),
+      FALLBACK,
+    );
+
+    expect(error.code).toBeNull();
+  });
+
+  it("marks a 429 as RATE_LIMITED", async () => {
+    const error = await createApiResponseError(
+      new Response(null, { status: 429 }),
+      FALLBACK,
+    );
+
+    expect(error).toBeInstanceOf(RateLimitError);
+    expect(error.code).toBe("RATE_LIMITED");
   });
 });

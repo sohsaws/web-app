@@ -52,7 +52,7 @@ describe("generateIdeas", () => {
     const pack = { ideas: [idea] };
     parse.mockResolvedValue(completion(pack));
 
-    await expect(generateIdeas("I like hiking")).resolves.toEqual(pack);
+    await expect(generateIdeas("I like hiking", "en")).resolves.toEqual(pack);
     expect(parse).toHaveBeenCalledTimes(1);
     expect(parse).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -65,12 +65,38 @@ describe("generateIdeas", () => {
   });
 
   it.each([
+    ["ru", "Russian"],
+    ["de", "German"],
+    ["en", "English"],
+  ] as const)(
+    "asks for the %s output language by name",
+    async (locale, name) => {
+      parse.mockResolvedValue(completion({ ideas: [idea] }));
+
+      await generateIdeas("I like hiking", locale);
+
+      expect(parse).toHaveBeenCalledWith(
+        expect.objectContaining({
+          messages: expect.arrayContaining([
+            {
+              role: "system",
+              content: expect.stringContaining(
+                `Write every title and description in ${name}`,
+              ),
+            },
+          ]),
+        }),
+      );
+    },
+  );
+
+  it.each([
     ["no parsed result", completion(null)],
     ["no choices", { choices: [] }],
   ])("throws when the model returns %s", async (_case, response) => {
     parse.mockResolvedValue(response);
 
-    await expect(generateIdeas("bio")).rejects.toThrow(
+    await expect(generateIdeas("bio", "en")).rejects.toThrow(
       "Model returned no structured idea pack",
     );
   });

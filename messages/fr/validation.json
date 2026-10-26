@@ -1,0 +1,29 @@
+{
+  "Validation": {
+    "invalid": "Veuillez vérifier ce champ.",
+    "required": "Ce champ est obligatoire.",
+    "nameRequired": "Le nom ne peut pas être vide.",
+    "nameTooLong": "Le nom ne doit pas dépasser {max} caractères.",
+    "bioTooLong": "La bio ne doit pas dépasser {max} caractères.",
+    "usernameRequired": "Le nom d’utilisateur est obligatoire.",
+    "usernameTooShort": "Le nom d’utilisateur doit comporter au moins {min} caractères.",
+    "usernameTooLong": "Le nom d’utilisateur ne doit pas dépasser {max} caractères.",
+    "usernameInvalidCharacters": "Seules les lettres, les chiffres et les traits de soulignement sont autorisés.",
+    "emailRequired": "L’adresse e-mail est obligatoire.",
+    "emailInvalid": "Veuillez saisir une adresse e-mail valide.",
+    "emailTooLong": "L’adresse e-mail ne doit pas dépasser {max} caractères.",
+    "emailSameAsCurrent": "Il s’agit déjà de votre adresse e-mail actuelle.",
+    "identifierRequired": "Une adresse e-mail ou un nom d’utilisateur est obligatoire.",
+    "identifierTooLong": "L’adresse e-mail ou le nom d’utilisateur ne doit pas dépasser {max} caractères.",
+    "identifierInvalid": "Adresse e-mail ou nom d’utilisateur non valide.",
+    "passwordRequired": "Un mot de passe est requis.",
+    "passwordTooShort": "Le mot de passe doit comporter au moins {min} caractères.",
+    "passwordTooLong": "Le mot de passe ne doit pas dépasser {max} caractères.",
+    "passwordConfirmRequired": "Veuillez confirmer votre mot de passe.",
+    "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
+    "passwordIncorrect": "Le mot de passe est incorrect.",
+    "currentPasswordRequired": "Vous devez saisir votre mot de passe actuel.",
+    "currentPasswordIncorrect": "Le mot de passe actuel est incorrect.",
+    "deleteConfirmation": "Tapez {word} pour confirmer."
+  }
+}

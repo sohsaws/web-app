@@ -1,11 +1,12 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { DropdownMenu } from "@/components/layout/dropdown-menu.client";
 import { Avatar } from "@/components/ui/avatar.client";
 import { useSignOut } from "@/hooks/auth/use-sign-out";
+import { Link } from "@/i18n/navigation";
 
 interface UserDropdownProps {
   user: {
@@ -81,6 +82,7 @@ function AvatarMenuTrigger({
 }
 
 export function UserDropdown({ user }: UserDropdownProps): ReactElement {
+  const t = useTranslations("Common.userMenu");
   const { isPending, signOut } = useSignOut();
 
   return (
@@ -92,18 +94,18 @@ export function UserDropdown({ user }: UserDropdownProps): ReactElement {
           isOpen={isOpen}
         />
       )}
-      triggerLabel={`Open menu for ${user.name}`}
+      triggerLabel={t("triggerLabel", { name: user.name })}
     >
-      <nav aria-label="User menu">
+      <nav aria-label={t("label")}>
         <ul>
           <li>
             <Link href="/settings/profile" className={itemClassName}>
-              Profile
+              {t("profile")}
             </Link>
           </li>
           <li>
             <Link href="/settings/security" className={itemClassName}>
-              Security
+              {t("security")}
             </Link>
           </li>
           <li>
@@ -113,7 +115,7 @@ export function UserDropdown({ user }: UserDropdownProps): ReactElement {
               onClick={signOut}
               className={itemClassName}
             >
-              {isPending ? "Signing out..." : "Log out"}
+              {isPending ? t("signingOut") : t("logOut")}
             </button>
           </li>
         </ul>

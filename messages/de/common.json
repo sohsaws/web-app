@@ -1,0 +1,63 @@
+{
+  "Common": {
+    "actions": {
+      "cancel": "Abbrechen",
+      "saveChanges": "Änderungen speichern",
+      "remove": "Entfernen",
+      "tryAgain": "Erneut versuchen",
+      "backToHome": "Zurück zur Startseite",
+      "signIn": "Anmelden",
+      "signUp": "Registrieren",
+      "logIn": "Anmelden",
+      "readMore": "Mehr lesen",
+      "showLess": "Weniger anzeigen"
+    },
+    "status": {
+      "loading": "Wird geladen...",
+      "saving": "Wird gespeichert...",
+      "retrying": "Neuer Versuch..."
+    },
+    "appHeader": {
+      "navigationLabel": "Anwendungsnavigation",
+      "overview": "Übersicht",
+      "dive": "Tauch ein",
+      "forYou": "Für dich",
+      "notifications": "Benachrichtigungen"
+    },
+    "userMenu": {
+      "triggerLabel": "Menü für {name} öffnen",
+      "label": "Benutzermenü",
+      "profile": "Profil",
+      "security": "Sicherheit",
+      "logOut": "Abmelden",
+      "signingOut": "Abmeldung..."
+    },
+    "signOut": {
+      "success": "Erfolgreich abgemeldet",
+      "failed": "Abmelden nicht möglich"
+    },
+    "avatar": {
+      "alt": "Profilbild von {name}"
+    },
+    "loadingIndicator": {
+      "label": "Wird geladen"
+    },
+    "errorPage": {
+      "eyebrow": "Etwas ist schiefgelaufen",
+      "title": "<line>Wir sind auf ein</line> <muted>unerwartetes Hindernis.</muted>",
+      "description": "Es liegt nicht an dir. Versuche es noch einmal, und wenn es wieder passiert, sag uns Bescheid.",
+      "reference": "Referenz: {digest}"
+    },
+    "notFound": {
+      "eyebrow": "Fehler 404",
+      "title": "<line>Diese Seite</line> <muted>ist verschwunden.</muted>",
+      "description": "Der Link ist vielleicht kaputt oder die Seite wurde verschoben. Zurück zum Entscheiden.",
+      "contactUs": "Kontaktiere uns"
+    },
+    "forYouPage": {
+      "eyebrow": "Für dich",
+      "title": "Demnächst...",
+      "description": "Aus deinen gespeicherten Ideen werden konkrete Vorschläge, die du ausprobieren kannst: Orte in deiner Nähe, Vereine, denen du beitreten kannst, Filme, Spiele und Bücher, die speziell für dich ausgewählt wurden. Mit jedem Wisch werden diese Vorschläge präziser – je mehr du also speicherst, desto besser werden sie."
+    }
+  }
+}

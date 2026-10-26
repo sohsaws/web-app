@@ -16,8 +16,3 @@ export function parseRetryAfterSeconds(value: string | null): number {
 
   return Math.max(1, Number(trimmed));
 }
-
-export function formatRetryAfter(seconds: number): string {
-  const minutes = Math.max(1, Math.ceil(seconds / 60));
-  return minutes === 1 ? "1 minute" : `${minutes} minutes`;
-}

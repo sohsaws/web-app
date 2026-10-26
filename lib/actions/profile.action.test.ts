@@ -44,7 +44,7 @@ describe("updateProfile", () => {
 
     expect(result).toEqual({
       success: false,
-      message: "You must be signed in to update your profile",
+      code: "NOT_SIGNED_IN",
     });
     expect(updateUser).not.toHaveBeenCalled();
   });
@@ -72,7 +72,7 @@ describe("updateProfile", () => {
 
     await expect(updateProfile({ name: "Ann", bio: "" })).resolves.toEqual({
       success: false,
-      message: "Profile update failed",
+      code: "PROFILE_UPDATE_FAILED",
     });
     expect(consoleError).toHaveBeenCalled();
   });
