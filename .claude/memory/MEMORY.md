@@ -510,9 +510,13 @@ cost ~$0.01–0.015 each); button placement and whether to confirm.
   (`lib/ai/deepinfra.ts`, base URL `https://api.deepinfra.com/v1/openai`,
   `DEEPINFRA_API_KEY`). Text with `chat.completions.parse` +
   `zodResponseFormat`; images with `images.generate`, `1024x1024`, `b64_json`,
-  checked against the PNG base64 signature. Model ids live in
+  checked only as base64; the format is assumed to be PNG (stored as
+  `.png`/`image/png`) and is not verified (first bytes `iVBORw0KGgo` = PNG,
+  `/9j/` = JPEG, `UklGR` = WebP). Model ids live in
   `IDEA_TEXT_MODEL_ID` / `IDEA_IMAGE_MODEL_ID` and the user changes them
-  (2026-10-08: `deepseek-ai/DeepSeek-V4.1-Flash`, `Qwen/Qwen-Image-Edit-Max`).
+  (2026-10-26: `deepseek-ai/DeepSeek-V4.1-Flash`, image
+  `black-forest-labs/FLUX-2-pro` — chosen by the user after
+  `Qwen/Qwen-Image-Max` failed upstream with "Model not exist").
   Category calls for the ideas of a deck run in parallel with `Promise.all`
   since 2026-10-08 (two sequential calls per idea). The user funded $5 prepaid. Category logic stays two
   calls per idea (21 calls per deck) by the user's choice. Idea images are PNG

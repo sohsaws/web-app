@@ -33,8 +33,11 @@ URLs redirect or refuse connections).
 - Model ids are constants there: `IDEA_TEXT_MODEL_ID` and
   `IDEA_IMAGE_MODEL_ID`. Change constants, not call sites. The user switches
   models without notice, so read the file for the current values instead of
-  trusting this list. As of 2026-10-08: text `deepseek-ai/DeepSeek-V4.1-Flash`,
-  image `Qwen/Qwen-Image-Edit-Max`.
+  trusting this list. As of 2026-10-26: text `deepseek-ai/DeepSeek-V4.1-Flash`,
+  image `black-forest-labs/FLUX-2-pro` ($0.015). `Qwen/Qwen-Image-Max` (a
+  DeepInfra "Partner" model forwarded to Alibaba DashScope, $0.075) failed on
+  2026-10-26 with upstream `404 Model not exist`; partner models can vanish
+  without notice.
 
 ## Structured text
 
