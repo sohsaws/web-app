@@ -7,7 +7,11 @@ import { sentinelClient } from "@better-auth/infra/client";
 import type { auth } from "@/lib/auth";
 
 export const authClient = createAuthClient({
-  plugins: [usernameClient(), inferAdditionalFields<typeof auth>(), sentinelClient()],
+  plugins: [
+    usernameClient(),
+    inferAdditionalFields<typeof auth>(),
+    sentinelClient(),
+  ],
 });
 
 export const { signIn, signUp, signOut, useSession } = authClient;
