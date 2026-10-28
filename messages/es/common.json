@@ -24,6 +24,9 @@
       "forYou": "Para ti",
       "notifications": "Notificaciones"
     },
+    "notificationsPanel": {
+      "empty": "Aquí todavía no hay nada..."
+    },
     "userMenu": {
       "triggerLabel": "Abrir el menú de {name}",
       "label": "Menú de usuario",

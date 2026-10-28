@@ -1,7 +1,7 @@
-import { BellRing } from "lucide-react";
 import { headers } from "next/headers";
 import { getLocale, getTranslations } from "next-intl/server";
 import { NavigationBar } from "@/components/layout/navigation-bar.client";
+import { NotificationsMenu } from "@/components/layout/notifications-menu.client";
 import { UserDropdown } from "@/components/layout/user-dropdown.client";
 import { Link, redirect } from "@/i18n/navigation";
 import { auth } from "@/lib/auth";
@@ -43,14 +43,8 @@ export default async function MainLayout({
             className="absolute left-1/2 hidden -translate-x-1/2 md:block"
           />
 
-          <div className="flex justify-end w-24 gap-7">
-            <button
-              type="button"
-              aria-label={t("notifications")}
-              className="text-neutral-300 hover:text-white transition-colors cursor-pointer"
-            >
-              <BellRing aria-hidden="true" className="w-6 h-6" />
-            </button>
+          <div className="flex justify-end w-24 gap-4">
+            <NotificationsMenu />
             <UserDropdown
               user={{
                 image: session.user.image,

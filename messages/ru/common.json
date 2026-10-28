@@ -24,6 +24,9 @@
       "forYou": "Для вас",
       "notifications": "Уведомления"
     },
+    "notificationsPanel": {
+      "empty": "Здесь пока пусто..."
+    },
     "userMenu": {
       "triggerLabel": "Открыть меню для {name}",
       "label": "Меню пользователя",
